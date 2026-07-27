@@ -23,7 +23,7 @@ export async function register(req: Request, res: Response)
     return res.status(400).json({
       success: false,
       message:
-        error instanceof Error ? error.message : "Something went wrong",
+        error instanceof Error ? error.message : " Something went wrong ",
     });
   }
 }

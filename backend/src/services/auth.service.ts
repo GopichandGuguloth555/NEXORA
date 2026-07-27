@@ -11,7 +11,7 @@ export async function registerUser(data: RegisterInput)
   });
 
   if (existingUser) {
-    throw new Error("User already exists");
+    throw new Error("Eamil or Uuser already Exists!");
   }
 
   const hashedPassword = await hashPassword(data.password);
