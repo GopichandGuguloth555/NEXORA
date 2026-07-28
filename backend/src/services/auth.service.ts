@@ -67,3 +67,4 @@ export const loginUser = async (data: LoginInput) =>
   };
 
 };
+
