@@ -44,6 +44,7 @@ enum Role {
 }
 
 model WorkspaceMember {
+  
   id String @id @default(cuid())
 
   workspaceId String
