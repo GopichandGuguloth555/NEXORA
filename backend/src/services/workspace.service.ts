@@ -1,5 +1,5 @@
 import prisma from "../config/prisma.js";
-import type { CreateWorkspaceInput } from "../validations/workspace.schema.js";
+import type { CreateWorkspaceInput, UpdateWorkspaceInput } from "../validations/workspace.schema.js";
 
 export const createWorkspace = async (data: CreateWorkspaceInput, userId: string) => {
 
@@ -44,4 +44,95 @@ export const createWorkspace = async (data: CreateWorkspaceInput, userId: string
   });
 
   return workspace;
+};
+
+export const getWorkspaces = async (userId: string) => {
+
+  const workspaces = await prisma.workspace.findMany({
+    
+    where: {
+      members: {
+        some: {
+          userId: userId,
+        },
+      },
+    },
+
+    include: {
+      owner: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          avatar: true,
+        },
+      },
+      members: true,
+    },
+  });
+
+  return workspaces;
+};
+
+export const updateWorkspace = async (
+  workspaceId: string,
+  data: UpdateWorkspaceInput,
+  userId: string
+) => {
+  // Check workspace exists
+  const workspace = await prisma.workspace.findUnique({
+    where: {
+      id: workspaceId,
+    },
+  });
+
+  if (!workspace) {
+    throw new Error("Workspace not found");
+  }
+
+  // Check membership
+  const member = await prisma.workspaceMember.findUnique({
+    where: {
+      workspaceId_userId: {
+        workspaceId,
+        userId,
+      },
+    },
+  });
+
+  if (!member) {
+    throw new Error("You are not a member of this workspace");
+  }
+
+  // Check role
+  if (member.role !== "OWNER" && member.role !== "ADMIN") {
+    throw new Error("Forbidden");
+  }
+
+  // Update workspace
+  const updatedWorkspace = await prisma.workspace.update({
+    where: {
+      id: workspaceId,
+    },
+
+    data: {
+      name: data.name,
+      description: data.description,
+    },
+
+    include: {
+      owner: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          avatar: true,
+        },
+      },
+
+      members: true,
+    },
+  });
+
+  return updatedWorkspace;
 };
