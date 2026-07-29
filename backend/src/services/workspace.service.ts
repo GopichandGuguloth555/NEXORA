@@ -49,7 +49,7 @@ export const createWorkspace = async (data: CreateWorkspaceInput, userId: string
 export const getWorkspaces = async (userId: string) => {
 
   const workspaces = await prisma.workspace.findMany({
-    
+
     where: {
       members: {
         some: {
@@ -135,4 +135,54 @@ export const updateWorkspace = async (
   });
 
   return updatedWorkspace;
+};
+
+export const deleteWorkspace = async (
+  workspaceId: string,
+  userId: string
+) => {
+
+  const workspace = await prisma.workspace.findUnique({
+    where: {
+      id: workspaceId,
+    },
+  });
+
+  if (!workspace) {
+    throw new Error("Workspace not found");
+  }
+
+  const member = await prisma.workspaceMember.findUnique({
+    where: {
+      workspaceId_userId: {
+        workspaceId,
+        userId,
+      },
+    },
+  });
+
+  if (!member) {
+    throw new Error("You are not a member of this workspace");
+  }
+
+  if (member.role !== "OWNER") {
+    throw new Error("Forbidden");
+  }
+
+  return await prisma.$transaction(async (tx) => {
+
+    await tx.workspaceMember.deleteMany({
+      where: {
+        workspaceId,
+      },
+    });
+
+    const deletedWorkspace = await tx.workspace.delete({
+      where: {
+        id: workspaceId,
+      },
+    });
+
+    return deletedWorkspace;
+  });
 };
