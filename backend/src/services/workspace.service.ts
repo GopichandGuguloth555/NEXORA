@@ -75,11 +75,7 @@ export const getWorkspaces = async (userId: string) => {
   return workspaces;
 };
 
-export const updateWorkspace = async (
-  workspaceId: string,
-  data: UpdateWorkspaceInput,
-  userId: string
-) => {
+export const updateWorkspace = async (workspaceId: string,data: UpdateWorkspaceInput,userId: string) => {
   // Check workspace exists
   const workspace = await prisma.workspace.findUnique({
     where: {
@@ -138,10 +134,7 @@ export const updateWorkspace = async (
   return updatedWorkspace;
 };
 
-export const deleteWorkspace = async (
-  workspaceId: string,
-  userId: string
-) => {
+export const deleteWorkspace = async (workspaceId: string,userId: string) => {
 
   const workspace = await prisma.workspace.findUnique({
     where: {
@@ -187,11 +180,8 @@ export const deleteWorkspace = async (
     return deletedWorkspace;
   });
 };
-export const inviteMember = async (
-  workspaceId: string,
-  data: InviteInput,
-  userId: string
-) => {
+
+export const inviteMember = async (workspaceId: string,data: InviteInput,userId: string) => {
 
 
   const allWorkspaces = await prisma.workspace.findMany();
@@ -212,7 +202,6 @@ export const inviteMember = async (
     },
   });
 
-  console.log("Workspace Found:", workspace);
 
   if (!workspace) {
     throw new Error("Workspace not found");
@@ -326,4 +315,74 @@ export const getWorkspaceMembers = async (workspaceId: string,userId: string) =>
   });
 
   return members;
+};
+
+export const removeMember = async (workspaceId: string,memberId: string,userId: string) => {
+  
+  // Check workspace exists
+  const workspace = await prisma.workspace.findUnique({
+    where: {
+      id: workspaceId,
+    },
+  });
+
+  if (!workspace) {
+    throw new Error("Workspace not found");
+  }
+
+  // Check requester is a member
+  const requester = await prisma.workspaceMember.findUnique({
+    where: {
+      workspaceId_userId: {
+        workspaceId,
+        userId,
+      },
+    },
+  });
+
+  if (!requester) {
+    throw new Error("You are not a member of this workspace");
+  }
+
+  // Check requester permissions
+  if (requester.role !== "OWNER" && requester.role !== "ADMIN") {
+    throw new Error("Forbidden");
+  }
+
+  // Find member to remove
+  const memberToRemove = await prisma.workspaceMember.findUnique({
+    where: {
+      id: memberId,
+    },
+  });
+
+  if (!memberToRemove) {
+    throw new Error("Member not found");
+  }
+
+  // Make sure member belongs to this workspace
+  if (memberToRemove.workspaceId !== workspaceId) {
+    throw new Error("Member does not belong to this workspace");}
+
+  // Owner cannot be removed
+  if (memberToRemove.role === "OWNER") {
+    throw new Error("Owner cannot be removed");
+  }
+
+  // Admin cannot remove another Admin
+  if (
+    requester.role === "ADMIN" &&
+    memberToRemove.role === "ADMIN"
+  ) {
+    throw new Error("Admins cannot remove other admins");
+  }
+
+  // Remove member
+  const deletedMember = await prisma.workspaceMember.delete({
+    where: {
+      id: memberId,
+    },
+  });
+
+  return deletedMember;
 };

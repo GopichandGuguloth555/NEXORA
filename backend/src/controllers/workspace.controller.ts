@@ -1,14 +1,14 @@
 import type { Request, Response } from "express";
-import { createWorkspaceSchema, inviteSchema, updateWorkspaceSchema} from "../validations/workspace.schema.js";
-import { createWorkspace, deleteWorkspace, getWorkspaceMembers, inviteMember } from "../services/workspace.service.js";
+import { createWorkspaceSchema, inviteSchema, updateWorkspaceSchema } from "../validations/workspace.schema.js";
+import { createWorkspace, deleteWorkspace, getWorkspaceMembers, inviteMember, removeMember } from "../services/workspace.service.js";
 import { getWorkspaces, updateWorkspace } from "../services/workspace.service.js";
 
-export const create = async (req: Request,res: Response) => {
+export const create = async (req: Request, res: Response) => {
 
   try {
     const data = createWorkspaceSchema.parse(req.body);
 
-    const workspace = await createWorkspace(data,req.user!.id);
+    const workspace = await createWorkspace(data, req.user!.id);
 
     return res.status(201).json({
       success: true,
@@ -16,9 +16,8 @@ export const create = async (req: Request,res: Response) => {
       data: workspace,
     });
 
-  } 
-  catch (error) 
-  {
+  }
+  catch (error) {
     return res.status(400).json({
       success: false,
       message:
@@ -29,8 +28,7 @@ export const create = async (req: Request,res: Response) => {
   }
 };
 
-export const getAllWorkspaces = async (req: Request,res: Response) =>
-{
+export const getAllWorkspaces = async (req: Request, res: Response) => {
   try {
     const workspaces = await getWorkspaces(req.user!.id);
 
@@ -50,8 +48,7 @@ export const getAllWorkspaces = async (req: Request,res: Response) =>
   }
 };
 
-export const update = async (req: Request,res: Response) => 
-{
+export const update = async (req: Request, res: Response) => {
   try {
     const data = updateWorkspaceSchema.parse(req.body);
 
@@ -77,8 +74,7 @@ export const update = async (req: Request,res: Response) =>
   }
 };
 
-export const deleteworkspace = async (req: Request,res: Response) => 
-{
+export const deleteworkspace = async (req: Request, res: Response) => {
   try {
 
     const workspace = await deleteWorkspace(
@@ -146,6 +142,35 @@ export const getMembers = async (req: Request, res: Response) => {
       success: true,
       message: "Workspace members fetched successfully",
       data: members,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : "Something went wrong",
+    });
+  }
+};
+
+export const removeMemberController = async (req: Request,res: Response) => {
+ 
+  try {
+    
+    const workspaceId = req.params.workspaceId;
+    const memberId = req.params.memberId;
+
+    const removedMember = await removeMember(
+      workspaceId,
+      memberId,
+      req.user!.id
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Member removed successfully!",
+      data: removedMember,
     });
   } catch (error) {
     return res.status(400).json({

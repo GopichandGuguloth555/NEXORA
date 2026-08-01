@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { create, deleteworkspace, getMembers, Invite } from "../controllers/workspace.controller.js";
+import { create, deleteworkspace, getMembers, Invite, removeMemberController } from "../controllers/workspace.controller.js";
 import { getAllWorkspaces,update } from "../controllers/workspace.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 import { updateWorkspaceSchema} from "../validations/workspace.schema.js";
@@ -12,5 +12,6 @@ router.patch("/:workspaceId", authMiddleware, update);
 router.delete("/:workspaceId",authMiddleware, deleteworkspace);
 router.post("/:workspaceId/members", authMiddleware, Invite);
 router.get("/:workspaceId/members",authMiddleware,getMembers);
+router.delete("/:workspaceId/members/:memberId",authMiddleware,removeMemberController);
 
 export default router;
