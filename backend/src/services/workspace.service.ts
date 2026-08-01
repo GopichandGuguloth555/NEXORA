@@ -1,6 +1,7 @@
 import prisma from "../config/prisma.js";
 import type { InviteInput } from "../validations/workspace.schema.js";
 import type { CreateWorkspaceInput, UpdateWorkspaceInput } from "../validations/workspace.schema.js";
+import { Role } from "../generated/prisma/enums.js";
 
 export const createWorkspace = async (data: CreateWorkspaceInput, userId: string) => {
 
@@ -385,4 +386,80 @@ export const removeMember = async (workspaceId: string,memberId: string,userId: 
   });
 
   return deletedMember;
+};
+
+export const updateMemberRole = async (workspaceId: string,memberId: string,role: Role,userId: string) => {
+  
+  // 1. Check if workspace exists
+  const workspace = await prisma.workspace.findUnique({
+    where: {
+      id: workspaceId,
+    },
+  });
+
+  if (!workspace) {
+    throw new Error("Workspace not found");
+  }
+
+  // 2. Check if logged-in user belongs to this workspace
+  const requester = await prisma.workspaceMember.findUnique({
+    where: {
+      workspaceId_userId: {
+        workspaceId,
+        userId,
+      },
+    },
+  });
+
+  if (!requester) {
+    throw new Error("You are not a member of this workspace");
+  }
+
+  // 3. Only OWNER can change roles
+  if (requester.role !== "OWNER") {
+    throw new Error("Only the workspace owner can update member roles");
+  }
+
+  // 4. Find the member whose role will be updated
+  const member = await prisma.workspaceMember.findUnique({
+    where: {
+      id: memberId,
+    },
+  });
+
+  if (!member) {
+    throw new Error("Member not found");
+  }
+
+  // 5. Make sure the member belongs to this workspace
+  if (member.workspaceId !== workspaceId) {
+    throw new Error("Member does not belong to this workspace");
+  }
+
+  // 6. Don't allow changing the owner's role
+  if (member.role === "OWNER") {
+    throw new Error("Owner role cannot be changed");
+  }
+
+  // 7. Update the role
+  const updatedMember = await prisma.workspaceMember.update({
+    where: {
+      id: memberId,
+    },
+    data: {
+      role,
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          avatar: true,
+        },
+      },
+    },
+  });
+
+  return updatedMember;
 };

@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import { createWorkspaceSchema, inviteSchema, updateWorkspaceSchema } from "../validations/workspace.schema.js";
-import { createWorkspace, deleteWorkspace, getWorkspaceMembers, inviteMember, removeMember } from "../services/workspace.service.js";
+import { createWorkspaceSchema, inviteSchema, updateMemberRoleSchema, updateWorkspaceSchema } from "../validations/workspace.schema.js";
+import { createWorkspace, deleteWorkspace, getWorkspaceMembers, inviteMember, removeMember, updateMemberRole } from "../services/workspace.service.js";
 import { getWorkspaces, updateWorkspace } from "../services/workspace.service.js";
 
 export const create = async (req: Request, res: Response) => {
@@ -157,7 +157,7 @@ export const getMembers = async (req: Request, res: Response) => {
 export const removeMemberController = async (req: Request,res: Response) => {
  
   try {
-    
+
     const workspaceId = req.params.workspaceId;
     const memberId = req.params.memberId;
 
@@ -171,6 +171,37 @@ export const removeMemberController = async (req: Request,res: Response) => {
       success: true,
       message: "Member removed successfully!",
       data: removedMember,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : "Something went wrong",
+    });
+  }
+};
+
+export const updateMemberRoleController = async (req: Request,res: Response) => {
+
+  try {
+    const workspaceId = req.params.workspaceId;
+    const memberId = req.params.memberId;
+
+    const data = updateMemberRoleSchema.parse(req.body);
+
+    const updatedMember = await updateMemberRole(
+      workspaceId,
+      memberId,
+      data.role,
+      req.user!.id
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Member role updated successfully",
+      data: updatedMember,
     });
   } catch (error) {
     return res.status(400).json({
