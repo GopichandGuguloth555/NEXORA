@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import { createWorkspaceSchema, updateWorkspaceSchema} from "../validations/workspace.schema.js";
-import { createWorkspace, deleteWorkspace } from "../services/workspace.service.js";
+import { createWorkspaceSchema, inviteSchema, updateWorkspaceSchema} from "../validations/workspace.schema.js";
+import { createWorkspace, deleteWorkspace, inviteMember } from "../services/workspace.service.js";
 import { getWorkspaces, updateWorkspace } from "../services/workspace.service.js";
 
 export const create = async (req: Request,res: Response) => {
@@ -29,10 +29,8 @@ export const create = async (req: Request,res: Response) => {
   }
 };
 
-export const getAllWorkspaces = async (
-  req: Request,
-  res: Response
-) => {
+export const getAllWorkspaces = async (req: Request,res: Response) =>
+{
   try {
     const workspaces = await getWorkspaces(req.user!.id);
 
@@ -52,10 +50,8 @@ export const getAllWorkspaces = async (
   }
 };
 
-export const update = async (
-  req: Request,
-  res: Response
-) => {
+export const update = async (req: Request,res: Response) => 
+{
   try {
     const data = updateWorkspaceSchema.parse(req.body);
 
@@ -81,10 +77,8 @@ export const update = async (
   }
 };
 
-export const deleteworkspace = async (
-  req: Request,
-  res: Response
-) => {
+export const deleteworkspace = async (req: Request,res: Response) => 
+{
   try {
 
     const workspace = await deleteWorkspace(
@@ -108,5 +102,33 @@ export const deleteworkspace = async (
           : "Something went wrong",
     });
 
+  }
+};
+
+export const Invite = async (req: Request, res: Response) => {
+  try {
+    const data = inviteSchema.parse(req.body);
+
+    const workspaceId = req.params.workspaceId;
+
+    const invited = await inviteMember(
+      workspaceId,
+      data,
+      req.user!.id
+    );
+
+    return res.status(201).json({
+      success: true,
+      message: "Member invited successfully!",
+      data: invited,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : "Something went wrong",
+    });
   }
 };

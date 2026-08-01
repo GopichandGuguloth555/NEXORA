@@ -29,3 +29,13 @@ export const updateWorkspaceSchema = z.object({
 
 export type UpdateWorkspaceInput = z.infer<typeof updateWorkspaceSchema>;
 
+export const inviteSchema = z.object({
+  email: z
+    .string()
+    .email("Invalid email address")
+    .toLowerCase(),
+
+  role: z.enum(["ADMIN", "MEMBER"]),
+});
+
+export type InviteInput = z.infer<typeof inviteSchema>;
