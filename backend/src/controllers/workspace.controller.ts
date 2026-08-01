@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { createWorkspaceSchema, inviteSchema, updateWorkspaceSchema} from "../validations/workspace.schema.js";
-import { createWorkspace, deleteWorkspace, inviteMember } from "../services/workspace.service.js";
+import { createWorkspace, deleteWorkspace, getWorkspaceMembers, inviteMember } from "../services/workspace.service.js";
 import { getWorkspaces, updateWorkspace } from "../services/workspace.service.js";
 
 export const create = async (req: Request,res: Response) => {
@@ -121,6 +121,31 @@ export const Invite = async (req: Request, res: Response) => {
       success: true,
       message: "Member invited successfully!",
       data: invited,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : "Something went wrong",
+    });
+  }
+};
+
+export const getMembers = async (req: Request, res: Response) => {
+  try {
+    const workspaceId = req.params.workspaceId;
+
+    const members = await getWorkspaceMembers(
+      workspaceId,
+      req.user!.id
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Workspace members fetched successfully",
+      data: members,
     });
   } catch (error) {
     return res.status(400).json({

@@ -277,3 +277,53 @@ export const inviteMember = async (
 
   return createdMember;
 };
+
+export const getWorkspaceMembers = async (workspaceId: string,userId: string) => 
+  {
+
+  const workspace = await prisma.workspace.findUnique({
+    where: {
+      id: workspaceId,
+    },
+  });
+
+  if (!workspace) {
+    throw new Error("Workspace not found");
+  }
+
+ 
+  const existingMember = await prisma.workspaceMember.findUnique({
+    where: {
+      workspaceId_userId: {
+        workspaceId,
+        userId,
+      },
+    },
+  });
+
+  if (!existingMember) {
+    throw new Error("You are not a member of this workspace");
+  }
+
+
+  const members = await prisma.workspaceMember.findMany({
+    where: {
+      workspaceId,
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          avatar: true,
+        },
+      },
+    },
+    orderBy: {
+      joinedAt: "asc",
+    },
+  });
+
+  return members;
+};
