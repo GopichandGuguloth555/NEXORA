@@ -1,5 +1,5 @@
 import prisma from "../config/prisma.js";
-import type { CreateTaskInput } from "../validations/task.schema.js";
+import type { CreateTaskInput, UpdateTaskInput } from "../validations/task.schema.js";
 
 export const createTask = async (projectId: string, data: CreateTaskInput, userId: string) => {
 
@@ -181,4 +181,96 @@ export const getTaskById = async ( taskId: string,userId: string) => {
   }
 
   return task;
+};
+
+export const updateTask = async ( taskId: string,data: UpdateTaskInput,userId: string) => {
+  const task = await prisma.task.findUnique({
+    where: {
+      id: taskId,
+    },
+    include: {
+      project: {
+        select: {
+          workspaceId: true,
+        },
+      },
+    },
+  });
+
+  if (!task) {
+    throw new Error("Task not found");
+  }
+
+  const member = await prisma.workspaceMember.findUnique({
+    where: {
+      workspaceId_userId: {
+        workspaceId: task.project.workspaceId,
+        userId,
+      },
+    },
+  });
+
+  if (!member) {
+    throw new Error("You are not a member of this workspace");
+  }
+
+  // Validate assignee (if provided)
+  if (data.assigneeId) {
+    const assignee = await prisma.workspaceMember.findUnique({
+      where: {
+        workspaceId_userId: {
+          workspaceId: task.project.workspaceId,
+          userId: data.assigneeId,
+        },
+      },
+    });
+
+    if (!assignee) {
+      throw new Error("Assignee is not a member of this workspace");
+    }
+  }
+
+  const updatedTask = await prisma.task.update({
+    where: {
+      id: taskId,
+    },
+
+    data: {
+      title: data.title,
+      description: data.description,
+      status: data.status,
+      priority: data.priority,
+      dueDate: data.dueDate
+        ? new Date(data.dueDate)
+        : undefined,
+      assigneeId: data.assigneeId,
+    },
+
+    include: {
+      project: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+
+      createdBy: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+
+      assignee: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  return updatedTask;
 };
