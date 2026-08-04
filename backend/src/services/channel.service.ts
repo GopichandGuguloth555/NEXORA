@@ -68,60 +68,59 @@ return channel;
   return channel;
 };
 
-export const getChannels = async (workspaceId: string, userId: string) => {
+export const getChannels = async (workspaceId: string,userId: string) => {
 
-    const workspace = await prisma.task.findUnique({
-        where: {
-            id: workspaceId,
-        }
-    });
+  const workspace = await prisma.workspace.findUnique({
+    where: {
+      id: workspaceId,
+    },
+  });
 
-    if (!workspace) {
-        throw new Error("workspace not found");
-    }
+  if (!workspace) {
+    throw new Error("Workspace not found");
+  }
 
-    const member = await prisma.workspaceMember.findUnique({
-        where: {
-            workspaceId_userId: {
-                workspaceId: workspaceId,
-                userId,
-            },
+  const member = await prisma.workspaceMember.findUnique({
+    where: {
+      workspaceId_userId: {
+        workspaceId,
+        userId,
+      },
+    },
+  });
+
+  if (!member) {
+    throw new Error("You are not a member of this workspace");
+  }
+
+  const channels = await prisma.channel.findMany({
+    where: {
+      workspaceId,
+    },
+    include: {
+      createdBy: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
         },
-    });
-
-    if (!member) {
-        throw new Error("You are not a member of this workspace");
-    }
-
-    const channels = await prisma.channel.findMany({
-
-        where: {
-            workspaceId,
+      },
+      workspace: {
+        select: {
+          id: true,
+          name: true,
         },
-        include: {
-            user: {
-                select: {
-                    id: true,
-                    name: true,
-                    email: true,
-                },
-            },
-            workspace: {
-                select: {
-                    id: true,
-                    name: true,
-                },
-            },
-        },
-        orderBy: {
-            createdAt: "asc",
-        },
-    });
+      },
+    },
+    orderBy: {
+      createdAt: "asc",
+    },
+  });
 
-    return channels;
+  return channels;
 };
 
-export const getCommentById = async (channelId: string, userId: string) => {
+export const getChannelById = async (channelId: string, userId: string) => {
 
     const channel = await prisma.channel.findUnique({
         where: {

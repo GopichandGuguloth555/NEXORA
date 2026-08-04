@@ -1,11 +1,8 @@
 import type { Request, Response } from "express";
 import { createChannelSchema } from "../validations/channel.schema.js";
-import { createChannel } from "../services/channel.service.js";
+import { createChannel, getChannelById, getChannels } from "../services/channel.service.js";
 
-export const createChannelController = async (
-  req: Request,
-  res: Response
-) => {
+export const createChannelController = async (req: Request,res: Response) => {
   try {
     const data = createChannelSchema.parse(req.body);
 
@@ -32,3 +29,56 @@ export const createChannelController = async (
     });
   }
 };
+
+export const getChannelsController = async (req: Request, res: Response) => {
+
+  try {
+    const workspaceId = req.params.workspaceId;
+
+    const channels = await getChannels(
+      workspaceId,
+      req.user!.id
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Channels fetched successfully!",
+      data: channels,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : "Something went wrong",
+    });
+  }
+};
+
+export const getChannelByIDController = async (req: Request,res: Response) => {
+
+  try {
+    const channelId = req.params.channelId;
+
+    const channel = await getChannelById(
+      channelId,
+      req.user!.id
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "channel fetched successfully!",
+      data: channel,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : "Something went wrong",
+    });
+  }
+};
+
