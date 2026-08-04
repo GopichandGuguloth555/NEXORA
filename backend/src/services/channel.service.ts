@@ -121,7 +121,7 @@ export const getChannels = async (workspaceId: string,userId: string) => {
 };
 
 export const getChannelById = async (channelId: string,userId: string) => {
-    
+
   const channel = await prisma.channel.findUnique({
     where: {
       id: channelId,
@@ -163,129 +163,109 @@ export const getChannelById = async (channelId: string,userId: string) => {
   return channel;
 };
 
+export const updateChannel = async (channelId: string,data: UpdateChannelInput,userId: string) => {
 
-export const updateComment = async (channelId: string, data: UpdateChannelInput, userId: string) => {
+  const channel = await prisma.channel.findUnique({
+    where: {
+      id: channelId,
+    },
+  });
 
-    const channel = await prisma.channel.findUnique({
-        where: {
-            id: channelId,
+  if (!channel) {
+    throw new Error("Channel not found");
+  }
+
+  const member = await prisma.workspaceMember.findUnique({
+    where: {
+      workspaceId_userId: {
+        workspaceId: channel.workspaceId,
+        userId,
+      },
+    },
+  });
+
+  if (!member) {
+    throw new Error("You are not a member of this workspace");
+  }
+
+  const updatedChannel = await prisma.channel.update({
+    where: {
+      id: channelId,
+    },
+
+    data: {
+      name: data.name,
+      description: data.description,
+    },
+
+    include: {
+      workspace: {
+        select: {
+          id: true,
+          name: true,
         },
-        include: {
+      },
 
-            channel: {
-                select: {
-                    workspaceId: true,
-                },
-            },
+      createdBy: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
         },
-    });
-    if (!channel) {
-        throw new Error("channel not found");
-    }
+      },
+    },
+  });
 
-    const member = await prisma.workspaceMember.findUnique({
-        where: {
-            workspaceId_userId: {
-                workspaceId: channel.workspaceId,
-                userId,
-            },
+  return updatedChannel;
+};
+
+export const deleteChannel = async (channelId: string,userId: string) => {
+
+  const channel = await prisma.channel.findUnique({
+    where: {
+      id: channelId,
+    },
+  });
+
+  if (!channel) {
+    throw new Error("Channel not found");
+  }
+
+  const member = await prisma.workspaceMember.findUnique({
+    where: {
+      workspaceId_userId: {
+        workspaceId: channel.workspaceId,
+        userId,
+      },
+    },
+  });
+
+  if (!member) {
+    throw new Error("You are not a member of this workspace");
+  }
+
+  const deletedChannel = await prisma.channel.delete({
+    where: {
+      id: channelId,
+    },
+
+    include: {
+      workspace: {
+        select: {
+          id: true,
+          name: true,
         },
-    });
+      },
 
-    if (!member) {
-        throw new Error("You are not a member of this workspace");
-    }
-
-
-    const updatedChannel = await prisma.comment.update({
-
-        where: {
-            id: channelId,
+      createdBy: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
         },
+      },
+    },
+  });
 
-        data: {
-
-            name: data.name,
-            description: data.description,
-        },
-
-        include: {
-            workspace: {
-                select: {
-                    id: true,
-                    name: true,
-                },
-            },
-
-            user: {
-                select: {
-                    id: true,
-                    name: true,
-                    email: true,
-                },
-            },
-        }
-    });
-
-    return updatedChannel;
-
-}
-
-export const deleteComment = async (channelId: string, userId: string) => {
-
-    const channel = await prisma.comment.findUnique({
-        where: {
-            id: channelId,
-        },
-        include: {
-            channel: {
-                select: {
-                    workspaceId: true,
-                },
-            },
-        },
-    });
-
-    if (!channel) {
-        throw new Error("channel not found");
-    }
-
-    const member = await prisma.workspaceMember.findUnique({
-        where: {
-            workspaceId_userId: {
-                workspaceId: channel.workspaceId,
-                userId,
-            },
-        },
-    });
-
-    if (!member) {
-        throw new Error("You are not a member of this workspace");
-    }
-
-    const deletedChannel = await prisma.channel.delete({
-
-        where: {
-            id: channelId,
-        },
-
-        include: {
-            workspace: {
-                select: {
-                    id: true,
-                    name: true,
-                },
-            },
-
-            user: {
-                select: {
-                    id: true,
-                    name: true,
-                    email: true,
-                },
-            },
-        }
-    });
-
-    return deletedChannel;
+  return deletedChannel;
 };
