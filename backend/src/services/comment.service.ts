@@ -119,6 +119,55 @@ export const getComments = async (taskId: string, userId: string) => {
     return comments;
 };
 
+export const getCommentById = async (commentId: string,userId: string) => {
+    
+  const comment = await prisma.comment.findUnique({
+    where: {
+      id: commentId,
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+      task: {
+        select: {
+          id: true,
+          title: true,
+          project: {
+            select: {
+              workspaceId: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!comment) {
+    throw new Error("Comment not found");
+  }
+
+  const member = await prisma.workspaceMember.findUnique({
+    where: {
+      workspaceId_userId: {
+        workspaceId: comment.task.project.workspaceId,
+        userId,
+      },
+    },
+  });
+
+  if (!member) {
+    throw new Error("You are not a member of this workspace");
+  }
+
+  return comment;
+};
+
+
 export const updateComment = async (commentId: string, data: UpdateCommentInput, userId: string) => {
 
     const comment = await prisma.comment.findUnique({

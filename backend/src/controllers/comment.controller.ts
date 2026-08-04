@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { createComment, deleteComment, updateComment,  } from "../services/comment.service.js";
+import { createComment, deleteComment, getCommentById, updateComment,  } from "../services/comment.service.js";
 import { createCommentSchema, updateCommentSchema } from "../validations/comment.schema.js";
 import { getComments } from "../services/comment.service.js";
 
@@ -56,6 +56,32 @@ export const getCommentsController = async (req: Request, res: Response) => {
                     : "Something went wrong",
         });
     }
+};
+
+
+export const getCommentByIDController = async (req: Request,res: Respons) => {
+  try {
+    const commentId = req.params.commentId;
+
+    const comment = await getCommentById(
+      commentId,
+      req.user!.id
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Comment fetched successfully!",
+      data: comment,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : "Something went wrong",
+    });
+  }
 };
 
 export const updateCommentController = async (req: Request, res: Response) => {
