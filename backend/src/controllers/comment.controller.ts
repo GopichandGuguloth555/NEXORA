@@ -1,11 +1,10 @@
 import type { Request, Response } from "express";
 import { createComment } from "../services/comment.service.js";
 import { createCommentSchema } from "../validations/comment.schema.js";
+import { getComments } from "../services/comment.service.js";
 
-export const createCommentController = async (
-  req: Request,
-  res: Response
-) => {
+export const createCommentController = async ( req: Request, res: Response) => {
+
   try {
     const data = createCommentSchema.parse(req.body);
 
@@ -21,6 +20,32 @@ export const createCommentController = async (
       success: true,
       message: "Comment created successfully!",
       data: comment,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : "Something went wrong",
+    });
+  }
+};
+
+export const getCommentsController = async (req: Request,res: Response) => {
+    
+  try {
+    const taskId = req.params.taskId;
+
+    const comments = await getComments(
+      taskId,
+      req.user!.id
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Comments fetched successfully!",
+      data: comments,
     });
   } catch (error) {
     return res.status(400).json({

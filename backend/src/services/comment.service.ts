@@ -2,7 +2,7 @@ import prisma from "../config/prisma.js";
 import type { CreateCommentInput } from "../validations/comment.schema.js";
 
 export const createComment = async (taskId: string,data: CreateCommentInput,userId: string) => {
-    
+
   const task = await prisma.task.findUnique({
     where: {
       id: taskId,
@@ -57,4 +57,64 @@ export const createComment = async (taskId: string,data: CreateCommentInput,user
   });
 
   return comment;
+};
+
+export const getComments = async (taskId: string,userId: string) => {
+
+  const task = await prisma.task.findUnique({
+    where: {
+      id: taskId,
+    },
+    include: {
+      project: {
+        select: {
+          workspaceId: true,
+        },
+      },
+    },
+  });
+
+  if (!task) {
+    throw new Error("Task not found");
+  }
+
+  const member = await prisma.workspaceMember.findUnique({
+    where: {
+      workspaceId_userId: {
+        workspaceId: task.project.workspaceId,
+        userId,
+      },
+    },
+  });
+
+  if (!member) {
+    throw new Error("You are not a member of this workspace");
+  }
+
+  const comments = await prisma.comment.findMany({
+    
+    where: {
+      taskId,
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+      task: {
+        select: {
+          id: true,
+          title: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "asc",
+    },
+  });
+
+  return comments;
 };
