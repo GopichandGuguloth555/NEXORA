@@ -6,7 +6,8 @@ import workspaceRoutes from "./routes/workspace.routes.js";
 import projectRoutes from "./routes/project.routes.js"
 import taskRoutes from "./routes/task.routes.js";
 import commentRoutes from "./routes/comment.routes.js";
-import channelRoutes from "./routes/channel.routes.js"
+import channelRoutes from "./routes/channel.routes.js";
+import messageRoutes from "./routes/message.routes.js";
 
 
 
@@ -22,5 +23,6 @@ app.use("/api/workspaces", projectRoutes);
 app.use("/api/projects", taskRoutes);
 app.use("/api/tasks", commentRoutes);
 app.use("/api/workspaces", channelRoutes);
+app.use("/api/workspaces",messageRoutes);
 
 export default app;
