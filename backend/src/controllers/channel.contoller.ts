@@ -110,8 +110,9 @@ export const updateChannelController = async (req: Request, res: Response) => {
     }
 
 };
+
 export const deleteChannelController = async (req: Request,res: Response) => {
-  
+
   try {
     const channel = await deleteChannel(
       req.params.channelId,
