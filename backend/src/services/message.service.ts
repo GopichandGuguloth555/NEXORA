@@ -1,6 +1,6 @@
 import { channel } from "node:diagnostics_channel";
 import prisma from "../config/prisma.js";
-import type { CreateMessageInput } from "../validations/message.schema.js";
+import type { CreateMessageInput, UpdateMessageInput } from "../validations/message.schema.js";
 
 export const createMessage = async (channelId: string, data: CreateMessageInput, userId: string) => {
 
@@ -109,7 +109,7 @@ export const getMessages = async (channelId: string, userId: string) => {
 };
 
 export const getMessageById = async (messageId: string,userId: string) => {
-    
+
   const message = await prisma.message.findUnique({
     where: {
       id: messageId,
@@ -150,4 +150,124 @@ export const getMessageById = async (messageId: string,userId: string) => {
   }
 
   return message;
+};
+
+export const updateMessage = async (messageId: string,data: UpdateMessageInput,userId: string) => {
+
+  const message = await prisma.message.findUnique({
+    where: {
+      id: messageId,
+    },
+    include: {
+      channel: {
+        select: {
+          workspaceId: true,
+        },
+      },
+    },
+  });
+
+  if (!message) {
+    throw new Error("Message not found");
+  }
+
+  const member = await prisma.workspaceMember.findUnique({
+    where: {
+      workspaceId_userId: {
+        workspaceId: message.channel.workspaceId,
+        userId,
+      },
+    },
+  });
+
+  if (!member) {
+    throw new Error("You are not a member of this workspace");
+  }
+
+  const updatedMessage = await prisma.message.update({
+    where: {
+      id: messageId,
+    },
+
+    data: {
+      content: data.content,
+    },
+
+    include: {
+      channel: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+
+      createdBy: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  return updatedMessage;
+};
+
+export const deleteMessage = async (messageId: string,userId: string) => {
+    
+  const message = await prisma.message.findUnique({
+    where: {
+      id: messageId,
+    },
+    include: {
+      channel: {
+        select: {
+          workspaceId: true,
+        },
+      },
+    },
+  });
+
+  if (!message) {
+    throw new Error("Message not found");
+  }
+
+  const member = await prisma.workspaceMember.findUnique({
+    where: {
+      workspaceId_userId: {
+        workspaceId: message.channel.workspaceId,
+        userId,
+      },
+    },
+  });
+
+  if (!member) {
+    throw new Error("You are not a member of this workspace");
+  }
+
+  const deletedMessage = await prisma.message.delete({
+    where: {
+      id: messageId,
+    },
+
+    include: {
+      channel: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+
+      createdBy: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  return deletedMessage;
 };

@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import { createMessageSchema } from "../validations/message.schema.js";
-import { createMessage, getMessageById, getMessages } from "../services/message.service.js";
+import { createMessageSchema, updateMessageSchema, type UpdateMessageInput } from "../validations/message.schema.js";
+import { createMessage, deleteMessage, getMessageById, getMessages, updateMessage } from "../services/message.service.js";
 
 
 export const createMessageController = async (req: Request, res: Response) => {
@@ -70,6 +70,59 @@ export const getMessageByIDController = async (req: Request,res: Response) => {
     return res.status(200).json({
       success: true,
       message: "message fetched successfully!",
+      data: message,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : "Something went wrong",
+    });
+  }
+};
+
+export const updateMessageController = async (req: Request, res: Response) => {
+
+    try {
+
+        const data = updateMessageSchema.parse(req.body);
+
+        const message = await updateMessage(
+            req.params.messageId,
+            data,
+            req.user!.id
+        );
+
+        return res.status(200).json({
+            success: true,
+            message: " Message updated successfully!",
+            data: message,
+        });
+    } catch (error) {
+        return res.status(400).json({
+            success: false,
+            message:
+                error instanceof Error
+                    ? error.message
+                    : "Something went wrong",
+        });
+    }
+
+};
+
+export const deleteMessageController = async (req: Request,res: Response) => {
+    
+  try {
+    const message = await deleteMessage(
+      req.params.messageId,
+      req.user!.id
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Message deleted successfully!",
       data: message,
     });
   } catch (error) {

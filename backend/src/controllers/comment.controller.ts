@@ -58,7 +58,6 @@ export const getCommentsController = async (req: Request, res: Response) => {
     }
 };
 
-
 export const getCommentByIDController = async (req: Request,res: Response) => {
   try {
     const commentId = req.params.commentId;
