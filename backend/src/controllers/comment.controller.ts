@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { createComment, updateComment,  } from "../services/comment.service.js";
+import { createComment, deleteComment, updateComment,  } from "../services/comment.service.js";
 import { createCommentSchema, updateCommentSchema } from "../validations/comment.schema.js";
 import { getComments } from "../services/comment.service.js";
 
@@ -85,4 +85,30 @@ export const updateCommentController = async (req: Request, res: Response) => {
         });
     }
 
-}
+};
+
+export const deleteCommentController = async (req: Request,res: Response) => {
+
+  try {
+
+    const comment = await deleteComment(
+        
+      req.params.commentId,
+      req.user!.id
+    );
+
+    return res.status(200).json({
+            success: true,
+            message: "Comment deleted successfully!",
+            data: comment,
+        });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : "Something went wrong",
+    });
+  }
+};

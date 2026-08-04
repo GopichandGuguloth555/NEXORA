@@ -188,3 +188,66 @@ export const updateComment = async (commentId: string, data: UpdateCommentInput,
     return updatedComment;
 
 }
+
+export const deleteComment = async (commentId: string, userId: string) => {
+
+    const comment = await prisma.comment.findUnique({
+        where: {
+            id: commentId,
+        },
+        include: {
+            task: {
+                select: {
+                    project: {
+                        select: {
+                            workspaceId: true,
+                        },
+                    },
+                },
+            },
+        },
+    });
+
+    if (!comment) {
+        throw new Error("comment not found");
+    }
+
+    const member = await prisma.workspaceMember.findUnique({
+        where: {
+            workspaceId_userId: {
+                workspaceId: comment.task.project.workspaceId,
+                userId,
+            },
+        },
+    });
+
+    if (!member) {
+        throw new Error("You are not a member of this workspace");
+    }
+
+    const deletedComment = await prisma.comment.delete({
+
+        where: {
+            id: commentId,
+        },
+
+        include: {
+            task: {
+                select: {
+                    id: true,
+                    title: true,
+                },
+            },
+
+            user: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                },
+            },
+        }
+    });
+
+    return deletedComment;
+};
