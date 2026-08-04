@@ -117,6 +117,7 @@ model Task {
 }
 
 model Comment {
+  
   id      String @id @default(cuid())
   content String
 

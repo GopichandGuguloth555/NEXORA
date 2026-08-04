@@ -1,59 +1,88 @@
 import type { Request, Response } from "express";
-import { createComment } from "../services/comment.service.js";
-import { createCommentSchema } from "../validations/comment.schema.js";
+import { createComment, updateComment,  } from "../services/comment.service.js";
+import { createCommentSchema, updateCommentSchema } from "../validations/comment.schema.js";
 import { getComments } from "../services/comment.service.js";
 
-export const createCommentController = async ( req: Request, res: Response) => {
+export const createCommentController = async (req: Request, res: Response) => {
 
-  try {
-    const data = createCommentSchema.parse(req.body);
+    try {
+        const data = createCommentSchema.parse(req.body);
 
-    const taskId = req.params.taskId;
+        const taskId = req.params.taskId;
 
-    const comment = await createComment(
-      taskId,
-      data,
-      req.user!.id
-    );
+        const comment = await createComment(
+            taskId,
+            data,
+            req.user!.id
+        );
 
-    return res.status(201).json({
-      success: true,
-      message: "Comment created successfully!",
-      data: comment,
-    });
-  } catch (error) {
-    return res.status(400).json({
-      success: false,
-      message:
-        error instanceof Error
-          ? error.message
-          : "Something went wrong",
-    });
-  }
+        return res.status(201).json({
+            success: true,
+            message: "Comment created successfully!",
+            data: comment,
+        });
+    } catch (error) {
+        return res.status(400).json({
+            success: false,
+            message:
+                error instanceof Error
+                    ? error.message
+                    : "Something went wrong",
+        });
+    }
 };
 
-export const getCommentsController = async (req: Request,res: Response) => {
-    
-  try {
-    const taskId = req.params.taskId;
+export const getCommentsController = async (req: Request, res: Response) => {
 
-    const comments = await getComments(
-      taskId,
-      req.user!.id
-    );
+    try {
+        const taskId = req.params.taskId;
 
-    return res.status(200).json({
-      success: true,
-      message: "Comments fetched successfully!",
-      data: comments,
-    });
-  } catch (error) {
-    return res.status(400).json({
-      success: false,
-      message:
-        error instanceof Error
-          ? error.message
-          : "Something went wrong",
-    });
-  }
+        const comments = await getComments(
+            taskId,
+            req.user!.id
+        );
+
+        return res.status(200).json({
+            success: true,
+            message: "Comments fetched successfully!",
+            data: comments,
+        });
+    } catch (error) {
+        return res.status(400).json({
+            success: false,
+            message:
+                error instanceof Error
+                    ? error.message
+                    : "Something went wrong",
+        });
+    }
 };
+
+export const updateCommentController = async (req: Request, res: Response) => {
+
+    try {
+
+        const data = updateCommentSchema.parse(req.body);
+
+        const comment = await updateComment(
+            req.params.commentId,
+            data,
+            req.user!.id
+        );
+
+        return res.status(200).json({
+            success: true,
+            message: "comment updated successfully!",
+            data: comment,
+        });
+    } catch (error) {
+        return res.status(400).json({
+            success: false,
+            message:
+                error instanceof Error
+                    ? error.message
+                    : "Something went wrong",
+        });
+    }
+
+}
