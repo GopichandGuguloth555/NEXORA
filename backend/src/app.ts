@@ -23,6 +23,6 @@ app.use("/api/workspaces", projectRoutes);
 app.use("/api/projects", taskRoutes);
 app.use("/api/tasks", commentRoutes);
 app.use("/api/workspaces", channelRoutes);
-app.use("/api/workspaces",messageRoutes);
+app.use("/api/channels",messageRoutes);
 
 export default app;
