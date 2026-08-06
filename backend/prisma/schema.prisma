@@ -27,6 +27,7 @@ model User {
   createdChannels Channel[]
   messages        Message[]
   documents       Document[]
+  notifications   Notification[]
 }
 
 model Workspace {
@@ -186,4 +187,33 @@ model Document {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+enum NotificationType {
+  TASK_ASSIGNED
+  TASK_UPDATED
+  TASK_COMPLETED
+  MESSAGE_RECEIVED
+  MENTION
+  DOCUMENT_CREATED
+  DOCUMENT_UPDATED
+  WORKSPACE_INVITE
+}
+
+model Notification {
+  id String @id @default(cuid())
+
+  type NotificationType
+
+  title   String
+  message String
+
+  entityId String?
+
+  isRead Boolean @default(false)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
 }
