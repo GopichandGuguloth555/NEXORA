@@ -26,6 +26,7 @@ model User {
   comments        Comment[]
   createdChannels Channel[]
   messages        Message[]
+  documents       Document[]
 }
 
 model Workspace {
@@ -44,6 +45,7 @@ model Workspace {
 
   channels        Channel[]
   createdMessages Message[]
+  documents       Document[]
 }
 
 enum Role {
@@ -167,4 +169,21 @@ model Message {
   updatedAt   DateTime   @updatedAt
   workspace   Workspace? @relation(fields: [workspaceId], references: [id])
   workspaceId String?
+}
+
+model Document {
+  id String @id @default(cuid())
+
+  title String
+
+  content String @db.Text
+
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+
+  createdById String
+  createdBy   User   @relation(fields: [createdById], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
