@@ -11,9 +11,12 @@ export const registerChannelHandlers = (socket: Socket) => {
       },
     });
 
-    if (!channel) {
-      return;
-    }
+   if (!channel) {
+    socket.emit("error", {
+        message: "Channel not found",
+    });
+    return;
+}
 
     const member = await prisma.workspaceMember.findUnique({
       where: {
@@ -24,9 +27,13 @@ export const registerChannelHandlers = (socket: Socket) => {
       },
     });
 
-    if (!member) {
-      return;
-    }
+   
+if (!member) {
+    socket.emit("error", {
+        message: "You are not a member of this workspace",
+    });
+    return;
+}
 
     socket.join(channelId);
 

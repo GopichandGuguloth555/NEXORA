@@ -1,9 +1,11 @@
 import { Server } from "socket.io";
 import type { Server as HttpServer } from "http";
 
-import { authSocket } from "./middleware/auth.socket.js";
-import { registerChannelHandlers } from "./handlers/channel.handler.js";
-import { registerMessageHandlers } from "./handlers/message.handler.js";
+import { authSocket } from "./auth.socket.js";
+import { registerChannelHandlers } from "./channel.socket..js";
+import { registerMessageHandlers } from "./message.socket.js";
+import { registerTypingHandlers } from "./typing.socket.js";
+import { registerPresenceHandlers } from "./presence.socket.js";
 
 let io: Server;
 
@@ -26,6 +28,10 @@ export const initializeSocket = (server: HttpServer) => {
     registerChannelHandlers(socket);
 
     registerMessageHandlers(socket);
+
+    registerTypingHandlers(socket);
+
+    registerPresenceHandlers(socket);
 
     socket.on("disconnect", () => {
       console.log(`${socket.data.user.name} disconnected`);
