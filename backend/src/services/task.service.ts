@@ -1,6 +1,5 @@
 import prisma from "../config/prisma.js";
 import type { CreateTaskInput, UpdateTaskInput } from "../validations/task.schema.js";
-import prisma from "../config/prisma.js";
 import { NotificationType } from "@prisma/client";
 import { createNotification } from "./notification.service.js";
 
