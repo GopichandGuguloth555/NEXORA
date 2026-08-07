@@ -1,6 +1,6 @@
-import { NotificationType } from "@prisma/client";
 import prisma from "../config/prisma.js";
 import type { MarkNotificationAsReadInput } from "../validations/notification.schema.js";
+import { NotificationType } from "../generated/prisma/client.js";
 
 interface CreateNotificationInput {
   userId: string;

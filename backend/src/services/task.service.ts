@@ -1,6 +1,6 @@
 import prisma from "../config/prisma.js";
 import type { CreateTaskInput, UpdateTaskInput } from "../validations/task.schema.js";
-import { NotificationType } from "@prisma/client";
+import { NotificationType } from "../generated/prisma/client.js";
 import { createNotification } from "./notification.service.js";
 
 export const createTask = async (projectId: string, data: CreateTaskInput, userId: string) => {
