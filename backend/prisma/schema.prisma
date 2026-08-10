@@ -28,6 +28,7 @@ model User {
   messages        Message[]
   documents       Document[]
   notifications   Notification[]
+  uploadedFiles   File[]
 }
 
 model Workspace {
@@ -47,6 +48,7 @@ model Workspace {
   channels        Channel[]
   createdMessages Message[]
   documents       Document[]
+  files           File[]
 }
 
 enum Role {
@@ -214,6 +216,25 @@ model Notification {
 
   userId String
   user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model File {
+  id String @id @default(cuid())
+
+  name     String
+  url      String
+  publicId String
+
+  mimeType String
+  size     Int
+
+  uploadedById String
+  uploadedBy   User   @relation(fields: [uploadedById], references: [id])
+
+  workspaceId String?
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id])
 
   createdAt DateTime @default(now())
 }
