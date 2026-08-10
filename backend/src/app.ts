@@ -10,6 +10,7 @@ import channelRoutes from "./routes/channel.routes.js";
 import messageRoutes from "./routes/message.routes.js";
 import documentRoutes from "./routes/documnets.routes.js";
 import notificationRoutes from "./routes/notification.routes.js";
+import uploadRoutes from "./routes/upload.routes.js";
 
 
 
@@ -28,5 +29,6 @@ app.use("/api/workspaces", channelRoutes);
 app.use("/api/channels",messageRoutes);
 app.use("/api/documents", documentRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/uploads", uploadRoutes);
 
 export default app;
