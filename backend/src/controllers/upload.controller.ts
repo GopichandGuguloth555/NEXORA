@@ -1,11 +1,11 @@
 import type { Request, Response } from "express";
-import { uploadFile } from "../services/ upload.service.js";
+import {uploadFile,getFiles,getFileById, deleteFile,} from "../services/ upload.service.js";
 
-export const uploadFileController = async (
-  req: Request,
-  res: Response
-) => {
+
+export const uploadFileController = async ( req: Request,res: Response) => {
+
   try {
+
     if (!req.file) {
       return res.status(400).json({
         success: false,
@@ -13,16 +13,49 @@ export const uploadFileController = async (
       });
     }
 
-    const result = await uploadFile(req.file);
+    const userId = req.user.id;
+
+    const workspaceId = req.body.workspaceId;
+
+    const file = await uploadFile(
+      req.file,
+      userId,
+      workspaceId
+    );
 
     return res.status(201).json({
       success: true,
       message: "File uploaded successfully",
-      data: {
-        url: result.secure_url,
-        publicId: result.public_id,
-        resourceType: result.resource_type,
-      },
+      data: file,
+    });
+
+  } catch (error) {
+
+    return res.status(400).json({
+      success: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : "File upload failed",
+    });
+  }
+};
+
+export const getFilesController = async (req: Request,res: Response) => {
+
+  try {
+    const userId = req.user.id;
+
+    const workspaceId =
+      typeof req.query.workspaceId === "string"
+        ? req.query.workspaceId
+        : undefined;
+
+    const files = await getFiles(userId, workspaceId);
+
+    return res.status(200).json({
+      success: true,
+      data: files,
     });
   } catch (error) {
     return res.status(400).json({
@@ -30,7 +63,54 @@ export const uploadFileController = async (
       message:
         error instanceof Error
           ? error.message
-          : "File upload failed",
+          : "Failed to fetch files",
+    });
+  }
+};
+
+export const getFileByIdController = async (req: Request,res: Response) => {
+
+  try {
+    const userId = req.user.id;
+    const { id } = req.params;
+
+    const file = await getFileById(id, userId);
+
+    return res.status(200).json({
+      success: true,
+      data: file,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch file",
+    });
+  }
+};
+
+export const deleteFileController = async (req: Request,res: Response) => {
+
+  try {
+    const userId = req.user.id;
+    const { id } = req.params;
+
+    const file = await deleteFile(id, userId);
+
+    return res.status(200).json({
+      success: true,
+      message: "File deleted successfully",
+      data: file,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : "Failed to delete file",
     });
   }
 };
