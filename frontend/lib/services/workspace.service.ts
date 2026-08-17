@@ -1,0 +1,44 @@
+import { api } from "../api";
+import { ApiResponse, Role, Workspace, WorkspaceMember } from "../types";
+
+export const workspaceService = {
+  async getAllWorkspaces(): Promise<ApiResponse<Workspace[]>> {
+    const res = await api.get<ApiResponse<Workspace[]>>("/workspaces");
+    return res.data;
+  },
+
+  async createWorkspace(data: { name: string; description?: string }): Promise<ApiResponse<Workspace>> {
+    const res = await api.post<ApiResponse<Workspace>>("/workspaces", data);
+    return res.data;
+  },
+
+  async updateWorkspace(workspaceId: string, data: { name?: string; description?: string }): Promise<ApiResponse<Workspace>> {
+    const res = await api.patch<ApiResponse<Workspace>>(`/workspaces/${workspaceId}`, data);
+    return res.data;
+  },
+
+  async deleteWorkspace(workspaceId: string): Promise<ApiResponse<Workspace>> {
+    const res = await api.delete<ApiResponse<Workspace>>(`/workspaces/${workspaceId}`);
+    return res.data;
+  },
+
+  async getMembers(workspaceId: string): Promise<ApiResponse<WorkspaceMember[]>> {
+    const res = await api.get<ApiResponse<WorkspaceMember[]>>(`/workspaces/${workspaceId}/members`);
+    return res.data;
+  },
+
+  async inviteMember(workspaceId: string, data: { email: string; role?: Role }): Promise<ApiResponse<WorkspaceMember>> {
+    const res = await api.post<ApiResponse<WorkspaceMember>>(`/workspaces/${workspaceId}/members`, data);
+    return res.data;
+  },
+
+  async removeMember(workspaceId: string, memberId: string): Promise<ApiResponse<WorkspaceMember>> {
+    const res = await api.delete<ApiResponse<WorkspaceMember>>(`/workspaces/${workspaceId}/members/${memberId}`);
+    return res.data;
+  },
+
+  async updateMemberRole(workspaceId: string, memberId: string, role: Role): Promise<ApiResponse<WorkspaceMember>> {
+    const res = await api.patch<ApiResponse<WorkspaceMember>>(`/workspaces/${workspaceId}/members/${memberId}`, { role });
+    return res.data;
+  },
+};
