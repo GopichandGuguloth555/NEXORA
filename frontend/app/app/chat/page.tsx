@@ -252,31 +252,32 @@ export default function ChatPage() {
 
   if (!currentWorkspace) {
     return (
-      <div className="p-12 text-center bg-slate-900/60 rounded-2xl border border-slate-800 space-y-4 max-w-md mx-auto my-12">
-        <MessageSquare className="w-10 h-10 text-slate-500 mx-auto" />
-        <h2 className="text-lg font-bold text-white">No Workspace Selected</h2>
-        <p className="text-xs text-slate-400">Please select or create a workspace to access channels.</p>
+      <div className="p-12 text-center bg-[#121212]/70 rounded-2xl border border-zinc-800 space-y-4 max-w-md mx-auto my-12">
+        <MessageSquare className="w-10 h-10 text-zinc-500 mx-auto" />
+        <h2 className="text-lg font-bold text-zinc-100">No Workspace Selected</h2>
+        <p className="text-xs text-zinc-400">Please select or create a workspace to access channels.</p>
       </div>
     );
   }
 
   return (
-    <div className="h-[calc(100vh-6.5rem)] max-w-7xl mx-auto rounded-3xl bg-slate-900 border border-slate-800 flex overflow-hidden shadow-2xl relative">
+    <div className="h-[calc(100vh-6.5rem)] max-w-7xl mx-auto rounded-3xl bg-[#0a0a0a] border border-zinc-700/50 flex overflow-hidden shadow-2xl relative anim-scale-in">
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_top_right,_rgba(200,200,200,0.05),_transparent_50%)]" />
       <ToastContainer toasts={toasts} onDismiss={removeToast} />
 
       {/* Sidebar Channel List (Responsive Drawer/Column) */}
       <div
-        className={`w-full md:w-72 bg-slate-950/60 border-r border-slate-800/80 flex flex-col shrink-0 ${
+        className={`relative w-full md:w-72 bg-black/50 border-r border-zinc-800/80 flex flex-col shrink-0 ${
           showMobileChat ? "hidden md:flex" : "flex"
         }`}
       >
-        <div className="p-4 border-b border-slate-800/80 flex items-center justify-between">
-          <span className="font-bold text-xs uppercase tracking-wider text-slate-300 flex items-center gap-2">
-            <MessageSquare className="w-4 h-4 text-indigo-400" /> Channels
+        <div className="p-4 border-b border-zinc-800/80 flex items-center justify-between">
+          <span className="font-bold text-xs uppercase tracking-wider text-zinc-300 flex items-center gap-2 font-display">
+            <MessageSquare className="w-4 h-4 text-zinc-400" /> Channels
           </span>
           <button
             onClick={() => setIsCreateOpen(true)}
-            className="p-1.5 rounded-xl bg-indigo-600/20 text-indigo-300 border border-indigo-500/30 hover:bg-indigo-600 hover:text-white transition-all cursor-pointer"
+            className="p-1.5 rounded-xl bg-zinc-200/10 text-zinc-300 border border-zinc-500/30 hover:bg-zinc-200 hover:text-black transition-all duration-300 hover:scale-110 hover:rotate-90 cursor-pointer"
             title="Create Channel"
           >
             <Plus className="w-4 h-4" />
@@ -286,18 +287,18 @@ export default function ChatPage() {
         <div className="flex-1 p-3 space-y-1.5 overflow-y-auto">
           {loadingChannels ? (
             <div className="py-12 text-center">
-              <Loader2 className="w-5 h-5 text-indigo-400 animate-spin mx-auto" />
+              <Loader2 className="w-5 h-5 text-zinc-400 animate-spin mx-auto" />
             </div>
           ) : error ? (
             <div className="p-4 text-center text-xs text-red-400 bg-red-500/10 rounded-xl border border-red-500/20">
               {error}
             </div>
           ) : channels.length === 0 ? (
-            <div className="p-6 text-center text-slate-500 text-xs space-y-2">
+            <div className="p-6 text-center text-zinc-500 text-xs space-y-2">
               <p>No channels in this workspace.</p>
               <button
                 onClick={() => setIsCreateOpen(true)}
-                className="text-indigo-400 hover:underline font-semibold"
+                className="text-zinc-400 hover:underline font-semibold"
               >
                 Create first channel
               </button>
@@ -310,19 +311,19 @@ export default function ChatPage() {
                 <button
                   key={c.id}
                   onClick={() => selectChannel(c)}
-                  className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-medium flex items-center justify-between transition-all cursor-pointer ${
+                  className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-medium flex items-center justify-between transition-all duration-300 cursor-pointer hover:translate-x-1 ${
                     isSelected
-                      ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30 font-semibold"
-                      : "text-slate-300 hover:bg-slate-900/80 hover:text-white"
+                      ? "bg-zinc-200 text-black shadow-md shadow-zinc-400/20 font-semibold scale-[1.02]"
+                      : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100 border border-transparent hover:border-zinc-700"
                   }`}
                 >
                   <div className="flex items-center gap-2 overflow-hidden">
-                    <Hash className={`w-4 h-4 shrink-0 ${isSelected ? "text-white" : "text-slate-500"}`} />
+                    <Hash className={`w-4 h-4 shrink-0 ${isSelected ? "text-black" : "text-zinc-500"}`} />
                     <span className="truncate">{c.name}</span>
                   </div>
 
                   {hasUnread && !isSelected && (
-                    <Circle className="w-2.5 h-2.5 text-indigo-400 fill-indigo-400 shrink-0" />
+                    <Circle className="w-2.5 h-2.5 text-zinc-400 fill-zinc-400 shrink-0" />
                   )}
                 </button>
               );
@@ -333,31 +334,31 @@ export default function ChatPage() {
 
       {/* Main Chat Stream Area */}
       <div
-        className={`flex-1 flex flex-col bg-slate-900/90 ${
+        className={`flex-1 flex flex-col bg-[#121212]/95 ${
           !showMobileChat ? "hidden md:flex" : "flex"
         }`}
       >
         {selectedChannel ? (
           <>
             {/* Topbar Header */}
-            <div className="p-4 bg-slate-950/50 border-b border-slate-800/80 flex items-center justify-between">
+            <div className="p-4 bg-[#050505]/50 border-b border-zinc-800/80 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 {/* Mobile Back Button */}
                 <button
                   onClick={() => setShowMobileChat(false)}
-                  className="md:hidden p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800"
+                  className="md:hidden p-1.5 rounded-xl text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800"
                 >
                   <ArrowLeft className="w-5 h-5" />
                 </button>
 
-                <div className="p-2 rounded-xl bg-indigo-600/20 text-indigo-400 border border-indigo-500/30">
+                <div className="p-2 rounded-xl bg-zinc-200/10 text-zinc-400 border border-zinc-500/30">
                   <Hash className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 className="font-bold text-sm text-white flex items-center gap-2">
+                  <h2 className="font-bold text-sm text-zinc-100 flex items-center gap-2">
                     <span>#{selectedChannel.name}</span>
                   </h2>
-                  <p className="text-[11px] text-slate-400 truncate max-w-sm sm:max-w-md">
+                  <p className="text-[11px] text-zinc-400 truncate max-w-sm sm:max-w-md">
                     {selectedChannel.description || "General channel discussion"}
                   </p>
                 </div>
@@ -370,7 +371,7 @@ export default function ChatPage() {
                     connected ? "bg-emerald-400 animate-pulse" : "bg-amber-400"
                   }`}
                 />
-                <span className="text-[11px] font-medium text-slate-400 hidden sm:inline">
+                <span className="text-[11px] font-medium text-zinc-400 hidden sm:inline">
                   {connected ? "Real-time Live" : "Connecting Socket..."}
                 </span>
               </div>
@@ -380,16 +381,16 @@ export default function ChatPage() {
             <div className="flex-1 p-4 overflow-y-auto space-y-4">
               {loadingMessages ? (
                 <div className="py-16 text-center">
-                  <Loader2 className="w-6 h-6 text-indigo-400 animate-spin mx-auto" />
+                  <Loader2 className="w-6 h-6 text-zinc-400 animate-spin mx-auto" />
                 </div>
               ) : messages.length === 0 ? (
                 /* Empty Channel State */
                 <div className="py-20 text-center space-y-3 max-w-sm mx-auto">
-                  <div className="w-12 h-12 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 text-indigo-400 mx-auto flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-2xl bg-zinc-200/10 border border-zinc-500/30 text-zinc-400 mx-auto flex items-center justify-center">
                     <Hash className="w-6 h-6" />
                   </div>
-                  <h3 className="text-sm font-bold text-white">Welcome to #{selectedChannel.name}!</h3>
-                  <p className="text-xs text-slate-400 leading-relaxed">
+                  <h3 className="text-sm font-bold text-zinc-100">Welcome to #{selectedChannel.name}!</h3>
+                  <p className="text-xs text-zinc-400 leading-relaxed">
                     This is the start of the #{selectedChannel.name} channel. Post a message to kick off the team conversation.
                   </p>
                 </div>
@@ -402,18 +403,18 @@ export default function ChatPage() {
                       className={`flex items-start gap-3 group ${isMe ? "flex-row-reverse" : ""}`}
                     >
                       {/* Avatar */}
-                      <div className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-sm">
+                      <div className="w-8 h-8 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-100 font-bold text-xs flex items-center justify-center shrink-0 shadow-sm">
                         {m.createdBy?.name ? m.createdBy.name.substring(0, 2).toUpperCase() : "U"}
                       </div>
 
                       {/* Message Content & Metadata */}
                       <div className={`space-y-1 max-w-[75%] sm:max-w-[65%] ${isMe ? "items-end" : "items-start"}`}>
                         <div
-                          className={`flex items-center gap-2 text-[10px] text-slate-400 ${
+                          className={`flex items-center gap-2 text-[10px] text-zinc-400 ${
                             isMe ? "justify-end" : ""
                           }`}
                         >
-                          <span className="font-bold text-slate-200">{m.createdBy?.name || "Member"}</span>
+                          <span className="font-bold text-zinc-200">{m.createdBy?.name || "Member"}</span>
                           <span>
                             {new Date(m.createdAt).toLocaleTimeString([], {
                               hour: "2-digit",
@@ -423,7 +424,7 @@ export default function ChatPage() {
                           {isMe && (
                             <button
                               onClick={() => handleDeleteMessage(m.id)}
-                              className="opacity-0 group-hover:opacity-100 text-slate-500 hover:text-red-400 transition-opacity ml-1"
+                              className="opacity-0 group-hover:opacity-100 text-zinc-500 hover:text-red-400 transition-opacity ml-1"
                               title="Delete message"
                             >
                               <Trash2 className="w-3 h-3" />
@@ -432,10 +433,10 @@ export default function ChatPage() {
                         </div>
 
                         <div
-                          className={`p-3 rounded-2xl text-xs leading-relaxed inline-block break-words ${
+                          className={`p-3 rounded-2xl text-xs leading-relaxed inline-block break-words transition-transform duration-300 hover:scale-[1.02] ${
                             isMe
-                              ? "bg-indigo-600 text-white rounded-tr-xs shadow-md shadow-indigo-600/20"
-                              : "bg-slate-950/80 border border-slate-800/80 text-slate-200 rounded-tl-xs shadow-sm"
+                              ? "nx-msg-me rounded-tr-xs shadow-md"
+                              : "nx-msg-other rounded-tl-xs shadow-sm"
                           }`}
                         >
                           {m.content}
@@ -448,8 +449,12 @@ export default function ChatPage() {
 
               {/* Typing Indicator */}
               {typingUsers.length > 0 && (
-                <div className="text-[11px] text-indigo-400 italic flex items-center gap-2 pt-2 animate-pulse">
-                  <div className="w-2 h-2 rounded-full bg-indigo-400" />
+                <div className="text-[11px] text-zinc-400 italic flex items-center gap-2 pt-2 anim-fade-up">
+                  <span className="flex gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-zinc-400 animate-bounce" style={{ animationDelay: "0ms" }} />
+                    <span className="w-1.5 h-1.5 rounded-full bg-zinc-400 animate-bounce" style={{ animationDelay: "150ms" }} />
+                    <span className="w-1.5 h-1.5 rounded-full bg-zinc-400 animate-bounce" style={{ animationDelay: "300ms" }} />
+                  </span>
                   <span>
                     {typingUsers.join(", ")} {typingUsers.length > 1 ? "are" : "is"} typing...
                   </span>
@@ -460,42 +465,42 @@ export default function ChatPage() {
             </div>
 
             {/* Message Input Box */}
-            <form onSubmit={handleSendMessage} className="p-4 bg-slate-950/60 border-t border-slate-800/80 flex items-center gap-3">
+            <form onSubmit={handleSendMessage} className="p-4 bg-black/50 border-t border-zinc-800/80 flex items-center gap-3">
               <input
                 type="text"
                 value={inputText}
                 onChange={handleInputChange}
                 placeholder={`Send a message in #${selectedChannel.name}...`}
-                className="flex-1 bg-slate-900 border border-slate-800 focus:border-indigo-500 rounded-2xl px-4 py-3 text-xs text-white placeholder-slate-500 outline-none transition-colors"
+                className="flex-1 bg-[#121212] border border-zinc-800 focus:border-zinc-400 rounded-2xl px-4 py-3 text-xs text-zinc-100 placeholder-zinc-600 outline-none transition-all duration-300 focus:shadow-[0_0_0_3px_rgba(200,200,200,0.12)]"
               />
               <button
                 type="submit"
                 disabled={!inputText.trim()}
-                className="p-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 text-white rounded-2xl shadow-lg shadow-indigo-600/30 transition-all cursor-pointer shrink-0"
+                className="nx-btn-primary p-3 rounded-2xl disabled:opacity-40 cursor-pointer shrink-0"
               >
                 <Send className="w-4 h-4" />
               </button>
             </form>
           </>
         ) : (
-          <div className="flex-1 flex flex-col items-center justify-center p-6 text-center space-y-3 text-slate-500">
-            <Info className="w-10 h-10 text-slate-600" />
-            <h3 className="text-sm font-bold text-slate-300">No Channel Selected</h3>
-            <p className="text-xs text-slate-500">Select a channel from the left sidebar to start chatting with your team.</p>
+          <div className="flex-1 flex flex-col items-center justify-center p-6 text-center space-y-3 text-zinc-500">
+            <Info className="w-10 h-10 text-zinc-600" />
+            <h3 className="text-sm font-bold text-zinc-300">No Channel Selected</h3>
+            <p className="text-xs text-zinc-500">Select a channel from the left sidebar to start chatting with your team.</p>
           </div>
         )}
       </div>
 
       {/* Create Channel Modal */}
       {isCreateOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#050505]/80 backdrop-blur-xs">
+          <div className="w-full max-w-md bg-[#121212] border border-zinc-800 rounded-2xl p-6 shadow-2xl space-y-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Hash className="w-5 h-5 text-indigo-400" />
-                <h2 className="text-lg font-bold text-white">Create New Channel</h2>
+                <Hash className="w-5 h-5 text-zinc-400" />
+                <h2 className="text-lg font-bold text-zinc-100">Create New Channel</h2>
               </div>
-              <button onClick={() => setIsCreateOpen(false)} className="p-1 text-slate-400 hover:text-white">
+              <button onClick={() => setIsCreateOpen(false)} className="p-1 text-zinc-400 hover:text-zinc-100">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -508,11 +513,11 @@ export default function ChatPage() {
 
             <form onSubmit={handleCreateChannel} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">
+                <label className="block text-xs font-semibold uppercase text-zinc-300 mb-1">
                   Channel Name *
                 </label>
                 <div className="relative">
-                  <Hash className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                  <Hash className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
                   <input
                     type="text"
                     value={channelName}
@@ -520,13 +525,13 @@ export default function ChatPage() {
                     placeholder="e.g. backend-updates"
                     required
                     minLength={3}
-                    className="w-full bg-slate-950/60 border border-slate-800 focus:border-indigo-500 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white outline-none"
+                    className="w-full bg-[#050505]/60 border border-zinc-800 focus:border-zinc-400 rounded-xl pl-10 pr-4 py-2.5 text-sm text-zinc-100 outline-none"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">
+                <label className="block text-xs font-semibold uppercase text-zinc-300 mb-1">
                   Description
                 </label>
                 <textarea
@@ -534,7 +539,7 @@ export default function ChatPage() {
                   onChange={(e) => setChannelDesc(e.target.value)}
                   placeholder="Channel topic or purpose..."
                   rows={3}
-                  className="w-full bg-slate-950/60 border border-slate-800 focus:border-indigo-500 rounded-xl px-4 py-2.5 text-sm text-white outline-none resize-none"
+                  className="w-full bg-[#050505]/60 border border-zinc-800 focus:border-zinc-400 rounded-xl px-4 py-2.5 text-sm text-zinc-100 outline-none resize-none"
                 />
               </div>
 
@@ -542,14 +547,14 @@ export default function ChatPage() {
                 <button
                   type="button"
                   onClick={() => setIsCreateOpen(false)}
-                  className="px-4 py-2 text-sm text-slate-400 hover:text-white"
+                  className="px-4 py-2 text-sm text-zinc-400 hover:text-zinc-100"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={creating}
-                  className="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-xl shadow-lg shadow-indigo-600/30 flex items-center gap-2 disabled:opacity-50"
+                  className="px-5 py-2 bg-zinc-200 hover:bg-zinc-300 text-black text-sm font-medium rounded-xl shadow-lg shadow-zinc-400/20 flex items-center gap-2 disabled:opacity-50"
                 >
                   {creating ? <Loader2 className="w-4 h-4 animate-spin" /> : "Create Channel"}
                 </button>

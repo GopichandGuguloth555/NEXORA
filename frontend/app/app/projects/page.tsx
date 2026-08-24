@@ -172,10 +172,10 @@ export default function ProjectsPage() {
 
   if (!currentWorkspace) {
     return (
-      <div className="p-12 text-center bg-slate-900/60 rounded-2xl border border-slate-800 space-y-4 max-w-md mx-auto my-12">
-        <FolderGit2 className="w-10 h-10 text-slate-500 mx-auto" />
-        <h2 className="text-lg font-bold text-white">No Workspace Selected</h2>
-        <p className="text-xs text-slate-400">Please select or create a workspace to manage projects.</p>
+      <div className="p-12 text-center bg-[#121212]/70 rounded-2xl border border-zinc-800 space-y-4 max-w-md mx-auto my-12">
+        <FolderGit2 className="w-10 h-10 text-zinc-500 mx-auto" />
+        <h2 className="text-lg font-bold text-zinc-100">No Workspace Selected</h2>
+        <p className="text-xs text-zinc-400">Please select or create a workspace to manage projects.</p>
       </div>
     );
   }
@@ -187,18 +187,18 @@ export default function ProjectsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-            <FolderGit2 className="w-6 h-6 text-indigo-400" />
+          <h1 className="text-2xl font-bold text-zinc-100 flex items-center gap-2">
+            <FolderGit2 className="w-6 h-6 text-zinc-400" />
             <span>Workspace Projects</span>
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Projects & initiatives in <span className="text-indigo-300 font-semibold">{currentWorkspace.name}</span>
+          <p className="text-xs text-zinc-400 mt-1">
+            Projects & initiatives in <span className="text-zinc-300 font-semibold">{currentWorkspace.name}</span>
           </p>
         </div>
 
         <button
           onClick={() => setIsCreateOpen(true)}
-          className="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-sm font-medium shadow-lg shadow-indigo-600/30 flex items-center gap-2 cursor-pointer transition-all"
+          className="nx-btn-primary px-4 py-2.5 rounded-xl text-sm flex items-center gap-2 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           <span>New Project</span>
@@ -209,31 +209,31 @@ export default function ProjectsPage() {
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[1, 2, 3, 4, 5, 6].map((n) => (
-            <div key={n} className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-4 animate-pulse">
+            <div key={n} className="p-6 rounded-2xl bg-[#121212]/70 border border-zinc-800 space-y-4 animate-pulse">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-slate-800" />
+                <div className="w-10 h-10 rounded-xl bg-zinc-800" />
                 <div className="space-y-2 flex-1">
-                  <div className="h-4 bg-slate-800 rounded w-3/4" />
-                  <div className="h-3 bg-slate-800/60 rounded w-1/2" />
+                  <div className="h-4 bg-zinc-800 rounded w-3/4" />
+                  <div className="h-3 bg-zinc-800/60 rounded w-1/2" />
                 </div>
               </div>
-              <div className="h-10 bg-slate-800/40 rounded-xl" />
+              <div className="h-10 bg-zinc-800/40 rounded-xl" />
             </div>
           ))}
         </div>
       ) : projects.length === 0 ? (
         /* INTENTIONAL EMPTY STATE */
-        <div className="p-12 text-center bg-slate-900/80 rounded-3xl border border-slate-800/80 max-w-lg mx-auto my-12 space-y-4 shadow-xl">
-          <div className="w-16 h-16 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 text-indigo-400 mx-auto flex items-center justify-center">
+        <div className="p-12 text-center bg-[#121212]/90 rounded-3xl border border-zinc-800/80 max-w-lg mx-auto my-12 space-y-4 shadow-xl">
+          <div className="w-16 h-16 rounded-2xl bg-zinc-200/10 border border-zinc-500/30 text-zinc-400 mx-auto flex items-center justify-center">
             <FolderGit2 className="w-8 h-8" />
           </div>
-          <h2 className="text-xl font-extrabold text-white">No projects yet</h2>
-          <p className="text-xs text-slate-400 max-w-sm mx-auto leading-relaxed">
+          <h2 className="text-xl font-extrabold text-zinc-100">No projects yet</h2>
+          <p className="text-xs text-zinc-400 max-w-sm mx-auto leading-relaxed">
             Create your first project and start planning your work with tasks, team assignments, and real-time updates.
           </p>
           <button
             onClick={() => setIsCreateOpen(true)}
-            className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-xl shadow-lg shadow-indigo-600/30 inline-flex items-center gap-2 cursor-pointer transition-all"
+            className="px-5 py-2.5 bg-zinc-200 hover:bg-zinc-300 text-black text-sm font-medium rounded-xl shadow-lg shadow-zinc-400/20 inline-flex items-center gap-2 cursor-pointer transition-all"
           >
             <Plus className="w-4 h-4" />
             <span>Create Project</span>
@@ -245,18 +245,18 @@ export default function ProjectsPage() {
           {projects.map((p) => (
             <div
               key={p.id}
-              className="p-6 rounded-2xl bg-slate-900/90 hover:bg-slate-900 border border-slate-800/80 hover:border-indigo-500/40 transition-all space-y-4 flex flex-col justify-between group shadow-lg"
+              className="nx-card nx-card-lg anim-scale-in p-6 space-y-4 flex flex-col justify-between group"
             >
               <div className="space-y-3">
                 <div className="flex items-start justify-between gap-2">
-                  <Link href={`/app/projects/${p.id}`} className="flex items-center gap-3 overflow-hidden group-hover:text-indigo-300 transition-colors">
-                    <span className="text-3xl shrink-0 p-2 rounded-xl bg-slate-950/60 border border-slate-800">
+                  <Link href={`/app/projects/${p.id}`} className="flex items-center gap-3 overflow-hidden group-hover:text-zinc-300 transition-colors">
+                    <span className="text-3xl shrink-0 p-2 rounded-xl bg-[#050505]/60 border border-zinc-800">
                       {p.emoji || "🚀"}
                     </span>
                     <div className="overflow-hidden">
-                      <h3 className="font-bold text-base text-white truncate">{p.name}</h3>
-                      <div className="text-[11px] text-slate-400 flex items-center gap-1.5 mt-0.5">
-                        <UserIcon className="w-3 h-3 text-slate-500" />
+                      <h3 className="font-bold text-base text-zinc-100 truncate">{p.name}</h3>
+                      <div className="text-[11px] text-zinc-400 flex items-center gap-1.5 mt-0.5">
+                        <UserIcon className="w-3 h-3 text-zinc-500" />
                         <span className="truncate">{p.createdBy?.name || "Team member"}</span>
                       </div>
                     </div>
@@ -265,14 +265,14 @@ export default function ProjectsPage() {
                   <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button
                       onClick={() => handleOpenEdit(p)}
-                      className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                      className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 transition-colors"
                       title="Edit Project"
                     >
                       <Edit2 className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => handleDeleteProject(p.id, p.name)}
-                      className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                      className="p-1.5 rounded-lg text-zinc-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
                       title="Delete Project"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -280,18 +280,18 @@ export default function ProjectsPage() {
                   </div>
                 </div>
 
-                <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">
+                <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
                   {p.description || "No project description provided."}
                 </p>
               </div>
 
-              <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
-                <div className="flex items-center gap-3 text-slate-400 text-[11px]">
+              <div className="pt-3 border-t border-zinc-800/80 flex items-center justify-between text-xs">
+                <div className="flex items-center gap-3 text-zinc-400 text-[11px]">
                   <span className="flex items-center gap-1 text-emerald-400 font-semibold">
                     <CheckSquare className="w-3.5 h-3.5" />
                     {p.taskCount ?? 0} {p.taskCount === 1 ? "task" : "tasks"}
                   </span>
-                  <span className="flex items-center gap-1 text-slate-500">
+                  <span className="flex items-center gap-1 text-zinc-500">
                     <Calendar className="w-3 h-3" />
                     {new Date(p.createdAt).toLocaleDateString()}
                   </span>
@@ -299,7 +299,7 @@ export default function ProjectsPage() {
 
                 <Link
                   href={`/app/projects/${p.id}`}
-                  className="px-3 py-1.5 rounded-xl bg-indigo-600/10 border border-indigo-500/20 text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white font-medium text-xs flex items-center gap-1 transition-all"
+                  className="px-3 py-1.5 rounded-xl bg-zinc-200/10 border border-zinc-500/25 text-zinc-400 group-hover:bg-zinc-300 group-hover:text-black font-medium text-xs flex items-center gap-1 transition-all"
                 >
                   Open <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
@@ -311,16 +311,16 @@ export default function ProjectsPage() {
 
       {/* Create Project Modal */}
       {isCreateOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#050505]/80 backdrop-blur-xs">
+          <div className="w-full max-w-md bg-[#121212] border border-zinc-800 rounded-2xl p-6 shadow-2xl space-y-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <FolderGit2 className="w-5 h-5 text-indigo-400" />
-                <h2 className="text-lg font-bold text-white">Create New Project</h2>
+                <FolderGit2 className="w-5 h-5 text-zinc-400" />
+                <h2 className="text-lg font-bold text-zinc-100">Create New Project</h2>
               </div>
               <button
                 onClick={() => setIsCreateOpen(false)}
-                className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
+                className="p-1 rounded-lg text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -334,7 +334,7 @@ export default function ProjectsPage() {
 
             <form onSubmit={handleCreateProject} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-300 mb-1.5">
                   Select Icon / Emoji
                 </label>
                 <div className="flex items-center gap-2 overflow-x-auto pb-1">
@@ -345,8 +345,8 @@ export default function ProjectsPage() {
                       onClick={() => setCreateEmoji(e)}
                       className={`p-2 rounded-xl text-lg border transition-all ${
                         createEmoji === e
-                          ? "bg-indigo-600/30 border-indigo-500 scale-110"
-                          : "bg-slate-950/60 border-slate-800 hover:bg-slate-800"
+                          ? "bg-zinc-200/30 border-zinc-500 scale-110"
+                          : "bg-[#050505]/60 border-zinc-800 hover:bg-zinc-800"
                       }`}
                     >
                       {e}
@@ -356,7 +356,7 @@ export default function ProjectsPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-300 mb-1.5">
                   Project Name *
                 </label>
                 <input
@@ -366,12 +366,12 @@ export default function ProjectsPage() {
                   placeholder="e.g. E-Commerce Platform"
                   required
                   minLength={3}
-                  className="w-full bg-slate-950/60 border border-slate-800 focus:border-indigo-500 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none"
+                  className="w-full bg-[#050505]/60 border border-zinc-800 focus:border-zinc-400 rounded-xl px-4 py-2.5 text-sm text-zinc-100 placeholder-zinc-600 outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-300 mb-1.5">
                   Description (Optional)
                 </label>
                 <textarea
@@ -379,7 +379,7 @@ export default function ProjectsPage() {
                   onChange={(e) => setCreateDesc(e.target.value)}
                   placeholder="Milestones, goals, and technical requirements..."
                   rows={3}
-                  className="w-full bg-slate-950/60 border border-slate-800 focus:border-indigo-500 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none resize-none"
+                  className="w-full bg-[#050505]/60 border border-zinc-800 focus:border-zinc-400 rounded-xl px-4 py-2.5 text-sm text-zinc-100 placeholder-zinc-600 outline-none resize-none"
                 />
               </div>
 
@@ -387,14 +387,14 @@ export default function ProjectsPage() {
                 <button
                   type="button"
                   onClick={() => setIsCreateOpen(false)}
-                  className="px-4 py-2 text-sm font-medium text-slate-400 hover:text-white"
+                  className="px-4 py-2 text-sm font-medium text-zinc-400 hover:text-zinc-100"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={creating}
-                  className="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-sm rounded-xl shadow-lg shadow-indigo-600/30 flex items-center gap-2 disabled:opacity-50"
+                  className="px-5 py-2 bg-zinc-200 hover:bg-zinc-300 text-black font-medium text-sm rounded-xl shadow-lg shadow-zinc-400/20 flex items-center gap-2 disabled:opacity-50"
                 >
                   {creating ? <Loader2 className="w-4 h-4 animate-spin" /> : "Create Project"}
                 </button>
@@ -406,16 +406,16 @@ export default function ProjectsPage() {
 
       {/* Edit Project Modal */}
       {editingProject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#050505]/80 backdrop-blur-xs">
+          <div className="w-full max-w-md bg-[#121212] border border-zinc-800 rounded-2xl p-6 shadow-2xl space-y-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Edit2 className="w-5 h-5 text-indigo-400" />
-                <h2 className="text-lg font-bold text-white">Edit Project</h2>
+                <Edit2 className="w-5 h-5 text-zinc-400" />
+                <h2 className="text-lg font-bold text-zinc-100">Edit Project</h2>
               </div>
               <button
                 onClick={() => setEditingProject(null)}
-                className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
+                className="p-1 rounded-lg text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -429,7 +429,7 @@ export default function ProjectsPage() {
 
             <form onSubmit={handleUpdateProject} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-300 mb-1.5">
                   Select Icon / Emoji
                 </label>
                 <div className="flex items-center gap-2 overflow-x-auto pb-1">
@@ -440,8 +440,8 @@ export default function ProjectsPage() {
                       onClick={() => setEditEmoji(e)}
                       className={`p-2 rounded-xl text-lg border transition-all ${
                         editEmoji === e
-                          ? "bg-indigo-600/30 border-indigo-500 scale-110"
-                          : "bg-slate-950/60 border-slate-800 hover:bg-slate-800"
+                          ? "bg-zinc-200/30 border-zinc-500 scale-110"
+                          : "bg-[#050505]/60 border-zinc-800 hover:bg-zinc-800"
                       }`}
                     >
                       {e}
@@ -451,7 +451,7 @@ export default function ProjectsPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-300 mb-1.5">
                   Project Name *
                 </label>
                 <input
@@ -460,19 +460,19 @@ export default function ProjectsPage() {
                   onChange={(e) => setEditName(e.target.value)}
                   required
                   minLength={3}
-                  className="w-full bg-slate-950/60 border border-slate-800 focus:border-indigo-500 rounded-xl px-4 py-2.5 text-sm text-white outline-none"
+                  className="w-full bg-[#050505]/60 border border-zinc-800 focus:border-zinc-400 rounded-xl px-4 py-2.5 text-sm text-zinc-100 outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-300 mb-1.5">
                   Description
                 </label>
                 <textarea
                   value={editDesc}
                   onChange={(e) => setEditDesc(e.target.value)}
                   rows={3}
-                  className="w-full bg-slate-950/60 border border-slate-800 focus:border-indigo-500 rounded-xl px-4 py-2.5 text-sm text-white outline-none resize-none"
+                  className="w-full bg-[#050505]/60 border border-zinc-800 focus:border-zinc-400 rounded-xl px-4 py-2.5 text-sm text-zinc-100 outline-none resize-none"
                 />
               </div>
 
@@ -480,14 +480,14 @@ export default function ProjectsPage() {
                 <button
                   type="button"
                   onClick={() => setEditingProject(null)}
-                  className="px-4 py-2 text-sm font-medium text-slate-400 hover:text-white"
+                  className="px-4 py-2 text-sm font-medium text-zinc-400 hover:text-zinc-100"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={updating}
-                  className="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-sm rounded-xl shadow-lg shadow-indigo-600/30 flex items-center gap-2 disabled:opacity-50"
+                  className="px-5 py-2 bg-zinc-200 hover:bg-zinc-300 text-black font-medium text-sm rounded-xl shadow-lg shadow-zinc-400/20 flex items-center gap-2 disabled:opacity-50"
                 >
                   {updating ? <Loader2 className="w-4 h-4 animate-spin" /> : "Save Changes"}
                 </button>

@@ -83,11 +83,11 @@ export default function NotificationsPage() {
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-            <Bell className="w-6 h-6 text-indigo-400" />
+          <h1 className="text-2xl font-bold text-zinc-100 flex items-center gap-2">
+            <Bell className="w-6 h-6 text-zinc-400" />
             <span>Notifications</span>
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-zinc-400 mt-1">
             Task assignments, updates, mentions, and workspace activities
           </p>
         </div>
@@ -96,7 +96,7 @@ export default function NotificationsPage() {
           <button
             onClick={handleMarkAllAsRead}
             disabled={markingAll}
-            className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold shadow-md shadow-indigo-600/30 flex items-center gap-2 cursor-pointer transition-all disabled:opacity-50"
+            className="px-4 py-2 bg-zinc-200 hover:bg-zinc-300 text-black rounded-xl text-xs font-semibold shadow-md shadow-zinc-400/20 flex items-center gap-2 cursor-pointer transition-all disabled:opacity-50"
           >
             {markingAll ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCheck className="w-4 h-4" />}
             <span>Mark All as Read ({unreadCount})</span>
@@ -104,14 +104,14 @@ export default function NotificationsPage() {
         )}
       </div>
 
-      <div className="p-6 rounded-3xl bg-slate-900/80 border border-slate-800 space-y-4 shadow-xl">
+      <div className="p-6 rounded-3xl bg-[#121212]/90 border border-zinc-800 space-y-4 shadow-xl">
         {loading ? (
           <div className="py-12 text-center">
-            <Loader2 className="w-6 h-6 text-indigo-400 animate-spin mx-auto mb-2" />
-            <span className="text-xs text-slate-400">Loading notifications...</span>
+            <Loader2 className="w-6 h-6 text-zinc-400 animate-spin mx-auto mb-2" />
+            <span className="text-xs text-zinc-400">Loading notifications...</span>
           </div>
         ) : notifications.length === 0 ? (
-          <div className="py-12 text-center text-slate-500 text-xs">
+          <div className="py-12 text-center text-zinc-500 text-xs">
             You're all caught up! No notifications available.
           </div>
         ) : (
@@ -121,19 +121,19 @@ export default function NotificationsPage() {
                 key={n.id}
                 className={`p-4 rounded-2xl border flex items-start justify-between gap-4 transition-all ${
                   n.isRead
-                    ? "bg-slate-950/40 border-slate-800/60 text-slate-400"
-                    : "bg-indigo-950/20 border-indigo-500/30 text-slate-200 shadow-md"
+                    ? "bg-[#050505]/40 border-zinc-800/60 text-zinc-400"
+                    : "bg-zinc-200/5 border-zinc-500/30 text-zinc-200 shadow-md"
                 }`}
               >
                 <div className="space-y-1 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-white text-sm">{n.title}</span>
-                    <span className="px-2 py-0.5 rounded text-[10px] font-semibold uppercase bg-slate-800 text-indigo-300 border border-slate-700">
+                    <span className="font-bold text-zinc-100 text-sm">{n.title}</span>
+                    <span className="px-2 py-0.5 rounded text-[10px] font-semibold uppercase bg-zinc-800 text-zinc-300 border border-zinc-700">
                       {n.type.replace("_", " ")}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-300">{n.message}</p>
-                  <div className="text-[10px] text-slate-500 pt-1 flex items-center gap-1">
+                  <p className="text-xs text-zinc-300">{n.message}</p>
+                  <div className="text-[10px] text-zinc-500 pt-1 flex items-center gap-1">
                     <Clock className="w-3 h-3" />
                     {new Date(n.createdAt).toLocaleString()}
                   </div>
@@ -143,7 +143,7 @@ export default function NotificationsPage() {
                   {!n.isRead && (
                     <button
                       onClick={() => handleMarkAsRead(n.id)}
-                      className="p-2 rounded-xl text-indigo-400 hover:bg-indigo-500/10 transition-colors"
+                      className="p-2 rounded-xl text-zinc-400 hover:bg-zinc-200/10 transition-colors"
                       title="Mark as Read"
                     >
                       <Check className="w-4 h-4" />
@@ -151,7 +151,7 @@ export default function NotificationsPage() {
                   )}
                   <button
                     onClick={() => handleDelete(n.id)}
-                    className="p-2 rounded-xl text-slate-500 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                    className="p-2 rounded-xl text-zinc-500 hover:text-red-400 hover:bg-red-500/10 transition-colors"
                     title="Delete Notification"
                   >
                     <Trash2 className="w-4 h-4" />

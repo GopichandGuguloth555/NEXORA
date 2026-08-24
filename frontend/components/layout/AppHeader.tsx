@@ -95,62 +95,63 @@ export function AppHeader({ onMobileMenuClick }: AppHeaderProps) {
   };
 
   return (
-    <header className="sticky top-0 z-30 h-16 bg-slate-900/80 backdrop-blur-md border-b border-slate-800/80 px-4 flex items-center justify-between">
+    <header className="sticky top-0 z-30 h-16 bg-[#080808]/85 backdrop-blur-xl border-b border-zinc-800/80 px-4 flex items-center justify-between anim-fade-up">
       <div className="flex items-center gap-3">
-        {/* Mobile Hamburger */}
         <button
           onClick={onMobileMenuClick}
-          className="md:hidden p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800"
+          className="md:hidden p-2 rounded-xl text-zinc-500 hover:text-zinc-100 hover:bg-zinc-800 transition-all duration-300 hover:scale-110"
         >
           <Menu className="w-5 h-5" />
         </button>
 
-        {/* Workspace & Page Title */}
         <div className="flex items-center gap-2 text-sm">
-          <span className="text-slate-400 font-medium hidden sm:inline">
+          <span className="text-zinc-500 font-medium hidden sm:inline">
             {currentWorkspace?.name || "Workspace"}
           </span>
-          <span className="text-slate-600 hidden sm:inline">/</span>
-          <span className="text-white font-semibold">{getPageTitle()}</span>
+          <span className="text-zinc-700 hidden sm:inline">/</span>
+          <span className="text-zinc-100 font-semibold font-display tracking-tight">
+            {getPageTitle()}
+          </span>
         </div>
       </div>
 
       <div className="flex items-center gap-4">
-        {/* Socket.IO Real-time Connection Indicator */}
         <div
-          className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium border ${
+          className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium border transition-all duration-500 ${
             connected
-              ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
+              ? "bg-zinc-200/10 border-zinc-500/30 text-zinc-300 anim-pulse-silver"
               : "bg-amber-500/10 border-amber-500/20 text-amber-400"
           }`}
           title={connected ? "Socket.IO Live Sync Active" : "Connecting to Socket.IO..."}
         >
-          <span className={`w-1.5 h-1.5 rounded-full ${connected ? "bg-emerald-400 animate-pulse" : "bg-amber-400"}`} />
+          <span
+            className={`w-1.5 h-1.5 rounded-full ${
+              connected ? "bg-zinc-300 animate-pulse" : "bg-amber-400"
+            }`}
+          />
           <span>{connected ? "Live Sync" : "Offline"}</span>
         </div>
 
-        {/* Notifications Popover Toggle */}
         <div className="relative">
           <button
             onClick={() => setShowNotifications(!showNotifications)}
-            className="relative p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+            className="relative p-2 rounded-xl text-zinc-500 hover:text-zinc-100 hover:bg-zinc-800 transition-all duration-300 hover:scale-110 cursor-pointer"
           >
             <Bell className="w-5 h-5" />
             {unreadCount > 0 && (
-              <span className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full bg-indigo-600 text-white font-bold text-[10px] flex items-center justify-center border-2 border-slate-900 animate-pulse">
+              <span className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full bg-zinc-200 text-black font-bold text-[10px] flex items-center justify-center border-2 border-[#080808] animate-pulse">
                 {unreadCount > 9 ? "9+" : unreadCount}
               </span>
             )}
           </button>
 
-          {/* Notifications Dropdown Drawer */}
           {showNotifications && (
-            <div className="absolute right-0 top-12 z-50 w-80 sm:w-96 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden p-4 space-y-3">
-              <div className="flex items-center justify-between border-b border-slate-800/80 pb-2">
+            <div className="absolute right-0 top-12 z-50 w-80 sm:w-96 bg-[#0e0e0e] border border-zinc-700/80 rounded-2xl shadow-2xl overflow-hidden p-4 space-y-3 anim-scale-in">
+              <div className="flex items-center justify-between border-b border-zinc-800/80 pb-2">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-bold text-white">Notifications</span>
+                  <span className="text-sm font-bold text-zinc-100 font-display">Notifications</span>
                   {unreadCount > 0 && (
-                    <span className="px-2 py-0.5 rounded-full bg-indigo-600/20 text-indigo-300 border border-indigo-500/30 text-[10px] font-bold">
+                    <span className="px-2 py-0.5 rounded-full bg-zinc-200/15 text-zinc-300 border border-zinc-500/30 text-[10px] font-bold">
                       {unreadCount} new
                     </span>
                   )}
@@ -161,14 +162,14 @@ export function AppHeader({ onMobileMenuClick }: AppHeaderProps) {
                     <button
                       onClick={handleMarkAllAsRead}
                       disabled={markingAll}
-                      className="text-[11px] text-indigo-400 hover:underline flex items-center gap-1 font-medium"
+                      className="text-[11px] text-zinc-400 hover:text-zinc-100 hover:underline flex items-center gap-1 font-medium"
                     >
                       <CheckCheck className="w-3.5 h-3.5" /> Mark all read
                     </button>
                   )}
                   <button
                     onClick={() => setShowNotifications(false)}
-                    className="p-1 rounded text-slate-400 hover:text-white"
+                    className="p-1 rounded text-zinc-500 hover:text-white"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -177,24 +178,25 @@ export function AppHeader({ onMobileMenuClick }: AppHeaderProps) {
 
               <div className="max-h-80 overflow-y-auto space-y-2 pr-1">
                 {notifications.length === 0 ? (
-                  <div className="py-8 text-center text-slate-500 text-xs">No notifications yet</div>
+                  <div className="py-8 text-center text-zinc-600 text-xs">No notifications yet</div>
                 ) : (
-                  notifications.map((n) => (
+                  notifications.map((n, i) => (
                     <div
                       key={n.id}
-                      className={`p-3 rounded-xl border text-xs space-y-1.5 transition-colors relative group ${
+                      style={{ animationDelay: `${i * 0.04}s` }}
+                      className={`anim-fade-up p-3 rounded-xl border text-xs space-y-1.5 transition-all duration-300 relative group hover:scale-[1.02] ${
                         n.isRead
-                          ? "bg-slate-950/40 border-slate-800/60 text-slate-400"
-                          : "bg-indigo-950/30 border-indigo-500/40 text-slate-200"
+                          ? "bg-black/40 border-zinc-800/60 text-zinc-500"
+                          : "bg-zinc-200/5 border-zinc-500/40 text-zinc-200"
                       }`}
                     >
                       <div className="flex items-start justify-between gap-2">
-                        <span className="font-bold text-white leading-tight">{n.title}</span>
+                        <span className="font-bold text-zinc-100 leading-tight">{n.title}</span>
                         <div className="flex items-center gap-1 shrink-0">
                           {!n.isRead && (
                             <button
                               onClick={() => handleMarkAsRead(n.id)}
-                              className="p-1 rounded text-indigo-400 hover:bg-indigo-500/10"
+                              className="p-1 rounded text-zinc-400 hover:bg-zinc-700/40"
                               title="Mark as read"
                             >
                               <Check className="w-3.5 h-3.5" />
@@ -202,7 +204,7 @@ export function AppHeader({ onMobileMenuClick }: AppHeaderProps) {
                           )}
                           <button
                             onClick={() => handleDeleteNotification(n.id)}
-                            className="p-1 rounded text-slate-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
+                            className="p-1 rounded text-zinc-600 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
                             title="Delete notification"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -210,15 +212,18 @@ export function AppHeader({ onMobileMenuClick }: AppHeaderProps) {
                         </div>
                       </div>
 
-                      <p className="text-[11px] leading-relaxed text-slate-300">{n.message}</p>
+                      <p className="text-[11px] leading-relaxed text-zinc-400">{n.message}</p>
 
-                      <div className="flex items-center justify-between text-[10px] text-slate-500 pt-1 border-t border-slate-800/40">
-                        <span className="px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 font-medium">
+                      <div className="flex items-center justify-between text-[10px] text-zinc-600 pt-1 border-t border-zinc-800/40">
+                        <span className="px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400 font-medium">
                           {n.type}
                         </span>
                         <span className="flex items-center gap-1">
                           <Clock className="w-3 h-3" />
-                          {new Date(n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          {new Date(n.createdAt).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
                         </span>
                       </div>
                     </div>
@@ -226,11 +231,11 @@ export function AppHeader({ onMobileMenuClick }: AppHeaderProps) {
                 )}
               </div>
 
-              <div className="pt-2 border-t border-slate-800/80 text-center">
+              <div className="pt-2 border-t border-zinc-800/80 text-center">
                 <Link
                   href="/app/notifications"
                   onClick={() => setShowNotifications(false)}
-                  className="text-xs text-indigo-400 hover:underline font-medium"
+                  className="text-xs text-zinc-400 hover:text-zinc-100 hover:underline font-medium"
                 >
                   Manage all notifications →
                 </Link>
@@ -239,9 +244,8 @@ export function AppHeader({ onMobileMenuClick }: AppHeaderProps) {
           )}
         </div>
 
-        {/* User Badge */}
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-600 to-violet-600 text-white font-bold text-xs flex items-center justify-center shadow-md">
+          <div className="w-8 h-8 rounded-full bg-metallic text-black font-bold text-xs flex items-center justify-center shadow-md transition-transform duration-300 hover:scale-110">
             {user?.name ? user.name.substring(0, 2).toUpperCase() : "U"}
           </div>
         </div>

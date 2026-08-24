@@ -42,10 +42,10 @@ function ToastItem({
     <div
       className={`pointer-events-auto p-4 rounded-xl border shadow-2xl flex items-center justify-between gap-3 text-xs font-medium animate-slide-up transition-all ${
         toast.type === "success"
-          ? "bg-slate-900 border-emerald-500/40 text-emerald-300"
+          ? "bg-[#121212] border-emerald-500/40 text-emerald-300"
           : toast.type === "error"
-          ? "bg-slate-900 border-red-500/40 text-red-300"
-          : "bg-slate-900 border-indigo-500/40 text-indigo-300"
+          ? "bg-[#121212] border-red-500/40 text-red-300"
+          : "bg-[#121212] border-zinc-500/40 text-zinc-300"
       }`}
     >
       <div className="flex items-center gap-2.5 overflow-hidden">
@@ -55,7 +55,7 @@ function ToastItem({
       </div>
       <button
         onClick={() => onDismiss(toast.id)}
-        className="p-1 rounded-lg text-slate-400 hover:text-white transition-colors"
+        className="p-1 rounded-lg text-zinc-400 hover:text-zinc-100 transition-colors"
       >
         <X className="w-3.5 h-3.5" />
       </button>

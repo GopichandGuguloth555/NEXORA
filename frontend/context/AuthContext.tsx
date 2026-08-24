@@ -63,7 +63,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setToken(null);
     localStorage.removeItem("nexora_token");
     localStorage.removeItem("nexora_user");
-    window.location.href = "/login";
+    window.location.href = "/";
   };
 
   return (

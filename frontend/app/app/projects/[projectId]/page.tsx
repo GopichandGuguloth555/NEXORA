@@ -310,26 +310,26 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
   if (loading) {
     return (
       <div className="space-y-6 max-w-7xl mx-auto">
-        <div className="h-20 bg-slate-900/60 rounded-2xl border border-slate-800 animate-pulse" />
+        <div className="h-20 bg-[#121212]/70 rounded-2xl border border-zinc-800 animate-pulse" />
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((n) => (
-            <div key={n} className="h-24 bg-slate-900/60 rounded-2xl border border-slate-800 animate-pulse" />
+            <div key={n} className="h-24 bg-[#121212]/70 rounded-2xl border border-zinc-800 animate-pulse" />
           ))}
         </div>
-        <div className="h-96 bg-slate-900/60 rounded-2xl border border-slate-800 animate-pulse" />
+        <div className="h-96 bg-[#121212]/70 rounded-2xl border border-zinc-800 animate-pulse" />
       </div>
     );
   }
 
   if (error || !project) {
     return (
-      <div className="p-12 text-center bg-slate-900/80 rounded-3xl border border-slate-800 max-w-md mx-auto my-12 space-y-4 shadow-xl">
+      <div className="p-12 text-center bg-[#121212]/90 rounded-3xl border border-zinc-800 max-w-md mx-auto my-12 space-y-4 shadow-xl">
         <AlertTriangle className="w-10 h-10 text-amber-400 mx-auto" />
-        <h2 className="text-xl font-bold text-white">Project Not Found</h2>
-        <p className="text-xs text-slate-400">{error || "The requested project does not exist or you do not have permission to view it."}</p>
+        <h2 className="text-xl font-bold text-zinc-100">Project Not Found</h2>
+        <p className="text-xs text-zinc-400">{error || "The requested project does not exist or you do not have permission to view it."}</p>
         <Link
           href="/app/projects"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-medium"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-200 hover:bg-zinc-300 text-black rounded-xl text-xs font-medium"
         >
           <ArrowLeft className="w-4 h-4" /> Back to Projects
         </Link>
@@ -348,27 +348,27 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
       <ToastContainer toasts={toasts} onDismiss={removeToast} />
 
       {/* Navigation Breadcrumb */}
-      <div className="flex items-center gap-2 text-xs text-slate-400">
-        <Link href="/app/projects" className="hover:text-white flex items-center gap-1">
+      <div className="flex items-center gap-2 text-xs text-zinc-400">
+        <Link href="/app/projects" className="hover:text-zinc-100 flex items-center gap-1">
           <ArrowLeft className="w-3.5 h-3.5" /> Projects
         </Link>
         <span>/</span>
-        <span className="text-slate-200 font-semibold">{project.name}</span>
+        <span className="text-zinc-200 font-semibold">{project.name}</span>
       </div>
 
       {/* Project Header Banner */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/90 border border-slate-800/80 shadow-xl space-y-4">
+      <div className="p-6 sm:p-8 rounded-3xl bg-[#121212]/95 border border-zinc-800/80 shadow-xl space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
           <div className="flex items-start gap-4">
-            <span className="text-4xl p-3 rounded-2xl bg-slate-950/60 border border-slate-800 shrink-0">
+            <span className="text-4xl p-3 rounded-2xl bg-[#050505]/60 border border-zinc-800 shrink-0">
               {project.emoji || "🚀"}
             </span>
             <div className="space-y-1">
-              <h1 className="text-2xl font-extrabold text-white tracking-tight">{project.name}</h1>
-              <p className="text-xs text-slate-400 max-w-2xl leading-relaxed">
+              <h1 className="text-2xl font-extrabold text-zinc-100 tracking-tight">{project.name}</h1>
+              <p className="text-xs text-zinc-400 max-w-2xl leading-relaxed">
                 {project.description || "No project description available."}
               </p>
-              <div className="flex items-center gap-4 text-[11px] text-slate-500 pt-1">
+              <div className="flex items-center gap-4 text-[11px] text-zinc-500 pt-1">
                 <span className="flex items-center gap-1">
                   <UserIcon className="w-3 h-3" /> Created by {project.createdBy?.name || "Team member"}
                 </span>
@@ -382,20 +382,20 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
           <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={() => setIsEditProjectOpen(true)}
-              className="p-2.5 rounded-xl bg-slate-950/60 border border-slate-800 hover:bg-slate-800 text-slate-300 hover:text-white text-xs font-medium flex items-center gap-1.5 transition-colors"
+              className="p-2.5 rounded-xl bg-[#050505]/60 border border-zinc-800 hover:bg-zinc-800 text-zinc-300 hover:text-zinc-100 text-xs font-medium flex items-center gap-1.5 transition-colors"
             >
               <Edit2 className="w-4 h-4" /> Edit
             </button>
             <button
               onClick={handleDeleteProject}
-              className="p-2.5 rounded-xl bg-slate-950/60 border border-slate-800 hover:bg-red-500/10 text-slate-400 hover:text-red-400 text-xs font-medium flex items-center gap-1.5 transition-colors"
+              className="p-2.5 rounded-xl bg-[#050505]/60 border border-zinc-800 hover:bg-red-500/10 text-zinc-400 hover:text-red-400 text-xs font-medium flex items-center gap-1.5 transition-colors"
               title="Delete Project"
             >
               <Trash2 className="w-4 h-4" />
             </button>
             <button
               onClick={() => setIsCreateTaskOpen(true)}
-              className="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-xl shadow-lg shadow-indigo-600/30 flex items-center gap-1.5 cursor-pointer transition-all"
+              className="px-4 py-2.5 bg-zinc-200 hover:bg-zinc-300 text-black text-xs font-semibold rounded-xl shadow-lg shadow-zinc-400/20 flex items-center gap-1.5 cursor-pointer transition-all"
             >
               <Plus className="w-4 h-4" /> New Task
             </button>
@@ -405,61 +405,61 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
 
       {/* Task Statistics Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800/80 flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-indigo-600/20 text-indigo-400 border border-indigo-500/30">
+        <div className="p-4 rounded-2xl bg-[#121212]/90 border border-zinc-800/80 flex items-center gap-3">
+          <div className="p-2.5 rounded-xl bg-zinc-200/10 text-zinc-400 border border-zinc-500/30">
             <CheckSquare className="w-5 h-5" />
           </div>
           <div>
-            <div className="text-[11px] text-slate-400 font-semibold uppercase">Total Tasks</div>
-            <div className="text-xl font-bold text-white mt-0.5">{tasks.length}</div>
+            <div className="text-[11px] text-zinc-400 font-semibold uppercase">Total Tasks</div>
+            <div className="text-xl font-bold text-zinc-100 mt-0.5">{tasks.length}</div>
           </div>
         </div>
 
-        <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800/80 flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-slate-800 text-slate-300 border border-slate-700">
+        <div className="p-4 rounded-2xl bg-[#121212]/90 border border-zinc-800/80 flex items-center gap-3">
+          <div className="p-2.5 rounded-xl bg-zinc-800 text-zinc-300 border border-zinc-700">
             <Clock className="w-5 h-5" />
           </div>
           <div>
-            <div className="text-[11px] text-slate-400 font-semibold uppercase">To Do</div>
-            <div className="text-xl font-bold text-slate-200 mt-0.5">{todoTasks.length}</div>
+            <div className="text-[11px] text-zinc-400 font-semibold uppercase">To Do</div>
+            <div className="text-xl font-bold text-zinc-200 mt-0.5">{todoTasks.length}</div>
           </div>
         </div>
 
-        <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800/80 flex items-center gap-3">
+        <div className="p-4 rounded-2xl bg-[#121212]/90 border border-zinc-800/80 flex items-center gap-3">
           <div className="p-2.5 rounded-xl bg-amber-600/20 text-amber-400 border border-amber-500/30">
             <Clock className="w-5 h-5" />
           </div>
           <div>
-            <div className="text-[11px] text-slate-400 font-semibold uppercase">In Progress</div>
+            <div className="text-[11px] text-zinc-400 font-semibold uppercase">In Progress</div>
             <div className="text-xl font-bold text-amber-400 mt-0.5">{inProgressTasks.length}</div>
           </div>
         </div>
 
-        <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800/80 flex items-center gap-3">
+        <div className="p-4 rounded-2xl bg-[#121212]/90 border border-zinc-800/80 flex items-center gap-3">
           <div className="p-2.5 rounded-xl bg-emerald-600/20 text-emerald-400 border border-emerald-500/30">
             <CheckCircle2 className="w-5 h-5" />
           </div>
           <div>
-            <div className="text-[11px] text-slate-400 font-semibold uppercase">Completed</div>
+            <div className="text-[11px] text-zinc-400 font-semibold uppercase">Completed</div>
             <div className="text-xl font-bold text-emerald-400 mt-0.5">{doneTasks.length}</div>
           </div>
         </div>
       </div>
 
       {/* Task Board Controls */}
-      <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
-        <h2 className="text-sm font-bold text-white flex items-center gap-2">
+      <div className="flex items-center justify-between border-b border-zinc-800/80 pb-3">
+        <h2 className="text-sm font-bold text-zinc-100 flex items-center gap-2">
           <span>Project Board</span>
-          <span className="px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 text-[10px]">
+          <span className="px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 text-[10px]">
             {tasks.length} tasks
           </span>
         </h2>
 
-        <div className="p-1 rounded-xl bg-slate-900 border border-slate-800 flex items-center gap-1">
+        <div className="p-1 rounded-xl bg-[#121212] border border-zinc-800 flex items-center gap-1">
           <button
             onClick={() => setViewMode("kanban")}
             className={`p-1.5 rounded-lg text-xs font-medium flex items-center gap-1 transition-all ${
-              viewMode === "kanban" ? "bg-indigo-600 text-white" : "text-slate-400 hover:text-white"
+              viewMode === "kanban" ? "bg-zinc-200 text-zinc-100" : "text-zinc-400 hover:text-zinc-100"
             }`}
           >
             <Kanban className="w-3.5 h-3.5" /> Board
@@ -467,7 +467,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
           <button
             onClick={() => setViewMode("list")}
             className={`p-1.5 rounded-lg text-xs font-medium flex items-center gap-1 transition-all ${
-              viewMode === "list" ? "bg-indigo-600 text-white" : "text-slate-400 hover:text-white"
+              viewMode === "list" ? "bg-zinc-200 text-zinc-100" : "text-zinc-400 hover:text-zinc-100"
             }`}
           >
             <List className="w-3.5 h-3.5" /> List
@@ -479,20 +479,20 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
       {viewMode === "kanban" ? (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* TODO Column */}
-          <div className="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-3">
-            <div className="flex items-center justify-between font-bold text-xs text-slate-300 pb-2 border-b border-slate-800">
+          <div className="p-4 rounded-2xl bg-[#121212]/70 border border-zinc-800 space-y-3">
+            <div className="flex items-center justify-between font-bold text-xs text-zinc-300 pb-2 border-b border-zinc-800">
               <span className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-slate-400" />
                 TO DO
               </span>
-              <span className="px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 text-[10px]">
+              <span className="px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 text-[10px]">
                 {todoTasks.length}
               </span>
             </div>
 
             <div className="space-y-3 min-h-[250px]">
               {todoTasks.length === 0 ? (
-                <div className="py-8 text-center text-slate-500 text-xs italic">No tasks in TODO</div>
+                <div className="py-8 text-center text-zinc-500 text-xs italic">No tasks in TODO</div>
               ) : (
                 todoTasks.map((t) => (
                   <TaskCard
@@ -508,8 +508,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
           </div>
 
           {/* IN PROGRESS Column */}
-          <div className="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-3">
-            <div className="flex items-center justify-between font-bold text-xs text-amber-400 pb-2 border-b border-slate-800">
+          <div className="p-4 rounded-2xl bg-[#121212]/70 border border-zinc-800 space-y-3">
+            <div className="flex items-center justify-between font-bold text-xs text-amber-400 pb-2 border-b border-zinc-800">
               <span className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
                 IN PROGRESS
@@ -521,7 +521,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
 
             <div className="space-y-3 min-h-[250px]">
               {inProgressTasks.length === 0 ? (
-                <div className="py-8 text-center text-slate-500 text-xs italic">No tasks in progress</div>
+                <div className="py-8 text-center text-zinc-500 text-xs italic">No tasks in progress</div>
               ) : (
                 inProgressTasks.map((t) => (
                   <TaskCard
@@ -537,8 +537,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
           </div>
 
           {/* DONE Column */}
-          <div className="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-3">
-            <div className="flex items-center justify-between font-bold text-xs text-emerald-400 pb-2 border-b border-slate-800">
+          <div className="p-4 rounded-2xl bg-[#121212]/70 border border-zinc-800 space-y-3">
+            <div className="flex items-center justify-between font-bold text-xs text-emerald-400 pb-2 border-b border-zinc-800">
               <span className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-400" />
                 DONE
@@ -550,7 +550,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
 
             <div className="space-y-3 min-h-[250px]">
               {doneTasks.length === 0 ? (
-                <div className="py-8 text-center text-slate-500 text-xs italic">No completed tasks</div>
+                <div className="py-8 text-center text-zinc-500 text-xs italic">No completed tasks</div>
               ) : (
                 doneTasks.map((t) => (
                   <TaskCard
@@ -567,33 +567,33 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
         </div>
       ) : (
         /* LIST VIEW */
-        <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2">
+        <div className="p-4 rounded-2xl bg-[#121212]/90 border border-zinc-800 space-y-2">
           {tasks.length === 0 ? (
-            <div className="py-8 text-center text-slate-500 text-xs">No tasks found</div>
+            <div className="py-8 text-center text-zinc-500 text-xs">No tasks found</div>
           ) : (
             tasks.map((t) => (
               <div
                 key={t.id}
                 onClick={() => openTaskDetail(t)}
-                className="p-3.5 rounded-xl bg-slate-950/60 hover:bg-slate-950 border border-slate-800 flex items-center justify-between gap-4 cursor-pointer transition-colors"
+                className="p-3.5 rounded-xl bg-[#050505]/60 hover:bg-[#050505] border border-zinc-800 flex items-center justify-between gap-4 cursor-pointer transition-colors"
               >
                 <div className="flex items-center gap-3 overflow-hidden">
                   <select
                     value={t.status}
                     onClick={(e) => e.stopPropagation()}
                     onChange={(e) => handleQuickStatusChange(t, e.target.value as TaskStatus)}
-                    className="bg-slate-900 border border-slate-700 text-xs rounded-lg px-2 py-1 text-slate-200 outline-none"
+                    className="bg-[#121212] border border-zinc-700 text-xs rounded-lg px-2 py-1 text-zinc-200 outline-none"
                   >
                     <option value="TODO">TODO</option>
                     <option value="IN_PROGRESS">IN_PROGRESS</option>
                     <option value="DONE">DONE</option>
                   </select>
-                  <span className="font-semibold text-sm text-white truncate">{t.title}</span>
+                  <span className="font-semibold text-sm text-zinc-100 truncate">{t.title}</span>
                 </div>
 
                 <div className="flex items-center gap-3 text-xs shrink-0">
                   {t.assignee && (
-                    <span className="text-[11px] text-slate-400">👤 {t.assignee.name}</span>
+                    <span className="text-[11px] text-zinc-400">👤 {t.assignee.name}</span>
                   )}
                   <span
                     className={`px-2 py-0.5 rounded text-[10px] font-semibold ${
@@ -601,7 +601,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
                         ? "bg-red-500/10 text-red-400 border border-red-500/20"
                         : t.priority === "MEDIUM"
                         ? "bg-amber-500/10 text-amber-400 border border-amber-500/20"
-                        : "bg-slate-800 text-slate-400"
+                        : "bg-zinc-800 text-zinc-400"
                     }`}
                   >
                     {t.priority}
@@ -611,7 +611,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
                       e.stopPropagation();
                       handleDeleteTask(t.id);
                     }}
-                    className="p-1 rounded text-slate-500 hover:text-red-400"
+                    className="p-1 rounded text-zinc-500 hover:text-red-400"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -624,35 +624,35 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
 
       {/* Edit Project Modal */}
       {isEditProjectOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#050505]/80 backdrop-blur-xs">
+          <div className="w-full max-w-md bg-[#121212] border border-zinc-800 rounded-2xl p-6 shadow-2xl space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-white">Edit Project</h2>
-              <button onClick={() => setIsEditProjectOpen(false)} className="p-1 text-slate-400 hover:text-white">
+              <h2 className="text-lg font-bold text-zinc-100">Edit Project</h2>
+              <button onClick={() => setIsEditProjectOpen(false)} className="p-1 text-zinc-400 hover:text-zinc-100">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleUpdateProject} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">Project Name *</label>
+                <label className="block text-xs font-semibold uppercase text-zinc-300 mb-1">Project Name *</label>
                 <input
                   type="text"
                   value={editName}
                   onChange={(e) => setEditName(e.target.value)}
                   required
                   minLength={3}
-                  className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white outline-none"
+                  className="w-full bg-[#050505]/60 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-zinc-100 outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">Description</label>
+                <label className="block text-xs font-semibold uppercase text-zinc-300 mb-1">Description</label>
                 <textarea
                   value={editDesc}
                   onChange={(e) => setEditDesc(e.target.value)}
                   rows={3}
-                  className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white outline-none resize-none"
+                  className="w-full bg-[#050505]/60 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-zinc-100 outline-none resize-none"
                 />
               </div>
 
@@ -660,14 +660,14 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
                 <button
                   type="button"
                   onClick={() => setIsEditProjectOpen(false)}
-                  className="px-4 py-2 text-sm text-slate-400 hover:text-white"
+                  className="px-4 py-2 text-sm text-zinc-400 hover:text-zinc-100"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={updatingProject}
-                  className="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-sm rounded-xl shadow-lg shadow-indigo-600/30 flex items-center gap-2 disabled:opacity-50"
+                  className="px-5 py-2 bg-zinc-200 hover:bg-zinc-300 text-black font-medium text-sm rounded-xl shadow-lg shadow-zinc-400/20 flex items-center gap-2 disabled:opacity-50"
                 >
                   {updatingProject ? <Loader2 className="w-4 h-4 animate-spin" /> : "Save Changes"}
                 </button>
@@ -679,14 +679,14 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
 
       {/* Create Task Modal */}
       {isCreateTaskOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#050505]/80 backdrop-blur-xs">
+          <div className="w-full max-w-md bg-[#121212] border border-zinc-800 rounded-2xl p-6 shadow-2xl space-y-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <CheckSquare className="w-5 h-5 text-indigo-400" />
-                <h2 className="text-lg font-bold text-white">Create New Task</h2>
+                <CheckSquare className="w-5 h-5 text-zinc-400" />
+                <h2 className="text-lg font-bold text-zinc-100">Create New Task</h2>
               </div>
-              <button onClick={() => setIsCreateTaskOpen(false)} className="p-1 text-slate-400 hover:text-white">
+              <button onClick={() => setIsCreateTaskOpen(false)} className="p-1 text-zinc-400 hover:text-zinc-100">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -699,7 +699,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
 
             <form onSubmit={handleCreateTask} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">Task Title *</label>
+                <label className="block text-xs font-semibold uppercase text-zinc-300 mb-1">Task Title *</label>
                 <input
                   type="text"
                   value={taskTitle}
@@ -707,28 +707,28 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
                   placeholder="e.g. Implement authentication logic"
                   required
                   minLength={3}
-                  className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white outline-none"
+                  className="w-full bg-[#050505]/60 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-zinc-100 outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">Description</label>
+                <label className="block text-xs font-semibold uppercase text-zinc-300 mb-1">Description</label>
                 <textarea
                   value={taskDesc}
                   onChange={(e) => setTaskDesc(e.target.value)}
                   placeholder="Task details and acceptance criteria..."
                   rows={3}
-                  className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white outline-none resize-none"
+                  className="w-full bg-[#050505]/60 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-zinc-100 outline-none resize-none"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">Status</label>
+                  <label className="block text-xs font-semibold uppercase text-zinc-300 mb-1">Status</label>
                   <select
                     value={taskStatus}
                     onChange={(e) => setTaskStatus(e.target.value as TaskStatus)}
-                    className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none"
+                    className="w-full bg-[#050505]/60 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-100 outline-none"
                   >
                     <option value="TODO">TODO</option>
                     <option value="IN_PROGRESS">IN_PROGRESS</option>
@@ -737,11 +737,11 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">Priority</label>
+                  <label className="block text-xs font-semibold uppercase text-zinc-300 mb-1">Priority</label>
                   <select
                     value={taskPriority}
                     onChange={(e) => setTaskPriority(e.target.value as TaskPriority)}
-                    className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none"
+                    className="w-full bg-[#050505]/60 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-100 outline-none"
                   >
                     <option value="LOW">LOW</option>
                     <option value="MEDIUM">MEDIUM</option>
@@ -752,11 +752,11 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">Assignee</label>
+                  <label className="block text-xs font-semibold uppercase text-zinc-300 mb-1">Assignee</label>
                   <select
                     value={taskAssigneeId}
                     onChange={(e) => setTaskAssigneeId(e.target.value)}
-                    className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none"
+                    className="w-full bg-[#050505]/60 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-100 outline-none"
                   >
                     <option value="">Unassigned</option>
                     {members.map((m) => (
@@ -768,12 +768,12 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">Due Date</label>
+                  <label className="block text-xs font-semibold uppercase text-zinc-300 mb-1">Due Date</label>
                   <input
                     type="date"
                     value={taskDueDate}
                     onChange={(e) => setTaskDueDate(e.target.value)}
-                    className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none"
+                    className="w-full bg-[#050505]/60 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-100 outline-none"
                   />
                 </div>
               </div>
@@ -782,14 +782,14 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
                 <button
                   type="button"
                   onClick={() => setIsCreateTaskOpen(false)}
-                  className="px-4 py-2 text-sm text-slate-400 hover:text-white"
+                  className="px-4 py-2 text-sm text-zinc-400 hover:text-zinc-100"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={creatingTask}
-                  className="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-xl shadow-lg shadow-indigo-600/30 flex items-center gap-2 disabled:opacity-50"
+                  className="px-5 py-2 bg-zinc-200 hover:bg-zinc-300 text-black text-sm font-medium rounded-xl shadow-lg shadow-zinc-400/20 flex items-center gap-2 disabled:opacity-50"
                 >
                   {creatingTask ? <Loader2 className="w-4 h-4 animate-spin" /> : "Create Task"}
                 </button>
@@ -801,24 +801,24 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
 
       {/* Task Detail Modal / Side Panel */}
       {activeTask && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-xs">
-          <div className="w-full max-w-xl bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-6 max-h-[90vh] flex flex-col">
-            <div className="flex items-start justify-between border-b border-slate-800 pb-3">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#050505]/80 backdrop-blur-xs">
+          <div className="w-full max-w-xl bg-[#121212] border border-zinc-800 rounded-2xl p-6 shadow-2xl space-y-6 max-h-[90vh] flex flex-col">
+            <div className="flex items-start justify-between border-b border-zinc-800 pb-3">
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-400">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">
                   Task Detail Modal
                 </span>
-                <h2 className="text-lg font-bold text-white mt-0.5">{activeTask.title}</h2>
+                <h2 className="text-lg font-bold text-zinc-100 mt-0.5">{activeTask.title}</h2>
               </div>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => handleDeleteTask(activeTask.id)}
-                  className="p-1.5 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg"
+                  className="p-1.5 text-zinc-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg"
                   title="Delete Task"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
-                <button onClick={() => setActiveTask(null)} className="p-1 text-slate-400 hover:text-white">
+                <button onClick={() => setActiveTask(null)} className="p-1 text-zinc-400 hover:text-zinc-100">
                   <X className="w-5 h-5" />
                 </button>
               </div>
@@ -827,34 +827,34 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
             {/* Task Form Fields */}
             <form onSubmit={handleSaveTaskDetail} className="space-y-4 flex-1 overflow-y-auto pr-1">
               <div>
-                <label className="block text-[11px] font-bold uppercase text-slate-400 mb-1">Title</label>
+                <label className="block text-[11px] font-bold uppercase text-zinc-400 mb-1">Title</label>
                 <input
                   type="text"
                   value={detailTitle}
                   onChange={(e) => setDetailTitle(e.target.value)}
                   required
                   minLength={3}
-                  className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none"
+                  className="w-full bg-[#050505]/60 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-100 outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold uppercase text-slate-400 mb-1">Description</label>
+                <label className="block text-[11px] font-bold uppercase text-zinc-400 mb-1">Description</label>
                 <textarea
                   value={detailDesc}
                   onChange={(e) => setDetailDesc(e.target.value)}
                   rows={3}
-                  className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none resize-none"
+                  className="w-full bg-[#050505]/60 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-100 outline-none resize-none"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-bold uppercase text-slate-400 mb-1">Status</label>
+                  <label className="block text-[11px] font-bold uppercase text-zinc-400 mb-1">Status</label>
                   <select
                     value={detailStatus}
                     onChange={(e) => setDetailStatus(e.target.value as TaskStatus)}
-                    className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none"
+                    className="w-full bg-[#050505]/60 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-100 outline-none"
                   >
                     <option value="TODO">TODO</option>
                     <option value="IN_PROGRESS">IN_PROGRESS</option>
@@ -863,11 +863,11 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold uppercase text-slate-400 mb-1">Priority</label>
+                  <label className="block text-[11px] font-bold uppercase text-zinc-400 mb-1">Priority</label>
                   <select
                     value={detailPriority}
                     onChange={(e) => setDetailPriority(e.target.value as TaskPriority)}
-                    className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none"
+                    className="w-full bg-[#050505]/60 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-100 outline-none"
                   >
                     <option value="LOW">LOW</option>
                     <option value="MEDIUM">MEDIUM</option>
@@ -878,11 +878,11 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-bold uppercase text-slate-400 mb-1">Assignee</label>
+                  <label className="block text-[11px] font-bold uppercase text-zinc-400 mb-1">Assignee</label>
                   <select
                     value={detailAssigneeId}
                     onChange={(e) => setDetailAssigneeId(e.target.value)}
-                    className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none"
+                    className="w-full bg-[#050505]/60 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-100 outline-none"
                   >
                     <option value="">Unassigned</option>
                     {members.map((m) => (
@@ -894,17 +894,17 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold uppercase text-slate-400 mb-1">Due Date</label>
+                  <label className="block text-[11px] font-bold uppercase text-zinc-400 mb-1">Due Date</label>
                   <input
                     type="date"
                     value={detailDueDate}
                     onChange={(e) => setDetailDueDate(e.target.value)}
-                    className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none"
+                    className="w-full bg-[#050505]/60 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-100 outline-none"
                   />
                 </div>
               </div>
 
-              <div className="flex items-center justify-between pt-2 border-t border-slate-800 text-[10px] text-slate-500">
+              <div className="flex items-center justify-between pt-2 border-t border-zinc-800 text-[10px] text-zinc-500">
                 <span>Created by: {activeTask.createdBy?.name || "Member"}</span>
                 <span>Created: {new Date(activeTask.createdAt).toLocaleDateString()}</span>
               </div>
@@ -913,7 +913,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
                 <button
                   type="submit"
                   disabled={updatingTask}
-                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold shadow-md flex items-center gap-1.5 disabled:opacity-50"
+                  className="px-4 py-2 bg-zinc-200 hover:bg-zinc-300 text-black rounded-xl text-xs font-semibold shadow-md flex items-center gap-1.5 disabled:opacity-50"
                 >
                   {updatingTask ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : "Save Updates"}
                 </button>
@@ -921,35 +921,35 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
             </form>
 
             {/* Comments Thread */}
-            <div className="border-t border-slate-800 pt-4 space-y-3">
-              <div className="text-xs font-bold text-white flex items-center gap-1.5">
-                <MessageSquare className="w-4 h-4 text-indigo-400" />
+            <div className="border-t border-zinc-800 pt-4 space-y-3">
+              <div className="text-xs font-bold text-zinc-100 flex items-center gap-1.5">
+                <MessageSquare className="w-4 h-4 text-zinc-400" />
                 <span>Comments ({comments.length})</span>
               </div>
 
               <div className="max-h-40 overflow-y-auto space-y-2">
                 {loadingComments ? (
                   <div className="py-4 text-center">
-                    <Loader2 className="w-4 h-4 text-indigo-400 animate-spin mx-auto" />
+                    <Loader2 className="w-4 h-4 text-zinc-400 animate-spin mx-auto" />
                   </div>
                 ) : comments.length === 0 ? (
-                  <div className="text-xs text-slate-500 py-2 text-center italic">No comments yet</div>
+                  <div className="text-xs text-zinc-500 py-2 text-center italic">No comments yet</div>
                 ) : (
                   comments.map((c) => (
-                    <div key={c.id} className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 text-xs space-y-1">
-                      <div className="flex items-center justify-between text-[10px] text-slate-400">
-                        <span className="font-bold text-slate-200">{c.user?.name || "Member"}</span>
+                    <div key={c.id} className="p-3 rounded-xl bg-[#050505]/60 border border-zinc-800 text-xs space-y-1">
+                      <div className="flex items-center justify-between text-[10px] text-zinc-400">
+                        <span className="font-bold text-zinc-200">{c.user?.name || "Member"}</span>
                         <div className="flex items-center gap-2">
                           <span>{new Date(c.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                           <button
                             onClick={() => handleDeleteComment(c.id)}
-                            className="text-slate-500 hover:text-red-400"
+                            className="text-zinc-500 hover:text-red-400"
                           >
                             <Trash2 className="w-3 h-3" />
                           </button>
                         </div>
                       </div>
-                      <p className="text-slate-300">{c.content}</p>
+                      <p className="text-zinc-300">{c.content}</p>
                     </div>
                   ))
                 )}
@@ -962,11 +962,11 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   placeholder="Write a comment..."
-                  className="flex-1 bg-slate-950/80 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none"
+                  className="flex-1 bg-[#050505]/80 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-100 outline-none"
                 />
                 <button
                   type="submit"
-                  className="p-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-medium"
+                  className="p-2 bg-zinc-200 hover:bg-zinc-300 text-black rounded-xl text-xs font-medium"
                 >
                   <Send className="w-4 h-4" />
                 </button>
@@ -993,10 +993,10 @@ function TaskCard({
   return (
     <div
       onClick={onClick}
-      className="p-4 rounded-xl bg-slate-950/80 hover:bg-slate-950 border border-slate-800 hover:border-indigo-500/40 transition-all space-y-3 cursor-pointer group shadow-sm"
+      className="p-4 rounded-xl bg-[#050505]/80 hover:bg-[#050505] border border-zinc-800 hover:border-zinc-500/40 transition-all space-y-3 cursor-pointer group shadow-sm"
     >
       <div className="flex items-start justify-between gap-2">
-        <h4 className="font-semibold text-xs text-white group-hover:text-indigo-300 transition-colors line-clamp-2">
+        <h4 className="font-semibold text-xs text-zinc-100 group-hover:text-zinc-300 transition-colors line-clamp-2">
           {task.title}
         </h4>
         <button
@@ -1004,7 +1004,7 @@ function TaskCard({
             e.stopPropagation();
             onDelete(task.id);
           }}
-          className="opacity-0 group-hover:opacity-100 text-slate-500 hover:text-red-400 transition-opacity p-0.5"
+          className="opacity-0 group-hover:opacity-100 text-zinc-500 hover:text-red-400 transition-opacity p-0.5"
           title="Delete Task"
         >
           <Trash2 className="w-3.5 h-3.5" />
@@ -1012,24 +1012,24 @@ function TaskCard({
       </div>
 
       {task.description && (
-        <p className="text-[11px] text-slate-400 line-clamp-2 leading-relaxed">{task.description}</p>
+        <p className="text-[11px] text-zinc-400 line-clamp-2 leading-relaxed">{task.description}</p>
       )}
 
-      <div className="flex items-center justify-between pt-2 border-t border-slate-800/60 text-[10px]">
+      <div className="flex items-center justify-between pt-2 border-t border-zinc-800/60 text-[10px]">
         <span
           className={`px-2 py-0.5 rounded font-semibold ${
             task.priority === "HIGH"
               ? "bg-red-500/10 text-red-400 border border-red-500/20"
               : task.priority === "MEDIUM"
               ? "bg-amber-500/10 text-amber-400 border border-amber-500/20"
-              : "bg-slate-800 text-slate-400"
+              : "bg-zinc-800 text-zinc-400"
           }`}
         >
           {task.priority}
         </span>
 
         {task.assignee && (
-          <span className="text-slate-400 truncate max-w-[100px]" title={task.assignee.name}>
+          <span className="text-zinc-400 truncate max-w-[100px]" title={task.assignee.name}>
             👤 {task.assignee.name}
           </span>
         )}
@@ -1038,7 +1038,7 @@ function TaskCard({
           value={task.status}
           onClick={(e) => e.stopPropagation()}
           onChange={(e) => onStatusChange(task, e.target.value as TaskStatus)}
-          className="bg-slate-900 border border-slate-800 rounded px-1.5 py-0.5 text-[10px] text-slate-300 outline-none"
+          className="bg-[#121212] border border-zinc-800 rounded px-1.5 py-0.5 text-[10px] text-zinc-300 outline-none"
         >
           <option value="TODO">TODO</option>
           <option value="IN_PROGRESS">IN_PROGRESS</option>

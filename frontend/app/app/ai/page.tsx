@@ -221,28 +221,28 @@ export default function AIPage() {
       <ToastContainer toasts={toasts} onDismiss={removeToast} />
 
       {/* Hero Banner */}
-      <div className="relative p-8 rounded-3xl bg-gradient-to-r from-violet-950/80 via-slate-900 to-indigo-950/80 border border-violet-500/30 overflow-hidden shadow-2xl">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="relative p-8 rounded-3xl bg-gradient-to-r from-[#1a1a1a] via-[#0c0c0c] to-black border border-zinc-500/30 overflow-hidden shadow-2xl">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-zinc-200/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 space-y-3 max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/30 text-xs font-semibold">
-            <Sparkles className="w-3.5 h-3.5 text-violet-400" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-200/15 text-zinc-300 border border-zinc-500/30 text-xs font-semibold">
+            <Sparkles className="w-3.5 h-3.5 text-zinc-400" />
             <span>AI Project Intelligence</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-zinc-100 tracking-tight">
             Plan your next project with AI
           </h1>
 
-          <p className="text-sm text-slate-300 leading-relaxed">
+          <p className="text-sm text-zinc-300 leading-relaxed">
             Describe what you want to build and Nexora will help turn your idea into a structured project plan with actionable tasks and technical documentation.
           </p>
         </div>
       </div>
 
       {/* Main Input Box */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/80 border border-slate-800 space-y-4 shadow-xl">
-        <label className="block text-xs font-bold uppercase tracking-wider text-slate-300">
+      <div className="p-6 sm:p-8 rounded-3xl bg-[#121212]/90 border border-zinc-800 space-y-4 shadow-xl">
+        <label className="block text-xs font-bold uppercase tracking-wider text-zinc-300">
           What are you building? *
         </label>
 
@@ -251,18 +251,18 @@ export default function AIPage() {
           onChange={(e) => setPrompt(e.target.value)}
           rows={4}
           placeholder="Build an e-commerce platform with React, Node.js, PostgreSQL and Stripe..."
-          className="w-full bg-slate-950/70 border border-slate-800 focus:border-violet-500 rounded-2xl p-4 text-sm text-white placeholder-slate-500 outline-none leading-relaxed resize-none"
+          className="w-full bg-[#050505]/70 border border-zinc-800 focus:border-zinc-400 rounded-2xl p-4 text-sm text-zinc-100 placeholder-zinc-600 outline-none leading-relaxed resize-none"
         />
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
           {/* Sample Prompts */}
           <div className="flex items-center gap-2 flex-wrap text-xs">
-            <span className="text-slate-500 font-medium">Examples:</span>
+            <span className="text-zinc-500 font-medium">Examples:</span>
             {samplePrompts.map((s, idx) => (
               <button
                 key={idx}
                 onClick={() => setPrompt(s)}
-                className="px-2.5 py-1 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-400 hover:text-violet-300 hover:border-violet-500/30 transition-all text-left text-[11px]"
+                className="px-2.5 py-1 rounded-xl bg-[#050505]/80 border border-zinc-800 text-zinc-400 hover:text-zinc-300 hover:border-zinc-500/30 transition-all text-left text-[11px]"
               >
                 "{s.slice(0, 32)}..."
               </button>
@@ -272,7 +272,7 @@ export default function AIPage() {
           <button
             onClick={() => handleGeneratePlan(prompt)}
             disabled={generating}
-            className="px-6 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-semibold text-sm rounded-xl shadow-lg shadow-violet-600/30 flex items-center gap-2 cursor-pointer disabled:opacity-50 transition-all shrink-0 justify-center"
+            className="px-6 py-3 bg-gradient-to-r from-zinc-200 to-zinc-400 hover:from-white hover:to-zinc-300 text-zinc-100 font-semibold text-sm rounded-xl shadow-lg shadow-zinc-400/20 flex items-center gap-2 cursor-pointer disabled:opacity-50 transition-all shrink-0 justify-center"
           >
             {generating ? (
               <>
@@ -290,14 +290,14 @@ export default function AIPage() {
 
         {/* Loading Progress State */}
         {generating && (
-          <div className="p-4 rounded-2xl bg-violet-950/20 border border-violet-500/30 space-y-2 animate-pulse">
-            <div className="flex items-center gap-2 text-xs font-semibold text-violet-300">
-              <Loader2 className="w-4 h-4 animate-spin text-violet-400" />
+          <div className="p-4 rounded-2xl bg-zinc-200/5 border border-zinc-500/30 space-y-2 animate-pulse">
+            <div className="flex items-center gap-2 text-xs font-semibold text-zinc-300">
+              <Loader2 className="w-4 h-4 animate-spin text-zinc-400" />
               <span>{loadingStepsText[loadingStep]}</span>
             </div>
-            <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+            <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
               <div
-                className="h-full bg-violet-500 transition-all duration-500"
+                className="h-full bg-zinc-400 transition-all duration-500"
                 style={{ width: `${((loadingStep + 1) / 4) * 100}%` }}
               />
             </div>
@@ -307,32 +307,32 @@ export default function AIPage() {
 
       {/* AI Generated Review Screen */}
       {plan && (
-        <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/90 border border-violet-500/30 space-y-8 shadow-2xl">
+        <div className="p-6 sm:p-8 rounded-3xl bg-[#121212]/95 border border-zinc-500/30 space-y-8 shadow-2xl">
           {/* Review Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-800 pb-6">
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-2xl font-bold text-white">{plan.name}</h2>
+                <h2 className="text-2xl font-bold text-zinc-100">{plan.name}</h2>
                 <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                   AI PLAN READY
                 </span>
               </div>
-              <p className="text-xs text-slate-400 mt-1 max-w-2xl">{plan.description}</p>
+              <p className="text-xs text-zinc-400 mt-1 max-w-2xl">{plan.description}</p>
             </div>
 
             <div className="flex items-center gap-3 shrink-0">
               <button
                 onClick={() => setIsEditing(!isEditing)}
-                className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold rounded-xl flex items-center gap-1.5 transition-colors cursor-pointer"
               >
-                <Edit3 className="w-4 h-4 text-violet-400" />
+                <Edit3 className="w-4 h-4 text-zinc-400" />
                 <span>{isEditing ? "Done Editing" : "Edit Plan"}</span>
               </button>
 
               <button
                 onClick={handleCreateRealProject}
                 disabled={creatingProject}
-                className="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-indigo-600/30 flex items-center gap-2 disabled:opacity-50 cursor-pointer transition-all"
+                className="px-5 py-2 bg-zinc-200 hover:bg-zinc-300 text-black text-xs font-bold rounded-xl shadow-lg shadow-zinc-400/20 flex items-center gap-2 disabled:opacity-50 cursor-pointer transition-all"
               >
                 {creatingProject ? <Loader2 className="w-4 h-4 animate-spin" /> : <FolderGit2 className="w-4 h-4" />}
                 <span>Create Project</span>
@@ -342,11 +342,11 @@ export default function AIPage() {
 
           {/* Goals & Tech Stack Badges */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-2">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">Project Goals</h4>
+            <div className="p-4 rounded-2xl bg-[#050505]/60 border border-zinc-800 space-y-2">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-400">Project Goals</h4>
               <ul className="space-y-1">
                 {plan.goals.map((g, i) => (
-                  <li key={i} className="text-xs text-slate-300 flex items-center gap-2">
+                  <li key={i} className="text-xs text-zinc-300 flex items-center gap-2">
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                     <span>{g}</span>
                   </li>
@@ -354,13 +354,13 @@ export default function AIPage() {
               </ul>
             </div>
 
-            <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-2">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">Recommended Tech Stack</h4>
+            <div className="p-4 rounded-2xl bg-[#050505]/60 border border-zinc-800 space-y-2">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-400">Recommended Tech Stack</h4>
               <div className="flex flex-wrap gap-1.5 pt-1">
                 {plan.technologies.map((t, i) => (
                   <span
                     key={i}
-                    className="px-2.5 py-1 rounded-xl bg-violet-500/10 text-violet-300 border border-violet-500/20 text-xs font-semibold"
+                    className="px-2.5 py-1 rounded-xl bg-zinc-200/10 text-zinc-300 border border-zinc-500/25 text-xs font-semibold"
                   >
                     {t}
                   </span>
@@ -372,24 +372,24 @@ export default function AIPage() {
           {/* Phases & Tasks Breakdown */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-base font-bold text-white flex items-center gap-2">
-                <ListTodo className="w-5 h-5 text-violet-400" />
+              <h3 className="text-base font-bold text-zinc-100 flex items-center gap-2">
+                <ListTodo className="w-5 h-5 text-zinc-400" />
                 <span>Project Phases & Tasks</span>
               </h3>
             </div>
 
             <div className="space-y-4">
               {plan.phases.map((phase, pIdx) => (
-                <div key={pIdx} className="p-5 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-3">
-                  <div className="flex items-center justify-between border-b border-slate-800/80 pb-2">
+                <div key={pIdx} className="p-5 rounded-2xl bg-[#050505]/70 border border-zinc-800 space-y-3">
+                  <div className="flex items-center justify-between border-b border-zinc-800/80 pb-2">
                     <div>
-                      <h4 className="font-bold text-sm text-violet-300">{phase.name}</h4>
-                      <p className="text-xs text-slate-400">{phase.description}</p>
+                      <h4 className="font-bold text-sm text-zinc-300">{phase.name}</h4>
+                      <p className="text-xs text-zinc-400">{phase.description}</p>
                     </div>
                     {isEditing && (
                       <button
                         onClick={() => handleAddTask(pIdx)}
-                        className="px-2.5 py-1 bg-violet-600/20 hover:bg-violet-600 text-violet-300 hover:text-white rounded-lg text-xs font-semibold flex items-center gap-1 transition-all"
+                        className="px-2.5 py-1 bg-zinc-200/10 hover:bg-zinc-200 text-zinc-300 hover:text-black rounded-lg text-xs font-semibold flex items-center gap-1 transition-all"
                       >
                         <Plus className="w-3.5 h-3.5" /> Add Task
                       </button>
@@ -400,7 +400,7 @@ export default function AIPage() {
                     {phase.tasks.map((task, tIdx) => (
                       <div
                         key={tIdx}
-                        className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800/80 space-y-2 hover:border-slate-700 transition-colors"
+                        className="p-3.5 rounded-xl bg-[#121212]/90 border border-zinc-800/80 space-y-2 hover:border-zinc-700 transition-colors"
                       >
                         {isEditing ? (
                           <div className="space-y-2">
@@ -408,13 +408,13 @@ export default function AIPage() {
                               type="text"
                               value={task.title}
                               onChange={(e) => handleTaskChange(pIdx, tIdx, "title", e.target.value)}
-                              className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white outline-none font-semibold"
+                              className="w-full bg-[#050505] border border-zinc-800 rounded-lg px-3 py-1.5 text-xs text-zinc-100 outline-none font-semibold"
                             />
                             <textarea
                               value={task.description}
                               onChange={(e) => handleTaskChange(pIdx, tIdx, "description", e.target.value)}
                               rows={2}
-                              className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-300 outline-none"
+                              className="w-full bg-[#050505] border border-zinc-800 rounded-lg p-2 text-xs text-zinc-300 outline-none"
                             />
                             <div className="flex items-center justify-between">
                               <select
@@ -422,7 +422,7 @@ export default function AIPage() {
                                 onChange={(e) =>
                                   handleTaskChange(pIdx, tIdx, "priority", e.target.value as TaskPriority)
                                 }
-                                className="bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-[11px] text-white outline-none"
+                                className="bg-[#050505] border border-zinc-800 rounded-lg px-2 py-1 text-[11px] text-zinc-100 outline-none"
                               >
                                 <option value="LOW">LOW</option>
                                 <option value="MEDIUM">MEDIUM</option>
@@ -440,8 +440,8 @@ export default function AIPage() {
                         ) : (
                           <div className="flex items-start justify-between gap-3">
                             <div className="space-y-1">
-                              <h5 className="font-semibold text-xs text-white">{task.title}</h5>
-                              <p className="text-xs text-slate-400 leading-normal">{task.description}</p>
+                              <h5 className="font-semibold text-xs text-zinc-100">{task.title}</h5>
+                              <p className="text-xs text-zinc-400 leading-normal">{task.description}</p>
                             </div>
                             <span
                               className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase shrink-0 ${
@@ -449,7 +449,7 @@ export default function AIPage() {
                                   ? "bg-rose-500/10 text-rose-400 border border-rose-500/20"
                                   : task.priority === "MEDIUM"
                                   ? "bg-amber-500/10 text-amber-400 border border-amber-500/20"
-                                  : "bg-slate-800 text-slate-400"
+                                  : "bg-zinc-800 text-zinc-400"
                               }`}
                             >
                               {task.priority}
@@ -465,9 +465,9 @@ export default function AIPage() {
           </div>
 
           {/* Generated Documentation Section */}
-          <div className="space-y-4 pt-4 border-t border-slate-800">
+          <div className="space-y-4 pt-4 border-t border-zinc-800">
             <div className="flex items-center justify-between">
-              <h3 className="text-base font-bold text-white flex items-center gap-2">
+              <h3 className="text-base font-bold text-zinc-100 flex items-center gap-2">
                 <FileText className="w-5 h-5 text-amber-400" />
                 <span>Generated Technical Documentation</span>
               </h3>
@@ -475,7 +475,7 @@ export default function AIPage() {
               <button
                 onClick={handleSaveDocumentation}
                 disabled={savingDocs}
-                className="px-4 py-2 bg-amber-600/20 hover:bg-amber-600 text-amber-300 hover:text-white rounded-xl text-xs font-semibold border border-amber-500/30 flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                className="px-4 py-2 bg-amber-600/20 hover:bg-amber-600 text-amber-300 hover:text-zinc-100 rounded-xl text-xs font-semibold border border-amber-500/30 flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
               >
                 {savingDocs ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                 <span>Save Documentation to Workspace</span>
@@ -484,12 +484,12 @@ export default function AIPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {plan.documentation.map((doc, idx) => (
-                <div key={idx} className="p-5 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-2">
+                <div key={idx} className="p-5 rounded-2xl bg-[#050505]/70 border border-zinc-800 space-y-2">
                   <h4 className="font-bold text-xs text-amber-300 flex items-center gap-2">
                     <FileText className="w-4 h-4 text-amber-400" />
                     <span>{doc.title}</span>
                   </h4>
-                  <div className="text-xs text-slate-300 font-mono bg-slate-900 p-3 rounded-xl border border-slate-800 max-h-40 overflow-y-auto whitespace-pre-wrap">
+                  <div className="text-xs text-zinc-300 font-mono bg-[#121212] p-3 rounded-xl border border-zinc-800 max-h-40 overflow-y-auto whitespace-pre-wrap">
                     {doc.content}
                   </div>
                 </div>
@@ -500,12 +500,12 @@ export default function AIPage() {
       )}
 
       {/* AI Assistant Widget */}
-      <div className="p-6 rounded-3xl bg-slate-900/80 border border-slate-800 space-y-4 shadow-xl">
-        <h3 className="text-sm font-bold text-white flex items-center gap-2">
-          <HelpCircle className="w-4 h-4 text-violet-400" />
+      <div className="p-6 rounded-3xl bg-[#121212]/90 border border-zinc-800 space-y-4 shadow-xl">
+        <h3 className="text-sm font-bold text-zinc-100 flex items-center gap-2">
+          <HelpCircle className="w-4 h-4 text-zinc-400" />
           <span>Nexora AI Assistant</span>
         </h3>
-        <p className="text-xs text-slate-400">
+        <p className="text-xs text-zinc-400">
           Ask Nexora AI technical architecture questions or request task breakdown recommendations.
         </p>
 
@@ -515,12 +515,12 @@ export default function AIPage() {
             value={assistantPrompt}
             onChange={(e) => setAssistantPrompt(e.target.value)}
             placeholder="e.g. What should I build first?"
-            className="flex-1 bg-slate-950/80 border border-slate-800 focus:border-violet-500 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 outline-none"
+            className="flex-1 bg-[#050505]/80 border border-zinc-800 focus:border-zinc-400 rounded-xl px-4 py-2.5 text-xs text-zinc-100 placeholder-zinc-600 outline-none"
           />
           <button
             type="submit"
             disabled={assistantLoading}
-            className="px-4 py-2.5 bg-violet-600 hover:bg-violet-500 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 disabled:opacity-50 cursor-pointer transition-all"
+            className="px-4 py-2.5 bg-zinc-200 hover:bg-zinc-400 text-black rounded-xl text-xs font-semibold flex items-center gap-1.5 disabled:opacity-50 cursor-pointer transition-all"
           >
             {assistantLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
             <span>Ask</span>
@@ -528,8 +528,8 @@ export default function AIPage() {
         </form>
 
         {assistantReply && (
-          <div className="p-4 rounded-2xl bg-violet-950/30 border border-violet-500/30 text-xs text-slate-200 leading-relaxed font-sans">
-            <span className="font-bold text-violet-300 block mb-1">Nexora AI Response:</span>
+          <div className="p-4 rounded-2xl bg-zinc-200/5 border border-zinc-500/30 text-xs text-zinc-200 leading-relaxed font-sans">
+            <span className="font-bold text-zinc-300 block mb-1">Nexora AI Response:</span>
             {assistantReply}
           </div>
         )}

@@ -257,7 +257,7 @@ export default function TasksPage() {
   };
 
   if (!currentWorkspace) {
-    return <div className="p-8 text-center text-slate-400">Please select a workspace.</div>;
+    return <div className="p-8 text-center text-zinc-400">Please select a workspace.</div>;
   }
 
   const todoTasks = tasks.filter((t) => t.status === "TODO");
@@ -271,21 +271,21 @@ export default function TasksPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-zinc-100 flex items-center gap-2">
             <CheckSquare className="w-6 h-6 text-emerald-400" />
             <span>Task Management</span>
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Kanban board & task tracking for <span className="text-indigo-300 font-semibold">{currentWorkspace.name}</span>
+          <p className="text-xs text-zinc-400 mt-1">
+            Kanban board & task tracking for <span className="text-zinc-300 font-semibold">{currentWorkspace.name}</span>
           </p>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="p-1 rounded-xl bg-slate-900 border border-slate-800 flex items-center gap-1">
+          <div className="p-1 rounded-xl bg-[#121212] border border-zinc-800 flex items-center gap-1">
             <button
               onClick={() => setViewMode("kanban")}
               className={`p-1.5 rounded-lg text-xs font-medium flex items-center gap-1 transition-all ${
-                viewMode === "kanban" ? "bg-indigo-600 text-white" : "text-slate-400 hover:text-white"
+                viewMode === "kanban" ? "bg-zinc-200 text-zinc-100" : "text-zinc-400 hover:text-zinc-100"
               }`}
             >
               <Kanban className="w-3.5 h-3.5" /> Board
@@ -293,7 +293,7 @@ export default function TasksPage() {
             <button
               onClick={() => setViewMode("list")}
               className={`p-1.5 rounded-lg text-xs font-medium flex items-center gap-1 transition-all ${
-                viewMode === "list" ? "bg-indigo-600 text-white" : "text-slate-400 hover:text-white"
+                viewMode === "list" ? "bg-zinc-200 text-zinc-100" : "text-zinc-400 hover:text-zinc-100"
               }`}
             >
               <List className="w-3.5 h-3.5" /> List
@@ -302,7 +302,7 @@ export default function TasksPage() {
 
           <button
             onClick={() => setIsCreateOpen(true)}
-            className="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-sm font-medium shadow-lg shadow-indigo-600/30 flex items-center gap-2"
+            className="px-4 py-2.5 bg-zinc-200 hover:bg-zinc-300 text-black rounded-xl text-sm font-medium shadow-lg shadow-zinc-400/20 flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />
             <span>New Task</span>
@@ -311,8 +311,8 @@ export default function TasksPage() {
       </div>
 
       {/* Project Selector Bar */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-slate-800/80">
-        <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider shrink-0 mr-2 flex items-center gap-1">
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-zinc-800/80">
+        <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider shrink-0 mr-2 flex items-center gap-1">
           <Filter className="w-3.5 h-3.5" /> Project:
         </span>
         {projects.map((p) => (
@@ -321,8 +321,8 @@ export default function TasksPage() {
             onClick={() => handleProjectSelect(p.id)}
             className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all shrink-0 flex items-center gap-2 cursor-pointer ${
               selectedProjectId === p.id
-                ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/20"
-                : "bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800"
+                ? "bg-zinc-200 text-zinc-100 shadow-md shadow-zinc-400/15"
+                : "bg-[#121212]/90 text-zinc-400 hover:text-zinc-100 border border-zinc-800"
             }`}
           >
             <span>{p.emoji || "🚀"}</span>
@@ -335,23 +335,23 @@ export default function TasksPage() {
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[1, 2, 3].map((n) => (
-            <div key={n} className="h-64 bg-slate-900/60 rounded-2xl border border-slate-800 animate-pulse" />
+            <div key={n} className="h-64 bg-[#121212]/70 rounded-2xl border border-zinc-800 animate-pulse" />
           ))}
         </div>
       ) : projects.length === 0 ? (
-        <div className="p-12 text-center bg-slate-900/60 rounded-2xl border border-slate-800 text-slate-400 text-sm">
+        <div className="p-12 text-center bg-[#121212]/70 rounded-2xl border border-zinc-800 text-zinc-400 text-sm">
           No projects available in this workspace. Please create a project first.
         </div>
       ) : viewMode === "kanban" ? (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* TODO Column */}
-          <div className="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-3">
-            <div className="flex items-center justify-between font-bold text-xs text-slate-300 pb-2 border-b border-slate-800">
+          <div className="nx-card p-4/70 border border-zinc-800 space-y-3">
+            <div className="flex items-center justify-between font-bold text-xs text-zinc-300 pb-2 border-b border-zinc-800">
               <span className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-slate-400" />
                 TO DO
               </span>
-              <span className="px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 text-[10px]">
+              <span className="px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 text-[10px]">
                 {todoTasks.length}
               </span>
             </div>
@@ -370,8 +370,8 @@ export default function TasksPage() {
           </div>
 
           {/* IN PROGRESS Column */}
-          <div className="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-3">
-            <div className="flex items-center justify-between font-bold text-xs text-amber-400 pb-2 border-b border-slate-800">
+          <div className="nx-card p-4/70 border border-zinc-800 space-y-3">
+            <div className="flex items-center justify-between font-bold text-xs text-amber-400 pb-2 border-b border-zinc-800">
               <span className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
                 IN PROGRESS
@@ -395,8 +395,8 @@ export default function TasksPage() {
           </div>
 
           {/* DONE Column */}
-          <div className="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-3">
-            <div className="flex items-center justify-between font-bold text-xs text-emerald-400 pb-2 border-b border-slate-800">
+          <div className="nx-card p-4/70 border border-zinc-800 space-y-3">
+            <div className="flex items-center justify-between font-bold text-xs text-emerald-400 pb-2 border-b border-zinc-800">
               <span className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-400" />
                 DONE
@@ -421,39 +421,39 @@ export default function TasksPage() {
         </div>
       ) : (
         /* LIST VIEW */
-        <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2">
+        <div className="nx-card p-4/90 border border-zinc-800 space-y-2">
           {tasks.length === 0 ? (
-            <div className="py-8 text-center text-slate-500 text-xs">No tasks found</div>
+            <div className="py-8 text-center text-zinc-500 text-xs">No tasks found</div>
           ) : (
             tasks.map((t) => (
               <div
                 key={t.id}
                 onClick={() => openTaskDetail(t)}
-                className="p-3.5 rounded-xl bg-slate-950/60 hover:bg-slate-950 border border-slate-800 flex items-center justify-between gap-4 cursor-pointer transition-colors"
+                className="nx-card p-3.5 hover:bg-[#050505] border border-zinc-800 flex items-center justify-between gap-4 cursor-pointer transition-colors"
               >
                 <div className="flex items-center gap-3 overflow-hidden">
                   <select
                     value={t.status}
                     onClick={(e) => e.stopPropagation()}
                     onChange={(e) => handleUpdateStatus(t, e.target.value as TaskStatus)}
-                    className="bg-slate-900 border border-slate-700 text-xs rounded-lg px-2 py-1 text-slate-200 outline-none"
+                    className="bg-[#121212] border border-zinc-700 text-xs rounded-lg px-2 py-1 text-zinc-200 outline-none"
                   >
                     <option value="TODO">TODO</option>
                     <option value="IN_PROGRESS">IN_PROGRESS</option>
                     <option value="DONE">DONE</option>
                   </select>
-                  <span className="font-semibold text-sm text-white truncate">{t.title}</span>
+                  <span className="font-semibold text-sm text-zinc-100 truncate">{t.title}</span>
                 </div>
 
                 <div className="flex items-center gap-3 text-xs shrink-0">
-                  {t.assignee && <span className="text-[11px] text-slate-400">👤 {t.assignee.name}</span>}
+                  {t.assignee && <span className="text-[11px] text-zinc-400">👤 {t.assignee.name}</span>}
                   <span
                     className={`px-2 py-0.5 rounded text-[10px] font-semibold ${
                       t.priority === "HIGH"
                         ? "bg-red-500/10 text-red-400 border border-red-500/20"
                         : t.priority === "MEDIUM"
                         ? "bg-amber-500/10 text-amber-400 border border-amber-500/20"
-                        : "bg-slate-800 text-slate-400"
+                        : "bg-zinc-800 text-zinc-400"
                     }`}
                   >
                     {t.priority}
@@ -463,7 +463,7 @@ export default function TasksPage() {
                       e.stopPropagation();
                       handleDeleteTask(t.id);
                     }}
-                    className="p-1 rounded text-slate-500 hover:text-red-400"
+                    className="p-1 rounded text-zinc-500 hover:text-red-400"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -476,11 +476,11 @@ export default function TasksPage() {
 
       {/* Create Task Modal */}
       {isCreateOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#050505]/80 backdrop-blur-xs">
+          <div className="w-full max-w-md bg-[#121212] border border-zinc-800 rounded-2xl p-6 shadow-2xl space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-white">Create New Task</h2>
-              <button onClick={() => setIsCreateOpen(false)} className="p-1 text-slate-400 hover:text-white">
+              <h2 className="text-lg font-bold text-zinc-100">Create New Task</h2>
+              <button onClick={() => setIsCreateOpen(false)} className="p-1 text-zinc-400 hover:text-zinc-100">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -493,11 +493,11 @@ export default function TasksPage() {
 
             <form onSubmit={handleCreateTask} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">Target Project</label>
+                <label className="block text-xs font-semibold uppercase text-zinc-300 mb-1">Target Project</label>
                 <select
                   value={targetProjectId}
                   onChange={(e) => setTargetProjectId(e.target.value)}
-                  className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white outline-none"
+                  className="w-full bg-[#050505]/60 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-zinc-100 outline-none"
                 >
                   {projects.map((p) => (
                     <option key={p.id} value={p.id}>
@@ -508,7 +508,7 @@ export default function TasksPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">Task Title *</label>
+                <label className="block text-xs font-semibold uppercase text-zinc-300 mb-1">Task Title *</label>
                 <input
                   type="text"
                   value={title}
@@ -516,28 +516,28 @@ export default function TasksPage() {
                   placeholder="e.g. Build authentication logic"
                   required
                   minLength={3}
-                  className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white outline-none"
+                  className="w-full bg-[#050505]/60 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-zinc-100 outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">Description</label>
+                <label className="block text-xs font-semibold uppercase text-zinc-300 mb-1">Description</label>
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Details and acceptance criteria..."
                   rows={3}
-                  className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white outline-none resize-none"
+                  className="w-full bg-[#050505]/60 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-zinc-100 outline-none resize-none"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">Status</label>
+                  <label className="block text-xs font-semibold uppercase text-zinc-300 mb-1">Status</label>
                   <select
                     value={status}
                     onChange={(e) => setStatus(e.target.value as TaskStatus)}
-                    className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none"
+                    className="w-full bg-[#050505]/60 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-100 outline-none"
                   >
                     <option value="TODO">TODO</option>
                     <option value="IN_PROGRESS">IN_PROGRESS</option>
@@ -546,11 +546,11 @@ export default function TasksPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">Priority</label>
+                  <label className="block text-xs font-semibold uppercase text-zinc-300 mb-1">Priority</label>
                   <select
                     value={priority}
                     onChange={(e) => setPriority(e.target.value as TaskPriority)}
-                    className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none"
+                    className="w-full bg-[#050505]/60 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-100 outline-none"
                   >
                     <option value="LOW">LOW</option>
                     <option value="MEDIUM">MEDIUM</option>
@@ -561,11 +561,11 @@ export default function TasksPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">Assignee</label>
+                  <label className="block text-xs font-semibold uppercase text-zinc-300 mb-1">Assignee</label>
                   <select
                     value={assigneeId}
                     onChange={(e) => setAssigneeId(e.target.value)}
-                    className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none"
+                    className="w-full bg-[#050505]/60 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-100 outline-none"
                   >
                     <option value="">Unassigned</option>
                     {members.map((m) => (
@@ -577,12 +577,12 @@ export default function TasksPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">Due Date</label>
+                  <label className="block text-xs font-semibold uppercase text-zinc-300 mb-1">Due Date</label>
                   <input
                     type="date"
                     value={dueDate}
                     onChange={(e) => setDueDate(e.target.value)}
-                    className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none"
+                    className="w-full bg-[#050505]/60 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-100 outline-none"
                   />
                 </div>
               </div>
@@ -591,14 +591,14 @@ export default function TasksPage() {
                 <button
                   type="button"
                   onClick={() => setIsCreateOpen(false)}
-                  className="px-4 py-2 text-sm text-slate-400 hover:text-white"
+                  className="px-4 py-2 text-sm text-zinc-400 hover:text-zinc-100"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={creating}
-                  className="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-xl shadow-lg shadow-indigo-600/30 flex items-center gap-2 disabled:opacity-50"
+                  className="px-5 py-2 bg-zinc-200 hover:bg-zinc-300 text-black text-sm font-medium rounded-xl shadow-lg shadow-zinc-400/20 flex items-center gap-2 disabled:opacity-50"
                 >
                   {creating ? <Loader2 className="w-4 h-4 animate-spin" /> : "Create Task"}
                 </button>
@@ -610,24 +610,24 @@ export default function TasksPage() {
 
       {/* Task Detail Modal */}
       {activeTask && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-xs">
-          <div className="w-full max-w-xl bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-6 max-h-[90vh] flex flex-col">
-            <div className="flex items-start justify-between border-b border-slate-800 pb-3">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#050505]/80 backdrop-blur-xs">
+          <div className="w-full max-w-xl bg-[#121212] border border-zinc-800 rounded-2xl p-6 shadow-2xl space-y-6 max-h-[90vh] flex flex-col">
+            <div className="flex items-start justify-between border-b border-zinc-800 pb-3">
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-400">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">
                   Task Detail Modal
                 </span>
-                <h2 className="text-lg font-bold text-white mt-0.5">{activeTask.title}</h2>
+                <h2 className="text-lg font-bold text-zinc-100 mt-0.5">{activeTask.title}</h2>
               </div>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => handleDeleteTask(activeTask.id)}
-                  className="p-1.5 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg"
+                  className="p-1.5 text-zinc-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg"
                   title="Delete Task"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
-                <button onClick={() => setActiveTask(null)} className="p-1 text-slate-400 hover:text-white">
+                <button onClick={() => setActiveTask(null)} className="p-1 text-zinc-400 hover:text-zinc-100">
                   <X className="w-5 h-5" />
                 </button>
               </div>
@@ -635,34 +635,34 @@ export default function TasksPage() {
 
             <form onSubmit={handleSaveTaskDetail} className="space-y-4 flex-1 overflow-y-auto pr-1">
               <div>
-                <label className="block text-[11px] font-bold uppercase text-slate-400 mb-1">Title</label>
+                <label className="block text-[11px] font-bold uppercase text-zinc-400 mb-1">Title</label>
                 <input
                   type="text"
                   value={detailTitle}
                   onChange={(e) => setDetailTitle(e.target.value)}
                   required
                   minLength={3}
-                  className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none"
+                  className="w-full bg-[#050505]/60 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-100 outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold uppercase text-slate-400 mb-1">Description</label>
+                <label className="block text-[11px] font-bold uppercase text-zinc-400 mb-1">Description</label>
                 <textarea
                   value={detailDesc}
                   onChange={(e) => setDetailDesc(e.target.value)}
                   rows={3}
-                  className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none resize-none"
+                  className="w-full bg-[#050505]/60 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-100 outline-none resize-none"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-bold uppercase text-slate-400 mb-1">Status</label>
+                  <label className="block text-[11px] font-bold uppercase text-zinc-400 mb-1">Status</label>
                   <select
                     value={detailStatus}
                     onChange={(e) => setDetailStatus(e.target.value as TaskStatus)}
-                    className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none"
+                    className="w-full bg-[#050505]/60 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-100 outline-none"
                   >
                     <option value="TODO">TODO</option>
                     <option value="IN_PROGRESS">IN_PROGRESS</option>
@@ -671,11 +671,11 @@ export default function TasksPage() {
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold uppercase text-slate-400 mb-1">Priority</label>
+                  <label className="block text-[11px] font-bold uppercase text-zinc-400 mb-1">Priority</label>
                   <select
                     value={detailPriority}
                     onChange={(e) => setDetailPriority(e.target.value as TaskPriority)}
-                    className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none"
+                    className="w-full bg-[#050505]/60 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-100 outline-none"
                   >
                     <option value="LOW">LOW</option>
                     <option value="MEDIUM">MEDIUM</option>
@@ -686,11 +686,11 @@ export default function TasksPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-bold uppercase text-slate-400 mb-1">Assignee</label>
+                  <label className="block text-[11px] font-bold uppercase text-zinc-400 mb-1">Assignee</label>
                   <select
                     value={detailAssigneeId}
                     onChange={(e) => setDetailAssigneeId(e.target.value)}
-                    className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none"
+                    className="w-full bg-[#050505]/60 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-100 outline-none"
                   >
                     <option value="">Unassigned</option>
                     {members.map((m) => (
@@ -702,17 +702,17 @@ export default function TasksPage() {
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold uppercase text-slate-400 mb-1">Due Date</label>
+                  <label className="block text-[11px] font-bold uppercase text-zinc-400 mb-1">Due Date</label>
                   <input
                     type="date"
                     value={detailDueDate}
                     onChange={(e) => setDetailDueDate(e.target.value)}
-                    className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none"
+                    className="w-full bg-[#050505]/60 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-100 outline-none"
                   />
                 </div>
               </div>
 
-              <div className="flex items-center justify-between pt-2 border-t border-slate-800 text-[10px] text-slate-500">
+              <div className="flex items-center justify-between pt-2 border-t border-zinc-800 text-[10px] text-zinc-500">
                 <span>Created by: {activeTask.createdBy?.name || "Member"}</span>
                 <span>Created: {new Date(activeTask.createdAt).toLocaleDateString()}</span>
               </div>
@@ -721,39 +721,39 @@ export default function TasksPage() {
                 <button
                   type="submit"
                   disabled={updatingTask}
-                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold shadow-md flex items-center gap-1.5 disabled:opacity-50"
+                  className="px-4 py-2 bg-zinc-200 hover:bg-zinc-300 text-black rounded-xl text-xs font-semibold shadow-md flex items-center gap-1.5 disabled:opacity-50"
                 >
                   {updatingTask ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : "Save Updates"}
                 </button>
               </div>
             </form>
 
-            <div className="border-t border-slate-800 pt-4 space-y-3">
-              <div className="text-xs font-bold text-white flex items-center gap-1.5">
-                <MessageSquare className="w-4 h-4 text-indigo-400" />
+            <div className="border-t border-zinc-800 pt-4 space-y-3">
+              <div className="text-xs font-bold text-zinc-100 flex items-center gap-1.5">
+                <MessageSquare className="w-4 h-4 text-zinc-400" />
                 <span>Comments ({comments.length})</span>
               </div>
 
               <div className="max-h-40 overflow-y-auto space-y-2">
                 {loadingComments ? (
                   <div className="py-4 text-center">
-                    <Loader2 className="w-4 h-4 text-indigo-400 animate-spin mx-auto" />
+                    <Loader2 className="w-4 h-4 text-zinc-400 animate-spin mx-auto" />
                   </div>
                 ) : comments.length === 0 ? (
-                  <div className="text-xs text-slate-500 py-2 text-center italic">No comments yet</div>
+                  <div className="text-xs text-zinc-500 py-2 text-center italic">No comments yet</div>
                 ) : (
                   comments.map((c) => (
-                    <div key={c.id} className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 text-xs space-y-1">
-                      <div className="flex items-center justify-between text-[10px] text-slate-400">
-                        <span className="font-bold text-slate-200">{c.user?.name || "Member"}</span>
+                    <div key={c.id} className="nx-card p-3 border border-zinc-800 text-xs space-y-1">
+                      <div className="flex items-center justify-between text-[10px] text-zinc-400">
+                        <span className="font-bold text-zinc-200">{c.user?.name || "Member"}</span>
                         <div className="flex items-center gap-2">
                           <span>{new Date(c.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                          <button onClick={() => handleDeleteComment(c.id)} className="text-slate-500 hover:text-red-400">
+                          <button onClick={() => handleDeleteComment(c.id)} className="text-zinc-500 hover:text-red-400">
                             <Trash2 className="w-3 h-3" />
                           </button>
                         </div>
                       </div>
-                      <p className="text-slate-300">{c.content}</p>
+                      <p className="text-zinc-300">{c.content}</p>
                     </div>
                   ))
                 )}
@@ -765,11 +765,11 @@ export default function TasksPage() {
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   placeholder="Write a comment..."
-                  className="flex-1 bg-slate-950/80 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none"
+                  className="flex-1 bg-[#050505]/80 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-100 outline-none"
                 />
                 <button
                   type="submit"
-                  className="p-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-medium"
+                  className="p-2 bg-zinc-200 hover:bg-zinc-300 text-black rounded-xl text-xs font-medium"
                 >
                   <Send className="w-4 h-4" />
                 </button>
@@ -796,10 +796,10 @@ function TaskCard({
   return (
     <div
       onClick={onClick}
-      className="p-4 rounded-xl bg-slate-950/80 hover:bg-slate-950 border border-slate-800 hover:border-indigo-500/40 transition-all space-y-3 cursor-pointer group shadow-sm"
+      className="p-4 rounded-xl bg-[#050505]/80 hover:bg-[#050505] border border-zinc-800 hover:border-zinc-500/40 transition-all space-y-3 cursor-pointer group shadow-sm"
     >
       <div className="flex items-start justify-between gap-2">
-        <h4 className="font-semibold text-xs text-white group-hover:text-indigo-300 transition-colors line-clamp-2">
+        <h4 className="font-semibold text-xs text-zinc-100 group-hover:text-zinc-300 transition-colors line-clamp-2">
           {task.title}
         </h4>
         <button
@@ -807,7 +807,7 @@ function TaskCard({
             e.stopPropagation();
             onDelete(task.id);
           }}
-          className="opacity-0 group-hover:opacity-100 text-slate-500 hover:text-red-400 transition-opacity p-0.5"
+          className="opacity-0 group-hover:opacity-100 text-zinc-500 hover:text-red-400 transition-opacity p-0.5"
           title="Delete Task"
         >
           <Trash2 className="w-3.5 h-3.5" />
@@ -815,24 +815,24 @@ function TaskCard({
       </div>
 
       {task.description && (
-        <p className="text-[11px] text-slate-400 line-clamp-2 leading-relaxed">{task.description}</p>
+        <p className="text-[11px] text-zinc-400 line-clamp-2 leading-relaxed">{task.description}</p>
       )}
 
-      <div className="flex items-center justify-between pt-2 border-t border-slate-800/60 text-[10px]">
+      <div className="flex items-center justify-between pt-2 border-t border-zinc-800/60 text-[10px]">
         <span
           className={`px-2 py-0.5 rounded font-semibold ${
             task.priority === "HIGH"
               ? "bg-red-500/10 text-red-400 border border-red-500/20"
               : task.priority === "MEDIUM"
               ? "bg-amber-500/10 text-amber-400 border border-amber-500/20"
-              : "bg-slate-800 text-slate-400"
+              : "bg-zinc-800 text-zinc-400"
           }`}
         >
           {task.priority}
         </span>
 
         {task.assignee && (
-          <span className="text-slate-400 truncate max-w-[100px]" title={task.assignee.name}>
+          <span className="text-zinc-400 truncate max-w-[100px]" title={task.assignee.name}>
             👤 {task.assignee.name}
           </span>
         )}
@@ -841,7 +841,7 @@ function TaskCard({
           value={task.status}
           onClick={(e) => e.stopPropagation()}
           onChange={(e) => onStatusChange(task, e.target.value as TaskStatus)}
-          className="bg-slate-900 border border-slate-800 rounded px-1.5 py-0.5 text-[10px] text-slate-300 outline-none"
+          className="bg-[#121212] border border-zinc-800 rounded px-1.5 py-0.5 text-[10px] text-zinc-300 outline-none"
         >
           <option value="TODO">TODO</option>
           <option value="IN_PROGRESS">IN_PROGRESS</option>
