@@ -1,11 +1,9 @@
 import prisma from "../config/prisma.js";
-import { hashPassword } from "../utils/hash.js";
+import { hashPassword, comparePassword } from "../utils/hash.js";
 import type { RegisterInput, LoginInput } from "../validations/auth.validation.js";
-import { comparePassword } from "../utils/hash.js";
 import { generateAccessToken } from "../utils/jwt.js";
 
-export async function registerUser(data: RegisterInput) 
-{
+export async function registerUser(data: RegisterInput) {
   const existingUser = await prisma.user.findUnique({
     where: {
       email: data.email,
@@ -13,29 +11,47 @@ export async function registerUser(data: RegisterInput)
   });
 
   if (existingUser) {
-    throw new Error("Eamil or Uuser already Exists!");
+    throw new Error("Email or User already exists!");
   }
 
   const hashedPassword = await hashPassword(data.password);
 
-  const user = await prisma.user.create({
-    data: {
-      name: data.name,
-      email: data.email,
-      password: hashedPassword,
-    },
+  const result = await prisma.$transaction(async (tx) => {
+    const user = await tx.user.create({
+      data: {
+        name: data.name,
+        email: data.email,
+        password: hashedPassword,
+      },
+    });
+
+    const workspace = await tx.workspace.create({
+      data: {
+        name: `${data.name}'s Workspace`,
+        description: "Default workspace created automatically",
+        ownerId: user.id,
+      },
+    });
+
+    await tx.workspaceMember.create({
+      data: {
+        workspaceId: workspace.id,
+        userId: user.id,
+        role: "OWNER",
+      },
+    });
+
+    return user;
   });
 
   return {
-    id: user.id,
-    name: user.name,
-    email: user.email,
+    id: result.id,
+    name: result.name,
+    email: result.email,
   };
 }
 
-export const loginUser = async (data: LoginInput) => 
-{
-
+export const loginUser = async (data: LoginInput) => {
   const user = await prisma.user.findUnique({
     where: {
       email: data.email,
@@ -65,6 +81,4 @@ export const loginUser = async (data: LoginInput) =>
     },
     accessToken,
   };
-
 };
-

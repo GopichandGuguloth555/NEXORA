@@ -10,15 +10,20 @@ import { CreateWorkspaceModal } from "@/components/workspace/CreateWorkspaceModa
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
 import { Plus, Layers } from "lucide-react";
 
-export default function ProtectedAppLayout({ children }: { children: React.ReactNode }) {
+export default function ProtectedAppLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const router = useRouter();
-  const { user, token, loading: authLoading } = useAuth();
-  const { workspaces, loading: wsLoading, createWorkspace } = useWorkspace();
+
+  const { token, loading: authLoading } = useAuth();
+
+  const { workspaces, loading: wsLoading } = useWorkspace();
 
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [createWsOpen, setCreateWsOpen] = useState(false);
-  const [initializingWorkspace, setInitializingWorkspace] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !token) {
@@ -26,32 +31,13 @@ export default function ProtectedAppLayout({ children }: { children: React.React
     }
   }, [token, authLoading, router]);
 
-  useEffect(() => {
-    const handleInitialWorkspace = async () => {
-      if (!authLoading && token && !wsLoading && workspaces.length === 0 && !initializingWorkspace) {
-        try {
-          setInitializingWorkspace(true);
-          const name = user?.name ? `${user.name}'s Workspace` : "My Workspace";
-          await createWorkspace(name, "Default workspace created automatically");
-        } catch (err) {
-          console.error("Auto workspace creation error", err);
-        } finally {
-          setInitializingWorkspace(false);
-        }
-      }
-    };
-    handleInitialWorkspace();
-  }, [authLoading, token, wsLoading, workspaces.length, user]);
-
-  if (authLoading || wsLoading || initializingWorkspace) {
+  if (authLoading || wsLoading) {
     return (
       <LoadingScreen
         message={
-          initializingWorkspace
-            ? "Setting up your workspace..."
-            : authLoading
-              ? "Signing you in..."
-              : "Loading workspace..."
+          authLoading
+            ? "Signing you in..."
+            : "Loading workspace..."
         }
       />
     );
@@ -70,7 +56,9 @@ export default function ProtectedAppLayout({ children }: { children: React.React
       />
 
       <div className="flex-1 flex flex-col min-w-0 min-h-screen">
-        <AppHeader onMobileMenuClick={() => setMobileMenuOpen(true)} />
+        <AppHeader
+          onMobileMenuClick={() => setMobileMenuOpen(true)}
+        />
 
         <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
           {workspaces.length === 0 ? (
@@ -78,10 +66,16 @@ export default function ProtectedAppLayout({ children }: { children: React.React
               <div className="w-12 h-12 rounded-xl bg-zinc-200/10 border border-zinc-500/30 text-zinc-300 mx-auto flex items-center justify-center anim-float">
                 <Layers className="w-6 h-6" />
               </div>
-              <h2 className="text-xl font-bold text-zinc-100 font-display">Welcome to Nexora!</h2>
+
+              <h2 className="text-xl font-bold text-zinc-100 font-display">
+                Welcome to Nexora!
+              </h2>
+
               <p className="text-sm text-zinc-500">
-                You don&apos;t have any active workspace yet. Create one to get started with your projects.
+                You don&apos;t have any active workspace yet. Create one to
+                get started with your projects.
               </p>
+
               <button
                 onClick={() => setCreateWsOpen(true)}
                 className="nx-btn-primary px-5 py-2.5 rounded-xl text-sm inline-flex items-center gap-2"
@@ -96,7 +90,10 @@ export default function ProtectedAppLayout({ children }: { children: React.React
         </main>
       </div>
 
-      <CreateWorkspaceModal isOpen={createWsOpen} onClose={() => setCreateWsOpen(false)} />
+      <CreateWorkspaceModal
+        isOpen={createWsOpen}
+        onClose={() => setCreateWsOpen(false)}
+      />
     </div>
   );
 }
