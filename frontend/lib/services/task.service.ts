@@ -23,7 +23,7 @@ export const taskService = {
   },
 
   async getTaskById(taskId: string): Promise<ApiResponse<Task>> {
-    const res = await api.get<ApiResponse<Task>>(`/tasks/${taskId}`);
+    const res = await api.get<ApiResponse<Task>>(`/projects/tasks/${taskId}`);
     return res.data;
   },
 
@@ -38,12 +38,12 @@ export const taskService = {
       assigneeId?: string | null;
     }
   ): Promise<ApiResponse<Task>> {
-    const res = await api.patch<ApiResponse<Task>>(`/tasks/${taskId}`, data);
+    const res = await api.patch<ApiResponse<Task>>(`/projects/tasks/${taskId}`, data);
     return res.data;
   },
 
   async deleteTask(taskId: string): Promise<ApiResponse<Task>> {
-    const res = await api.delete<ApiResponse<Task>>(`/tasks/${taskId}`);
+    const res = await api.delete<ApiResponse<Task>>(`/projects/tasks/${taskId}`);
     return res.data;
   },
 
