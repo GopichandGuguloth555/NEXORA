@@ -1,5 +1,5 @@
 import { api } from "../api";
-import { ApiResponse, Role, Workspace, WorkspaceMember } from "../types";
+import { ApiResponse, Role, Workspace, WorkspaceMember, WorkspaceInvitation } from "../types";
 
 export const workspaceService = {
   async getAllWorkspaces(): Promise<ApiResponse<Workspace[]>> {
@@ -27,8 +27,33 @@ export const workspaceService = {
     return res.data;
   },
 
-  async inviteMember(workspaceId: string, data: { email: string; role?: Role }): Promise<ApiResponse<WorkspaceMember>> {
-    const res = await api.post<ApiResponse<WorkspaceMember>>(`/workspaces/${workspaceId}/members`, data);
+  async inviteMember(workspaceId: string, data: { email: string; role?: Role }): Promise<ApiResponse<WorkspaceInvitation>> {
+    const res = await api.post<ApiResponse<WorkspaceInvitation>>(`/workspaces/${workspaceId}/members`, data);
+    return res.data;
+  },
+
+  async getPendingInvitations(workspaceId: string): Promise<ApiResponse<WorkspaceInvitation[]>> {
+    const res = await api.get<ApiResponse<WorkspaceInvitation[]>>(`/workspaces/${workspaceId}/invitations`);
+    return res.data;
+  },
+
+  async acceptInvitation(invitationId: string): Promise<ApiResponse<any>> {
+    const res = await api.post<ApiResponse<any>>(`/workspaces/invitations/${invitationId}/accept`, {});
+    return res.data;
+  },
+
+  async rejectInvitation(invitationId: string): Promise<ApiResponse<any>> {
+    const res = await api.post<ApiResponse<any>>(`/workspaces/invitations/${invitationId}/reject`, {});
+    return res.data;
+  },
+
+  async cancelInvitation(invitationId: string): Promise<ApiResponse<any>> {
+    const res = await api.post<ApiResponse<any>>(`/workspaces/invitations/${invitationId}/cancel`, {});
+    return res.data;
+  },
+
+  async getReceivedInvitations(): Promise<ApiResponse<WorkspaceInvitation[]>> {
+    const res = await api.get<ApiResponse<WorkspaceInvitation[]>>(`/workspaces/invitations/received`);
     return res.data;
   },
 

@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { createWorkspaceSchema, inviteSchema, updateMemberRoleSchema, updateWorkspaceSchema } from "../validations/workspace.schema.js";
-import { createWorkspace, deleteWorkspace, getWorkspaceMembers, inviteMember, removeMember, updateMemberRole } from "../services/workspace.service.js";
+import { createWorkspace, deleteWorkspace, getWorkspaceMembers, inviteMember, removeMember, updateMemberRole, getPendingInvitations, acceptInvitation, rejectInvitation, cancelInvitation, getReceivedInvitations } from "../services/workspace.service.js";
 import { getWorkspaces, updateWorkspace } from "../services/workspace.service.js";
 
 export const create = async (req: Request, res: Response) => {
@@ -210,6 +210,90 @@ export const updateMemberRoleController = async (req: Request,res: Response) => 
         error instanceof Error
           ? error.message
           : "Something went wrong",
+    });
+  }
+};
+
+export const getPendingInvitationsController = async (req: Request, res: Response) => {
+  try {
+    const workspaceId = req.params.workspaceId;
+    const invitations = await getPendingInvitations(workspaceId, req.user!.id);
+    return res.status(200).json({
+      success: true,
+      message: "Pending invitations fetched successfully",
+      data: invitations,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: error instanceof Error ? error.message : "Something went wrong",
+    });
+  }
+};
+
+export const acceptInvitationController = async (req: Request, res: Response) => {
+  try {
+    const invitationId = req.params.invitationId;
+    const result = await acceptInvitation(invitationId, req.user!.id);
+    return res.status(200).json({
+      success: true,
+      message: "Invitation accepted successfully",
+      data: result,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: error instanceof Error ? error.message : "Something went wrong",
+    });
+  }
+};
+
+export const rejectInvitationController = async (req: Request, res: Response) => {
+  try {
+    const invitationId = req.params.invitationId;
+    const result = await rejectInvitation(invitationId, req.user!.id);
+    return res.status(200).json({
+      success: true,
+      message: "Invitation rejected successfully",
+      data: result,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: error instanceof Error ? error.message : "Something went wrong",
+    });
+  }
+};
+
+export const cancelInvitationController = async (req: Request, res: Response) => {
+  try {
+    const invitationId = req.params.invitationId;
+    const result = await cancelInvitation(invitationId, req.user!.id);
+    return res.status(200).json({
+      success: true,
+      message: "Invitation cancelled successfully",
+      data: result,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: error instanceof Error ? error.message : "Something went wrong",
+    });
+  }
+};
+
+export const getReceivedInvitationsController = async (req: Request, res: Response) => {
+  try {
+    const invitations = await getReceivedInvitations(req.user!.id);
+    return res.status(200).json({
+      success: true,
+      message: "Received invitations fetched successfully",
+      data: invitations,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: error instanceof Error ? error.message : "Something went wrong",
     });
   }
 };

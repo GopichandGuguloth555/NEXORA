@@ -2,15 +2,18 @@
 
 import React, { useEffect, useState } from "react";
 import { notificationService } from "@/lib/services/notification.service";
+import { workspaceService } from "@/lib/services/workspace.service";
 import { NotificationItem } from "@/lib/types";
 import { ToastContainer, ToastMessage } from "@/components/ui/Toast";
 import { Bell, Check, Trash2, Loader2, CheckCheck, Clock } from "lucide-react";
+import { useWorkspace } from "@/context/WorkspaceContext";
 
 export default function NotificationsPage() {
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [markingAll, setMarkingAll] = useState(false);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const { fetchWorkspaces } = useWorkspace();
 
   const showToast = (type: "success" | "error" | "info", message: string) => {
     const id = Date.now().toString();
@@ -46,6 +49,34 @@ export default function NotificationsPage() {
       showToast("success", "Notification marked as read");
     } catch (err: any) {
       showToast("error", err.message || "Failed to mark as read");
+    }
+  };
+
+  const handleAcceptInvite = async (invitationId: string, notificationId: string) => {
+    try {
+      await workspaceService.acceptInvitation(invitationId);
+      await notificationService.markAsRead(notificationId, true);
+      showToast("success", "Invitation accepted! Refresh or check the workspace selector.");
+      setNotifications((prev) =>
+        prev.map((n) => (n.id === notificationId ? { ...n, isRead: true } : n))
+      );
+      // Refresh workspaces to immediately show the new one in the UI
+      await fetchWorkspaces();
+    } catch (err: any) {
+      showToast("error", err.message || "Failed to accept invitation");
+    }
+  };
+
+  const handleRejectInvite = async (invitationId: string, notificationId: string) => {
+    try {
+      await workspaceService.rejectInvitation(invitationId);
+      await notificationService.markAsRead(notificationId, true);
+      showToast("success", "Invitation rejected");
+      setNotifications((prev) =>
+        prev.map((n) => (n.id === notificationId ? { ...n, isRead: true } : n))
+      );
+    } catch (err: any) {
+      showToast("error", err.message || "Failed to reject invitation");
     }
   };
 
@@ -133,6 +164,24 @@ export default function NotificationsPage() {
                     </span>
                   </div>
                   <p className="text-xs text-zinc-300">{n.message}</p>
+                  
+                  {n.type === "WORKSPACE_INVITE" && !n.isRead && n.entityId && (
+                    <div className="flex items-center gap-2 mt-2">
+                      <button
+                        onClick={() => handleAcceptInvite(n.entityId!, n.id)}
+                        className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white text-[11px] font-bold rounded-lg transition-colors"
+                      >
+                        Accept
+                      </button>
+                      <button
+                        onClick={() => handleRejectInvite(n.entityId!, n.id)}
+                        className="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-[11px] font-bold rounded-lg border border-zinc-700 transition-colors"
+                      >
+                        Reject
+                      </button>
+                    </div>
+                  )}
+
                   <div className="text-[10px] text-zinc-500 pt-1 flex items-center gap-1">
                     <Clock className="w-3 h-3" />
                     {new Date(n.createdAt).toLocaleString()}

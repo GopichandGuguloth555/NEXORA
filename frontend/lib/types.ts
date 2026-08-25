@@ -23,6 +23,22 @@ export interface User {
   updatedAt?: string;
 }
 
+export type InvitationStatus = "PENDING" | "ACCEPTED" | "REJECTED";
+
+export interface WorkspaceInvitation {
+  id: string;
+  workspaceId: string;
+  inviterId: string;
+  inviteeEmail: string;
+  role: Role;
+  status: InvitationStatus;
+  createdAt: string;
+  updatedAt: string;
+  inviter?: User;
+  invitee?: User | null;
+  workspace?: { id: string; name: string };
+}
+
 export interface WorkspaceMember {
   id: string;
   workspaceId: string;

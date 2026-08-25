@@ -29,6 +29,7 @@ model User {
   documents       Document[]
   notifications   Notification[]
   uploadedFiles   File[]
+  sentInvitations WorkspaceInvitation[] @relation("Inviter")
 }
 
 model Workspace {
@@ -49,12 +50,39 @@ model Workspace {
   createdMessages Message[]
   documents       Document[]
   files           File[]
+  invitations     WorkspaceInvitation[]
 }
 
 enum Role {
   OWNER
   ADMIN
   MEMBER
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+model WorkspaceInvitation {
+  id String @id @default(cuid())
+
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+
+  inviterId String
+  inviter   User @relation("Inviter", fields: [inviterId], references: [id])
+
+  inviteeEmail String
+  role         Role @default(MEMBER)
+
+  status InvitationStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([workspaceId, inviteeEmail])
 }
 
 model WorkspaceMember {

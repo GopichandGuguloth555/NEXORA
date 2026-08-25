@@ -2,14 +2,20 @@
 
 import React, { useEffect, useState } from "react";
 import { useWorkspace } from "@/context/WorkspaceContext";
+import { useAuth } from "@/context/AuthContext";
 import { workspaceService } from "@/lib/services/workspace.service";
-import { Role, WorkspaceMember } from "@/lib/types";
-import { Users, UserPlus, Shield, Trash2, X, Loader2, Mail } from "lucide-react";
+import { Role, WorkspaceMember, WorkspaceInvitation } from "@/lib/types";
+import { Users, UserPlus, Shield, Trash2, X, Loader2, Mail, Clock } from "lucide-react";
 
 export default function MembersPage() {
   const { currentWorkspace } = useWorkspace();
+  const { user } = useAuth();
   const [members, setMembers] = useState<WorkspaceMember[]>([]);
+  const [invitations, setInvitations] = useState<WorkspaceInvitation[]>([]);
+  const [receivedInvitations, setReceivedInvitations] = useState<WorkspaceInvitation[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const currentUserRole = members.find(m => m.userId === user?.id)?.role;
 
   // Invite Modal
   const [isInviteOpen, setIsInviteOpen] = useState(false);
@@ -22,8 +28,14 @@ export default function MembersPage() {
     if (!currentWorkspace) return;
     try {
       setLoading(true);
-      const res = await workspaceService.getMembers(currentWorkspace.id);
-      setMembers(res.data || []);
+      const [membersRes, invitesRes, receivedRes] = await Promise.all([
+        workspaceService.getMembers(currentWorkspace.id),
+        workspaceService.getPendingInvitations(currentWorkspace.id).catch(() => ({ data: [] })),
+        workspaceService.getReceivedInvitations().catch(() => ({ data: [] }))
+      ]);
+      setMembers(membersRes.data || []);
+      setInvitations(invitesRes.data || []);
+      setReceivedInvitations(receivedRes.data || []);
     } catch (err) {
       console.error("Failed to load members", err);
     } finally {
@@ -89,22 +101,24 @@ export default function MembersPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-100 flex items-center gap-2">
-            <Users className="w-6 h-6 text-zinc-400" />
-            <span>Workspace Members & Roles</span>
+          <h1 className="text-2xl font-bold text-zinc-100 flex items-center gap-3">
+            <Users className="w-6 h-6 text-emerald-400" />
+            Members & Roles
           </h1>
-          <p className="text-xs text-zinc-400 mt-1">
-            Manage team access & permissions for <span className="text-zinc-300 font-semibold">{currentWorkspace.name}</span>
+          <p className="text-sm text-zinc-400 mt-1">
+            Manage who has access to {currentWorkspace.name}
           </p>
         </div>
 
-        <button
-          onClick={() => setIsInviteOpen(true)}
-          className="px-4 py-2.5 bg-zinc-200 hover:bg-zinc-300 text-black rounded-xl text-sm font-medium shadow-lg shadow-zinc-400/20 flex items-center gap-2"
-        >
-          <UserPlus className="w-4 h-4" />
-          <span>Invite Member</span>
-        </button>
+        {(currentUserRole === "OWNER" || currentUserRole === "ADMIN") && (
+          <button
+            onClick={() => setIsInviteOpen(true)}
+            className="px-4 py-2.5 bg-zinc-200 hover:bg-zinc-300 text-black rounded-xl text-sm font-medium shadow-lg shadow-zinc-400/20 flex items-center gap-2"
+          >
+            <UserPlus className="w-4 h-4" />
+            <span>Invite Member</span>
+          </button>
+        )}
       </div>
 
       {/* Members List */}
@@ -135,29 +149,151 @@ export default function MembersPage() {
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <select
-                    value={m.role}
-                    onChange={(e) => handleRoleChange(m.id, e.target.value as Role)}
-                    className="bg-[#050505] border border-zinc-800 rounded-xl px-3 py-1.5 text-xs text-zinc-200 outline-none"
-                  >
-                    <option value="OWNER">OWNER</option>
-                    <option value="ADMIN">ADMIN</option>
-                    <option value="MEMBER">MEMBER</option>
-                  </select>
+                  {currentUserRole === "OWNER" && m.role !== "OWNER" ? (
+                    <select
+                      value={m.role}
+                      onChange={(e) => handleRoleChange(m.id, e.target.value as Role)}
+                      className="bg-[#050505] border border-zinc-800 rounded-xl px-3 py-1.5 text-xs text-zinc-200 outline-none"
+                    >
+                      <option value="OWNER">OWNER</option>
+                      <option value="ADMIN">ADMIN</option>
+                      <option value="MEMBER">MEMBER</option>
+                    </select>
+                  ) : (
+                    <div className="bg-[#050505] border border-zinc-800 rounded-xl px-3 py-1.5 text-xs text-zinc-400">
+                      {m.role}
+                    </div>
+                  )}
 
-                  <button
-                    onClick={() => handleRemoveMember(m.id)}
-                    className="p-2 rounded-xl text-zinc-500 hover:text-red-400 hover:bg-red-500/10 transition-colors"
-                    title="Remove Member"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                  {((currentUserRole === "OWNER" && m.role !== "OWNER") || (currentUserRole === "ADMIN" && m.role === "MEMBER")) && (
+                    <button
+                      onClick={() => handleRemoveMember(m.id)}
+                      className="p-2 rounded-xl text-zinc-500 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                      title="Remove Member"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
           </div>
         )}
       </div>
+
+      {/* Pending Invitations */}
+      {(invitations.length > 0 || receivedInvitations.length > 0) && (
+        <div className="p-6 rounded-2xl bg-[#121212]/90 border border-zinc-800 space-y-8">
+          
+          {/* Sent Invitations */}
+          {invitations.length > 0 && (
+            <div className="space-y-4">
+              <div className="text-xs font-bold uppercase tracking-wider text-zinc-400">
+                For invitations SENT by current user
+              </div>
+              <div className="divide-y divide-slate-800/80">
+                {invitations.map((inv) => (
+                  <div key={inv.id} className="py-4 flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-3 overflow-hidden">
+                      <div className="w-10 h-10 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-100 font-bold text-xs flex items-center justify-center shrink-0">
+                        {inv.invitee?.name ? inv.invitee.name.substring(0, 2).toUpperCase() : <Clock className="w-4 h-4 text-zinc-400" />}
+                      </div>
+                      <div className="overflow-hidden">
+                        <div className="font-semibold text-sm text-zinc-100 truncate">{inv.invitee?.name || "Pending User"}</div>
+                        <div className="text-xs text-zinc-400 truncate">{inv.inviteeEmail}</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="px-2 py-1 bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 rounded-md text-[10px] font-bold uppercase tracking-wider">
+                        {inv.status}
+                      </span>
+                      <div className="bg-[#050505] border border-zinc-800 rounded-xl px-3 py-1.5 text-xs text-zinc-400">
+                        {inv.role}
+                      </div>
+                      {user?.id === inv.inviterId && (
+                        <button
+                          onClick={async () => {
+                            if (!confirm("Cancel this invitation?")) return;
+                            try {
+                              await workspaceService.cancelInvitation(inv.id);
+                              await fetchMembers();
+                            } catch (err: any) {
+                              alert(err.message || "Failed to cancel invitation");
+                            }
+                          }}
+                          className="px-3 py-1.5 bg-zinc-800 hover:bg-red-500/20 text-zinc-400 hover:text-red-400 text-[11px] font-bold rounded-lg transition-colors border border-zinc-700 hover:border-red-500/50"
+                        >
+                          Cancel / Delete
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Received Invitations */}
+          {receivedInvitations.length > 0 && (
+            <div className="space-y-4">
+              <div className="text-xs font-bold uppercase tracking-wider text-zinc-400">
+                For invitations RECEIVED by current user
+              </div>
+              <div className="divide-y divide-slate-800/80">
+                {receivedInvitations.map((inv) => (
+                  <div key={inv.id} className="py-4 flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-3 overflow-hidden">
+                      <div className="w-10 h-10 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-100 font-bold text-xs flex items-center justify-center shrink-0">
+                        {inv.inviter?.name ? inv.inviter.name.substring(0, 2).toUpperCase() : <Clock className="w-4 h-4 text-zinc-400" />}
+                      </div>
+                      <div className="overflow-hidden">
+                        <div className="font-semibold text-sm text-zinc-100 truncate">{inv.inviter?.name || "Sender"}</div>
+                        <div className="text-xs text-zinc-400 truncate">Workspace: {inv.workspace?.name || "Unknown"}</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="px-2 py-1 bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 rounded-md text-[10px] font-bold uppercase tracking-wider">
+                        {inv.status}
+                      </span>
+                      <div className="bg-[#050505] border border-zinc-800 rounded-xl px-3 py-1.5 text-xs text-zinc-400">
+                        {inv.role}
+                      </div>
+                      <button
+                        onClick={async () => {
+                          try {
+                            await workspaceService.acceptInvitation(inv.id);
+                            await fetchMembers();
+                            // If they accept a workspace they might want it in their selector, it's good to refresh context but let's stick to fetchMembers
+                            window.location.reload(); // Hard refresh to ensure workspace selector updates
+                          } catch (err: any) {
+                            alert(err.message || "Failed to accept invitation");
+                          }
+                        }}
+                        className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white text-[11px] font-bold rounded-lg transition-colors shadow-lg shadow-emerald-500/20"
+                      >
+                        Accept
+                      </button>
+                      <button
+                        onClick={async () => {
+                          try {
+                            await workspaceService.rejectInvitation(inv.id);
+                            await fetchMembers();
+                          } catch (err: any) {
+                            alert(err.message || "Failed to reject invitation");
+                          }
+                        }}
+                        className="px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white text-[11px] font-bold rounded-lg transition-colors shadow-lg shadow-red-500/20"
+                      >
+                        Reject
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Invite Member Modal */}
       {isInviteOpen && (

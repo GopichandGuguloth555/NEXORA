@@ -81,13 +81,16 @@ export const getProjectByIdController = async (req: Request,res: Response) => {
       data: project,
     });
   } catch (error) {
-    return res.status(400).json({
-      success: false,
-      message:
-        error instanceof Error
-          ? error.message
-          : "Something went wrong",
-    });
+    if (error instanceof Error) {
+      if (error.message.includes("Project not found")) {
+        return res.status(404).json({ success: false, message: error.message });
+      }
+      if (error.message.includes("not a member") || error.message.includes("Forbidden")) {
+        return res.status(403).json({ success: false, message: error.message });
+      }
+      return res.status(400).json({ success: false, message: error.message });
+    }
+    return res.status(400).json({ success: false, message: "Something went wrong" });
   }
 };
 
@@ -110,13 +113,16 @@ export const updateProjectController = async (req: Request,res: Response) => {
       data: project,
     });
   } catch (error) {
-    return res.status(400).json({
-      success: false,
-      message:
-        error instanceof Error
-          ? error.message
-          : "Something went wrong",
-    });
+    if (error instanceof Error) {
+      if (error.message.includes("Project does not exist")) {
+        return res.status(404).json({ success: false, message: error.message });
+      }
+      if (error.message.includes("not a member") || error.message.includes("Forbidden")) {
+        return res.status(403).json({ success: false, message: error.message });
+      }
+      return res.status(400).json({ success: false, message: error.message });
+    }
+    return res.status(400).json({ success: false, message: "Something went wrong" });
   }
 };
 
@@ -136,12 +142,15 @@ export const deleteProjectController = async (req: Request,res: Response) => {
       data: project,
     });
   } catch (error) {
-    return res.status(400).json({
-      success: false,
-      message:
-        error instanceof Error
-          ? error.message
-          : "Something went wrong",
-    });
+    if (error instanceof Error) {
+      if (error.message.includes("Project does not exist")) {
+        return res.status(404).json({ success: false, message: error.message });
+      }
+      if (error.message.includes("not a member") || error.message.includes("Forbidden")) {
+        return res.status(403).json({ success: false, message: error.message });
+      }
+      return res.status(400).json({ success: false, message: error.message });
+    }
+    return res.status(400).json({ success: false, message: "Something went wrong" });
   }
 };

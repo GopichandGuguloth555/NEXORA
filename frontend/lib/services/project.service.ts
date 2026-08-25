@@ -13,17 +13,17 @@ export const projectService = {
   },
 
   async getProjectById(projectId: string): Promise<ApiResponse<Project>> {
-    const res = await api.get<ApiResponse<Project>>(`/projects/${projectId}`);
+    const res = await api.get<ApiResponse<Project>>(`/workspaces/projects/${projectId}`);
     return res.data;
   },
 
   async updateProject(projectId: string, data: { name?: string; description?: string; emoji?: string }): Promise<ApiResponse<Project>> {
-    const res = await api.patch<ApiResponse<Project>>(`/projects/${projectId}`, data);
+    const res = await api.patch<ApiResponse<Project>>(`/workspaces/projects/${projectId}`, data);
     return res.data;
   },
 
   async deleteProject(projectId: string): Promise<ApiResponse<Project>> {
-    const res = await api.delete<ApiResponse<Project>>(`/projects/${projectId}`);
+    const res = await api.delete<ApiResponse<Project>>(`/workspaces/projects/${projectId}`);
     return res.data;
   },
 };
