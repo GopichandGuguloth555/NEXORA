@@ -1,6 +1,7 @@
 import prisma from "../config/prisma.js";
 import type { MarkNotificationAsReadInput } from "../validations/notification.schema.js";
 import { NotificationType } from "../generated/prisma/client.js";
+import { getIO } from "../sockets/socket.js";
 
 interface CreateNotificationInput {
   userId: string;
@@ -21,6 +22,11 @@ export const createNotification = async ({userId,type,title,message,entityId,}: 
       entityId,
     },
   });
+
+  const io = getIO();
+  if (io) {
+    io.to(userId).emit("new-notification", notification);
+  }
 
   return notification;
 };

@@ -24,6 +24,9 @@ export const initializeSocket = (server: HttpServer) => {
   io.on("connection", (socket) => {
 
     console.log(`${socket.data.user.name} connected`);
+    
+    // Join a personal room to receive targeted notifications
+    socket.join(socket.data.user.id);
 
     registerChannelHandlers(socket);
 
