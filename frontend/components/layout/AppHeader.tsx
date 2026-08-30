@@ -95,7 +95,7 @@ export function AppHeader({ onMobileMenuClick }: AppHeaderProps) {
   };
 
   return (
-    <header className="sticky top-0 z-30 h-16 bg-[#080808]/85 backdrop-blur-xl border-b border-zinc-800/80 px-4 flex items-center justify-between anim-fade-up">
+    <header className="sticky top-0 z-30 h-16 bg-gradient-to-r from-[#121212]/90 to-[#0a0a0a]/90 backdrop-blur-xl border-b border-white/5 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.4)] px-4 flex items-center justify-between anim-fade-up">
       <div className="flex items-center gap-3">
         <button
           onClick={onMobileMenuClick}
@@ -117,16 +117,16 @@ export function AppHeader({ onMobileMenuClick }: AppHeaderProps) {
 
       <div className="flex items-center gap-4">
         <div
-          className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium border transition-all duration-500 ${
+          className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium border shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] transition-all duration-500 ${
             connected
-              ? "bg-zinc-200/10 border-zinc-500/30 text-zinc-300 anim-pulse-silver"
-              : "bg-amber-500/10 border-amber-500/20 text-amber-400"
+              ? "bg-gradient-to-b from-zinc-800 to-zinc-900 border-zinc-700 text-zinc-300"
+              : "bg-gradient-to-b from-amber-900/50 to-amber-950/50 border-amber-800/50 text-amber-400"
           }`}
           title={connected ? "Socket.IO Live Sync Active" : "Connecting to Socket.IO..."}
         >
           <span
-            className={`w-1.5 h-1.5 rounded-full ${
-              connected ? "bg-zinc-300 animate-pulse" : "bg-amber-400"
+            className={`w-1.5 h-1.5 rounded-full shadow-[0_0_8px_rgba(255,255,255,0.4)] ${
+              connected ? "bg-zinc-100 animate-pulse" : "bg-amber-400"
             }`}
           />
           <span>{connected ? "Live Sync" : "Offline"}</span>

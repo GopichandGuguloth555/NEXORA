@@ -488,7 +488,7 @@ export default function ChatPage() {
                               </span>
                             </div>
                           )}
-                          <div className="text-[15px] text-zinc-300 leading-relaxed whitespace-pre-wrap break-words">
+                          <div className={`text-[14px] text-zinc-200 leading-relaxed whitespace-pre-wrap break-words inline-block px-4 py-2.5 rounded-2xl ${isMe ? 'bg-gradient-to-b from-zinc-800 to-zinc-900 border border-zinc-700 shadow-[0_4px_12px_rgba(0,0,0,0.3)]' : 'bg-gradient-to-b from-[#181818] to-[#121212] border border-white/5 shadow-[0_4px_12px_rgba(0,0,0,0.2)]'}`}>
                             {m.content}
                           </div>
                         </div>
@@ -546,7 +546,7 @@ export default function ChatPage() {
             <div className="px-4 pb-6 pt-2 bg-gradient-to-t from-[#050505] via-[#050505] to-transparent">
               <form 
                 onSubmit={handleSendMessage} 
-                className="bg-[#121212] border border-zinc-800 rounded-xl overflow-hidden focus-within:border-zinc-500 focus-within:ring-1 focus-within:ring-zinc-500/50 transition-all shadow-lg"
+                className="bg-[#050505] border border-zinc-800/80 rounded-xl overflow-hidden focus-within:border-zinc-600 transition-all shadow-[inset_0_2px_12px_rgba(0,0,0,0.6)] group"
               >
                 <input
                   type="text"
@@ -573,9 +573,9 @@ export default function ChatPage() {
                     <button
                       type="submit"
                       disabled={!inputText.trim()}
-                      className={`p-1.5 rounded-md flex items-center justify-center transition-all ${
+                      className={`p-1.5 rounded-md flex items-center justify-center transition-all transform active:scale-95 ${
                         inputText.trim() 
-                          ? "bg-zinc-200 text-black hover:bg-white shadow-[0_0_10px_rgba(255,255,255,0.2)]" 
+                          ? "bg-zinc-200 text-black hover:bg-white shadow-[0_2px_8px_rgba(255,255,255,0.2)]" 
                           : "bg-zinc-800 text-zinc-500"
                       }`}
                     >

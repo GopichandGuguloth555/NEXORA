@@ -241,10 +241,13 @@ export default function AIPage() {
       </div>
 
       {/* Main Input Box */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-[#121212]/90 border border-zinc-800 space-y-4 shadow-xl">
-        <label className="block text-xs font-bold uppercase tracking-wider text-zinc-300">
-          What are you building? *
-        </label>
+      <div className="relative p-6 sm:p-8 rounded-3xl bg-gradient-to-b from-[#161616]/95 to-[#0a0a0a]/95 border border-white/5 space-y-4 shadow-[0_8px_32px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.05)] transform transition-transform hover:-translate-y-0.5 overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(255,255,255,0.04),_transparent_60%)] pointer-events-none" />
+        
+        <div className="relative z-10 space-y-4">
+          <label className="block text-xs font-bold uppercase tracking-wider text-zinc-300">
+            What are you building? *
+          </label>
 
         <textarea
           value={prompt}
@@ -303,6 +306,7 @@ export default function AIPage() {
             </div>
           </div>
         )}
+        </div>
       </div>
 
       {/* AI Generated Review Screen */}
@@ -500,14 +504,17 @@ export default function AIPage() {
       )}
 
       {/* AI Assistant Widget */}
-      <div className="p-6 rounded-3xl bg-[#121212]/90 border border-zinc-800 space-y-4 shadow-xl">
-        <h3 className="text-sm font-bold text-zinc-100 flex items-center gap-2">
-          <HelpCircle className="w-4 h-4 text-zinc-400" />
-          <span>Nexora AI Assistant</span>
-        </h3>
-        <p className="text-xs text-zinc-400">
-          Ask Nexora AI technical architecture questions or request task breakdown recommendations.
-        </p>
+      <div className="relative p-6 rounded-3xl bg-gradient-to-b from-[#161616]/95 to-[#0a0a0a]/95 border border-white/5 space-y-4 shadow-[0_8px_32px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.05)] transform transition-transform hover:-translate-y-0.5 overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(255,255,255,0.04),_transparent_60%)] pointer-events-none" />
+        
+        <div className="relative z-10 space-y-4">
+          <h3 className="text-sm font-bold text-zinc-100 flex items-center gap-2">
+            <HelpCircle className="w-4 h-4 text-zinc-400" />
+            <span>Nexora AI Assistant</span>
+          </h3>
+          <p className="text-xs text-zinc-400">
+            Ask Nexora AI technical architecture questions or request task breakdown recommendations.
+          </p>
 
         <form onSubmit={handleAskAssistant} className="flex items-center gap-2">
           <input
@@ -532,7 +539,8 @@ export default function AIPage() {
             <span className="font-bold text-zinc-300 block mb-1">Nexora AI Response:</span>
             {assistantReply}
           </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

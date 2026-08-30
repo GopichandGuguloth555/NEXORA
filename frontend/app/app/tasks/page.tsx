@@ -902,7 +902,7 @@ function TaskCard({
   return (
     <div
       onClick={onClick}
-      className="group relative flex flex-col p-4 bg-[#141414] hover:bg-[#1a1a1a] rounded-[16px] border border-zinc-800/80 hover:border-zinc-600 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer hover:-translate-y-0.5 overflow-hidden"
+      className="group relative flex flex-col p-4 rounded-[16px] bg-gradient-to-b from-[#181818] to-[#121212] border border-white/5 hover:border-white/10 shadow-[0_4px_12px_rgba(0,0,0,0.3)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.05)] transform transition-all duration-300 cursor-pointer hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] overflow-hidden"
     >
       {/* Hover Glow Effect */}
       <div className="absolute inset-0 bg-gradient-to-br from-zinc-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />

@@ -66,7 +66,7 @@ export function AppSidebar({
       )}
 
       <aside
-        className={`nx-sidebar fixed md:sticky top-0 left-0 z-50 h-screen flex flex-col transition-all duration-400 ease-out bg-[#080808] border-r border-zinc-800/80 ${
+        className={`nx-sidebar fixed md:sticky top-0 left-0 z-50 h-screen flex flex-col transition-all duration-400 ease-out bg-gradient-to-b from-[#121212] to-[#0a0a0a] shadow-[4px_0_24px_rgba(0,0,0,0.4)] border-r border-white/5 ${
           collapsed ? "w-20" : "w-64"
         } ${mobileOpen ? "translate-x-0 w-64" : "-translate-x-full md:translate-x-0"}`}
       >

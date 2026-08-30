@@ -9,6 +9,7 @@ interface AuthContextType {
   token: string | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
+  googleLogin: (idToken: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
 }
@@ -48,6 +49,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const googleLogin = async (idToken: string) => {
+    const res = await authService.googleLogin(idToken);
+    if (res.success && res.data) {
+      const { user: userData, accessToken } = res.data;
+      setUser(userData);
+      setToken(accessToken);
+      localStorage.setItem("nexora_token", accessToken);
+      localStorage.setItem("nexora_user", JSON.stringify(userData));
+    } else {
+      throw new Error(res.message || "Google login failed");
+    }
+  };
+
   const register = async (name: string, email: string, password: string) => {
     const res = await authService.register({ name, email, password });
     if (res.success) {
@@ -67,7 +81,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, token, loading, login, googleLogin, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
