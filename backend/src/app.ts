@@ -18,7 +18,11 @@ import aiRoutes from "./routes/ai.routes.js";
 
 const app = express();
 
-app.use(cors());
+const corsOptions = {
+  origin: process.env.CORS_ORIGIN || "http://localhost:3000",
+  credentials: true,
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
@@ -27,7 +31,7 @@ app.use("/api/workspaces", projectRoutes);
 app.use("/api/projects", taskRoutes);
 app.use("/api/tasks", commentRoutes);
 app.use("/api/workspaces", channelRoutes);
-app.use("/api/channels",messageRoutes);
+app.use("/api/channels", messageRoutes);
 app.use("/api/documents", documentRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/uploads", uploadRoutes);

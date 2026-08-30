@@ -1,3 +1,4 @@
+import { getParamString } from "../utils/params.js";
 import type { Request, Response } from "express";
 import { markNotificationAsReadSchema } from "../validations/notification.schema.js";
 import {getNotifications,markNotificationAsRead,deleteNotification,} from "../services/notification.service.js";
@@ -29,7 +30,7 @@ export const markNotificationAsReadController = async (req: Request,res: Respons
     const data = markNotificationAsReadSchema.parse(req.body);
 
     const notification = await markNotificationAsRead(
-      req.params.notificationId,
+      getParamString(req, "notificationId"),
       data,
       req.user!.id
     );
@@ -54,7 +55,7 @@ export const deleteNotificationController = async (req: Request,res: Response) =
 
   try {
     const notification = await deleteNotification(
-      req.params.notificationId,
+      getParamString(req, "notificationId"),
       req.user!.id
     );
 

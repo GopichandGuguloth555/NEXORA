@@ -1,3 +1,4 @@
+import { getParamString } from "../utils/params.js";
 import type { Request, Response } from "express";
 import { createChannelSchema, updateChannelSchema } from "../validations/channel.schema.js";
 import { createChannel, deleteChannel, getChannelById, getChannels, updateChannel } from "../services/channel.service.js";
@@ -6,7 +7,7 @@ export const createChannelController = async (req: Request,res: Response) => {
   try {
     const data = createChannelSchema.parse(req.body);
 
-    const workspaceId = req.params.workspaceId;
+    const workspaceId = getParamString(req, "workspaceId");
 
     const channel = await createChannel(
       workspaceId,
@@ -33,7 +34,7 @@ export const createChannelController = async (req: Request,res: Response) => {
 export const getChannelsController = async (req: Request, res: Response) => {
 
   try {
-    const workspaceId = req.params.workspaceId;
+    const workspaceId = getParamString(req, "workspaceId");
 
     const channels = await getChannels(
       workspaceId,
@@ -59,7 +60,7 @@ export const getChannelsController = async (req: Request, res: Response) => {
 export const getChannelByIDController = async (req: Request,res: Response) => {
 
   try {
-    const channelId = req.params.channelId;
+    const channelId = getParamString(req, "channelId");
 
     const channel = await getChannelById(
       channelId,
@@ -89,7 +90,7 @@ export const updateChannelController = async (req: Request, res: Response) => {
         const data = updateChannelSchema.parse(req.body);
 
         const channel = await updateChannel(
-            req.params.channelId,
+            getParamString(req, "channelId"),
             data,
             req.user!.id
         );
@@ -115,7 +116,7 @@ export const deleteChannelController = async (req: Request,res: Response) => {
 
   try {
     const channel = await deleteChannel(
-      req.params.channelId,
+      getParamString(req, "channelId"),
       req.user!.id
     );
 

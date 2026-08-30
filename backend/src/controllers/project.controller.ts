@@ -1,3 +1,4 @@
+import { getParamString } from "../utils/params.js";
 import type { Request, Response } from "express";
 import { createProject } from "../services/project.services.js";
 import { createProjectSchema } from "../validations/project.schema.js";
@@ -14,7 +15,7 @@ export const createProjectController = async (req: Request,res: Response) => {
   {
     const data = createProjectSchema.parse(req.body);
 
-    const workspaceId = req.params.workspaceId;
+    const workspaceId = getParamString(req, "workspaceId");
 
     const project = await createProject(
       workspaceId,
@@ -42,7 +43,7 @@ export const getProjectsController = async (req: Request,res: Response) => {
 
   try 
   {
-    const workspaceId = req.params.workspaceId;
+    const workspaceId = getParamString(req, "workspaceId");
 
     const projects = await getProjects(
       workspaceId,
@@ -68,7 +69,7 @@ export const getProjectsController = async (req: Request,res: Response) => {
 export const getProjectByIdController = async (req: Request,res: Response) => {
 
   try {
-    const projectId = req.params.projectId;
+    const projectId = getParamString(req, "projectId");
 
     const project = await getProjectById(
       projectId,
@@ -99,7 +100,7 @@ export const updateProjectController = async (req: Request,res: Response) => {
   try {
     const data = updateProjectSchema.parse(req.body);
 
-    const projectId = req.params.projectId;
+    const projectId = getParamString(req, "projectId");
 
     const project = await updateProject(
       projectId,
@@ -129,7 +130,7 @@ export const updateProjectController = async (req: Request,res: Response) => {
 export const deleteProjectController = async (req: Request,res: Response) => {
 
   try {
-    const projectId = req.params.projectId;
+    const projectId = getParamString(req, "projectId");
 
     const project = await deleteProject(
       projectId,

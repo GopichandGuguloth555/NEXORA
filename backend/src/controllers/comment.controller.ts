@@ -1,3 +1,4 @@
+import { getParamString } from "../utils/params.js";
 import type { Request, Response } from "express";
 import { createComment, deleteComment, getCommentById, updateComment,  } from "../services/comment.service.js";
 import { createCommentSchema, updateCommentSchema } from "../validations/comment.schema.js";
@@ -8,7 +9,7 @@ export const createCommentController = async (req: Request, res: Response) => {
     try {
         const data = createCommentSchema.parse(req.body);
 
-        const taskId = req.params.taskId;
+        const taskId = getParamString(req, "taskId");
 
         const comment = await createComment(
             taskId,
@@ -35,7 +36,7 @@ export const createCommentController = async (req: Request, res: Response) => {
 export const getCommentsController = async (req: Request, res: Response) => {
 
     try {
-        const taskId = req.params.taskId;
+        const taskId = getParamString(req, "taskId");
 
         const comments = await getComments(
             taskId,
@@ -60,7 +61,7 @@ export const getCommentsController = async (req: Request, res: Response) => {
 
 export const getCommentByIDController = async (req: Request,res: Response) => {
   try {
-    const commentId = req.params.commentId;
+    const commentId = getParamString(req, "commentId");
 
     const comment = await getCommentById(
       commentId,
@@ -90,7 +91,7 @@ export const updateCommentController = async (req: Request, res: Response) => {
         const data = updateCommentSchema.parse(req.body);
 
         const comment = await updateComment(
-            req.params.commentId,
+            getParamString(req, "commentId"),
             data,
             req.user!.id
         );
@@ -118,7 +119,7 @@ export const deleteCommentController = async (req: Request,res: Response) => {
 
     const comment = await deleteComment(
         
-      req.params.commentId,
+      getParamString(req, "commentId"),
       req.user!.id
     );
 

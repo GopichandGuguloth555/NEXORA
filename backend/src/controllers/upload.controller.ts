@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import {uploadFile,getFiles,getFileById, deleteFile,} from "../services/ upload.service.js";
+import { getParamString } from "../utils/params.js";
 
 
 export const uploadFileController = async ( req: Request,res: Response) => {
@@ -13,7 +14,7 @@ export const uploadFileController = async ( req: Request,res: Response) => {
       });
     }
 
-    const userId = req.user.id;
+    const userId = req.user!.id;
 
     const workspaceId = req.body.workspaceId;
 
@@ -44,7 +45,7 @@ export const uploadFileController = async ( req: Request,res: Response) => {
 export const getFilesController = async (req: Request,res: Response) => {
 
   try {
-    const userId = req.user.id;
+    const userId = req.user!.id;
 
     const workspaceId =
       typeof req.query.workspaceId === "string"
@@ -71,8 +72,8 @@ export const getFilesController = async (req: Request,res: Response) => {
 export const getFileByIdController = async (req: Request,res: Response) => {
 
   try {
-    const userId = req.user.id;
-    const { id } = req.params;
+    const userId = req.user!.id;
+    const id = getParamString(req, "id");
 
     const file = await getFileById(id, userId);
 
@@ -94,8 +95,8 @@ export const getFileByIdController = async (req: Request,res: Response) => {
 export const deleteFileController = async (req: Request,res: Response) => {
 
   try {
-    const userId = req.user.id;
-    const { id } = req.params;
+    const userId = req.user!.id;
+    const id = getParamString(req, "id");
 
     const file = await deleteFile(id, userId);
 

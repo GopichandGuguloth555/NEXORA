@@ -1,3 +1,4 @@
+import { getParamString } from "../utils/params.js";
 import type { Request, Response } from "express";
 import {createDocumentSchema,updateDocumentSchema,} from "../validations/document.schema.js";
 import {createDocument,getDocuments,getDocumentById,updateDocument,deleteDocument,} from "../services/document.services.js";
@@ -7,7 +8,7 @@ export const createDocumentController = async (req: Request,res: Response) => {
     const data = createDocumentSchema.parse(req.body);
 
     const document = await createDocument(
-      req.params.workspaceId,
+      getParamString(req, "workspaceId"),
       data,
       req.user!.id
     );
@@ -32,7 +33,7 @@ export const getDocumentsController = async (req: Request,res: Response) => {
 
   try {
     const documents = await getDocuments(
-      req.params.workspaceId,
+      getParamString(req, "workspaceId"),
       req.user!.id
     );
 
@@ -56,7 +57,7 @@ export const getDocumentByIdController = async (req: Request,res: Response) => {
 
   try {
     const document = await getDocumentById(
-      req.params.documentId,
+      getParamString(req, "documentId"),
       req.user!.id
     );
 
@@ -82,7 +83,7 @@ export const updateDocumentController = async (req: Request,res: Response) => {
     const data = updateDocumentSchema.parse(req.body);
 
     const document = await updateDocument(
-      req.params.documentId,
+      getParamString(req, "documentId"),
       data,
       req.user!.id
     );
@@ -107,7 +108,7 @@ export const deleteDocumentController = async (req: Request,res: Response) => {
     
   try {
     const document = await deleteDocument(
-      req.params.documentId,
+      getParamString(req, "documentId"),
       req.user!.id
     );
 

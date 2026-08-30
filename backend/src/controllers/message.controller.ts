@@ -1,3 +1,4 @@
+import { getParamString } from "../utils/params.js";
 import type { Request, Response } from "express";
 import { createMessageSchema, updateMessageSchema, type UpdateMessageInput } from "../validations/message.schema.js";
 import { createMessage, deleteMessage, getMessageById, getMessages, updateMessage } from "../services/message.service.js";
@@ -8,7 +9,7 @@ export const createMessageController = async (req: Request, res: Response) => {
     try {
         const data = createMessageSchema.parse(req.body);
 
-        const channelId = req.params.channelId;
+        const channelId = getParamString(req, "channelId");
 
         const message = await createMessage(
             channelId,
@@ -35,7 +36,7 @@ export const createMessageController = async (req: Request, res: Response) => {
 export const getMessgesController = async (req: Request, res: Response) => {
 
     try {
-        const channelId = req.params.channelId;
+        const channelId = getParamString(req, "channelId");
 
         const messages = await getMessages(
             channelId,
@@ -60,7 +61,7 @@ export const getMessgesController = async (req: Request, res: Response) => {
 
 export const getMessageByIDController = async (req: Request,res: Response) => {
   try {
-    const messageId = req.params.messageId;
+    const messageId = getParamString(req, "messageId");
 
     const message = await getMessageById(
       messageId,
@@ -90,7 +91,7 @@ export const updateMessageController = async (req: Request, res: Response) => {
         const data = updateMessageSchema.parse(req.body);
 
         const message = await updateMessage(
-            req.params.messageId,
+            getParamString(req, "messageId"),
             data,
             req.user!.id
         );
@@ -116,7 +117,7 @@ export const deleteMessageController = async (req: Request,res: Response) => {
     
   try {
     const message = await deleteMessage(
-      req.params.messageId,
+      getParamString(req, "messageId"),
       req.user!.id
     );
 

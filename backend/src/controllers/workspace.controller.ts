@@ -1,3 +1,4 @@
+import { getParamString } from "../utils/params.js";
 import type { Request, Response } from "express";
 import { createWorkspaceSchema, inviteSchema, updateMemberRoleSchema, updateWorkspaceSchema } from "../validations/workspace.schema.js";
 import { createWorkspace, deleteWorkspace, getWorkspaceMembers, inviteMember, removeMember, updateMemberRole, getPendingInvitations, acceptInvitation, rejectInvitation, cancelInvitation, getReceivedInvitations } from "../services/workspace.service.js";
@@ -53,7 +54,7 @@ export const update = async (req: Request, res: Response) => {
     const data = updateWorkspaceSchema.parse(req.body);
 
     const workspace = await updateWorkspace(
-      req.params.workspaceId,
+      getParamString(req, "workspaceId"),
       data,
       req.user!.id
     );
@@ -78,7 +79,7 @@ export const deleteworkspace = async (req: Request, res: Response) => {
   try {
 
     const workspace = await deleteWorkspace(
-      req.params.workspaceId,
+      getParamString(req, "workspaceId"),
       req.user!.id
     );
 
@@ -105,7 +106,7 @@ export const Invite = async (req: Request, res: Response) => {
   try {
     const data = inviteSchema.parse(req.body);
 
-    const workspaceId = req.params.workspaceId;
+    const workspaceId = getParamString(req, "workspaceId");
 
     const invited = await inviteMember(
       workspaceId,
@@ -131,7 +132,7 @@ export const Invite = async (req: Request, res: Response) => {
 
 export const getMembers = async (req: Request, res: Response) => {
   try {
-    const workspaceId = req.params.workspaceId;
+    const workspaceId = getParamString(req, "workspaceId");
 
     const members = await getWorkspaceMembers(
       workspaceId,
@@ -158,8 +159,8 @@ export const removeMemberController = async (req: Request,res: Response) => {
  
   try {
 
-    const workspaceId = req.params.workspaceId;
-    const memberId = req.params.memberId;
+    const workspaceId = getParamString(req, "workspaceId");
+    const memberId = getParamString(req, "memberId");
 
     const removedMember = await removeMember(
       workspaceId,
@@ -186,8 +187,8 @@ export const removeMemberController = async (req: Request,res: Response) => {
 export const updateMemberRoleController = async (req: Request,res: Response) => {
 
   try {
-    const workspaceId = req.params.workspaceId;
-    const memberId = req.params.memberId;
+    const workspaceId = getParamString(req, "workspaceId");
+    const memberId = getParamString(req, "memberId");
 
     const data = updateMemberRoleSchema.parse(req.body);
 
@@ -216,7 +217,7 @@ export const updateMemberRoleController = async (req: Request,res: Response) => 
 
 export const getPendingInvitationsController = async (req: Request, res: Response) => {
   try {
-    const workspaceId = req.params.workspaceId;
+    const workspaceId = getParamString(req, "workspaceId");
     const invitations = await getPendingInvitations(workspaceId, req.user!.id);
     return res.status(200).json({
       success: true,
@@ -233,7 +234,7 @@ export const getPendingInvitationsController = async (req: Request, res: Respons
 
 export const acceptInvitationController = async (req: Request, res: Response) => {
   try {
-    const invitationId = req.params.invitationId;
+    const invitationId = getParamString(req, "invitationId");
     const result = await acceptInvitation(invitationId, req.user!.id);
     return res.status(200).json({
       success: true,
@@ -250,7 +251,7 @@ export const acceptInvitationController = async (req: Request, res: Response) =>
 
 export const rejectInvitationController = async (req: Request, res: Response) => {
   try {
-    const invitationId = req.params.invitationId;
+    const invitationId = getParamString(req, "invitationId");
     const result = await rejectInvitation(invitationId, req.user!.id);
     return res.status(200).json({
       success: true,
@@ -267,7 +268,7 @@ export const rejectInvitationController = async (req: Request, res: Response) =>
 
 export const cancelInvitationController = async (req: Request, res: Response) => {
   try {
-    const invitationId = req.params.invitationId;
+    const invitationId = getParamString(req, "invitationId");
     const result = await cancelInvitation(invitationId, req.user!.id);
     return res.status(200).json({
       success: true,

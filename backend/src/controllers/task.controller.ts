@@ -1,3 +1,4 @@
+import { getParamString } from "../utils/params.js";
 import type { Request, Response } from "express";
 import { createTask, deleteTask, getTaskById, updateTask } from "../services/task.service.js";
 import { createTaskSchema, updateTaskSchema } from "../validations/task.schema.js";
@@ -9,7 +10,7 @@ export const createTaskController = async ( req: Request, res: Response) => {
   try {
     const data = createTaskSchema.parse(req.body);
 
-    const projectId = req.params.projectId;
+    const projectId = getParamString(req, "projectId");
 
     const task = await createTask(
       projectId,
@@ -37,7 +38,7 @@ export const getTasksController = async ( req: Request, res: Response) => {
 
   try {
     const tasks = await getTasks(
-      req.params.projectId,
+      getParamString(req, "projectId"),
       req.user!.id
     );
 
@@ -62,7 +63,7 @@ export const getTaskByIdController = async (req: Request,res: Response) => {
   try {
     const task = await getTaskById(
 
-      req.params.taskId,
+      getParamString(req, "taskId"),
       req.user!.id
     );
 
@@ -88,7 +89,7 @@ export const updateTaskController = async (req: Request,res: Response) => {
     const data = updateTaskSchema.parse(req.body);
 
     const task = await updateTask(
-      req.params.taskId,
+      getParamString(req, "taskId"),
       data,
       req.user!.id
     );
@@ -114,7 +115,7 @@ export const deleteTaskController = async (req: Request,res: Response) => {
   try {
     const task = await deleteTask(
         
-      req.params.taskId,
+      getParamString(req, "taskId"),
       req.user!.id
     );
 

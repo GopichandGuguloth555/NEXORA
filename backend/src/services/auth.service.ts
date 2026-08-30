@@ -106,7 +106,7 @@ export const googleLoginUser = async (token: string) => {
       headers: { Authorization: `Bearer ${token}` }
     });
     if (!res.ok) throw new Error("Invalid Google token");
-    const data = await res.json();
+    const data = await res.json() as { email: string; name?: string; picture?: string };
     email = data.email;
     name = data.name || "Google User";
     picture = data.picture;
