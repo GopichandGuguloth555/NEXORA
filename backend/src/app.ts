@@ -18,11 +18,35 @@ import aiRoutes from "./routes/ai.routes.js";
 
 const app = express();
 
+// Support comma-separated origins in CORS_ORIGIN env var, e.g.:
+// CORS_ORIGIN=http://localhost:3000,https://nexora-2boh7vgtt-gopichand-guguloths-projects.vercel.app
+const rawOrigins = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(",").map((o) => o.trim())
+  : [
+      "http://localhost:3000",
+      "https://nexora-2boh7vgtt-gopichand-guguloths-projects.vercel.app",
+    ];
+
 const corsOptions = {
-  origin: process.env.CORS_ORIGIN || "http://localhost:3000",
+  origin: (
+    origin: string | undefined,
+    callback: (err: Error | null, allow?: boolean) => void
+  ) => {
+    // Allow requests with no origin (e.g. Postman, curl, same-origin server calls)
+    if (!origin) return callback(null, true);
+    if (rawOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error(`CORS policy: origin ${origin} not allowed`));
+  },
   credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 };
+
 app.use(cors(corsOptions));
+// Explicitly handle OPTIONS preflight for all routes
+app.options("*", cors(corsOptions));
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);

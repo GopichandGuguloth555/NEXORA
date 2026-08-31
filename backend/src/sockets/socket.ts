@@ -10,10 +10,21 @@ import { registerPresenceHandlers } from "./presence.socket.js";
 let io: Server;
 
 export const initializeSocket = (server: HttpServer) => {
+  // Support comma-separated origins in CORS_ORIGIN, same as Express CORS config
+  const rawOrigins = process.env.CORS_ORIGIN
+    ? process.env.CORS_ORIGIN.split(",").map((o) => o.trim())
+    : [
+        "http://localhost:3000",
+        "https://nexora-2boh7vgtt-gopichand-guguloths-projects.vercel.app",
+      ];
 
   io = new Server(server, {
     cors: {
-      origin: process.env.CORS_ORIGIN || "http://localhost:3000",
+      origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+        if (rawOrigins.includes(origin)) return callback(null, true);
+        return callback(new Error(`Socket CORS: origin ${origin} not allowed`));
+      },
       methods: ["GET", "POST"],
       credentials: true,
     },
