@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
@@ -9,13 +9,22 @@ import { Layers, ArrowRight, Lock, Mail, User, AlertCircle, Loader2 } from "luci
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { register, googleLogin } = useAuth();
+  const { register, googleLogin, token, loading: authLoading } = useAuth();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  // Redirect already-authenticated users to the dashboard
+  useEffect(() => {
+    if (!authLoading && token) {
+      router.replace("/app/dashboard");
+    }
+  }, [token, authLoading, router]);
+
+  if (authLoading || token) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

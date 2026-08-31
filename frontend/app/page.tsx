@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
@@ -22,8 +22,29 @@ import {
 
 export default function LandingPage() {
   const router = useRouter();
-  const { login } = useAuth();
+  const { login, token, loading: authLoading } = useAuth();
   const [demoLoading, setDemoLoading] = useState(false);
+
+  // Redirect authenticated users to the dashboard
+  useEffect(() => {
+    if (!authLoading && token) {
+      router.replace("/app/dashboard");
+    }
+  }, [token, authLoading, router]);
+
+  // Show nothing while checking auth to avoid flash of landing page
+  if (authLoading || token) {
+    return (
+      <div className="min-h-screen bg-[#050505] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-zinc-200/10 border border-zinc-500/30 flex items-center justify-center animate-pulse">
+            <Layers className="w-5 h-5 text-zinc-400" />
+          </div>
+          <p className="text-zinc-500 text-sm">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   const handleDemoLogin = async () => {
     try {
