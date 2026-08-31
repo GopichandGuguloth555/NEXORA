@@ -44,9 +44,9 @@ const corsOptions = {
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 
+// cors middleware handles OPTIONS preflight automatically (preflightContinue defaults to false).
+// Do NOT add app.options("*", ...) — Express 5 / path-to-regexp v8 rejects bare "*" wildcards.
 app.use(cors(corsOptions));
-// Explicitly handle OPTIONS preflight for all routes
-app.options("*", cors(corsOptions));
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
