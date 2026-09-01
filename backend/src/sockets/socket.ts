@@ -16,6 +16,8 @@ export const initializeSocket = (server: HttpServer) => {
     : [
         "http://localhost:3000",
         "https://nexora-2boh7vgtt-gopichand-guguloths-projects.vercel.app",
+        // Current production Vercel URL
+        "https://nexora-nine-ashy.vercel.app",
       ];
 
   io = new Server(server, {
