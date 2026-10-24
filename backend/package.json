@@ -2,11 +2,16 @@
   "name": "backend",
   "version": "1.0.0",
   "type": "module",
+  "engines": {
+    "node": ">=20.9.0"
+  },
   "description": "",
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsc",
+    "build": "prisma generate && tsc",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
     "start": "node dist/server.js"
   },
   "keywords": [],

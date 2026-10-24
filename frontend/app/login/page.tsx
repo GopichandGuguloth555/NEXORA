@@ -23,8 +23,6 @@ export default function LoginPage() {
     }
   }, [token, authLoading, router]);
 
-  if (authLoading || token) return null;
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -38,8 +36,8 @@ export default function LoginPage() {
       setLoading(true);
       await login(email, password);
       router.push("/app/dashboard");
-    } catch (err: any) {
-      setError(err.message || "Failed to sign in. Please check your credentials.");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to sign in. Please check your credentials.");
     } finally {
       setLoading(false);
     }
@@ -52,8 +50,8 @@ export default function LoginPage() {
         setError(null);
         await googleLogin(tokenResponse.access_token);
         router.push("/app/dashboard");
-      } catch (err: any) {
-        setError(err.message || "Google sign in failed");
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : "Google sign in failed");
       } finally {
         setLoading(false);
       }
@@ -62,6 +60,8 @@ export default function LoginPage() {
       setError("Google sign in was cancelled or failed");
     }
   });
+
+  if (authLoading || token) return null;
 
   return (
     <div className="relative min-h-screen flex items-center justify-center p-4 bg-[#050505] overflow-hidden">
@@ -185,7 +185,7 @@ export default function LoginPage() {
 
         {/* Footer */}
         <div className="mt-8 pt-6 border-t border-zinc-800/80 text-center text-sm text-zinc-400">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link href="/register" className="font-semibold text-zinc-400 hover:text-zinc-300 transition-colors">
             Create account
           </Link>

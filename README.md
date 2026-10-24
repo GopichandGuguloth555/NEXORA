@@ -267,6 +267,7 @@ NEXORA/
 
 ## 🗄️ Database Design
 
+<<<<<<< HEAD
 Nexora uses PostgreSQL with Prisma for relational data management.
 
 The data model includes the following core entities:
@@ -348,10 +349,20 @@ If you only want to run the original project locally, clone the original reposit
 ### 3. Install Backend Dependencies
 
 Open a terminal in the repository root:
+=======
+### 1. Prerequisites
+- Node.js (v20.9 or higher)
+- PostgreSQL database running locally or remotely
+>>>>>>> e5beb9d (fix:Configured for delyment)
 
 ```bash
 cd backend
 npm install
+<<<<<<< HEAD
+=======
+npm run db:migrate
+npm run dev
+>>>>>>> e5beb9d (fix:Configured for delyment)
 ```
 
 ### 4. Configure Environment Variables
@@ -437,6 +448,7 @@ npm install
 
 Create a frontend `.env.local` file if needed.
 
+<<<<<<< HEAD
 Example:
 
 ```env
@@ -470,6 +482,43 @@ If the backend uses the same port, configure the two services to use different p
 - [ ] Frontend API URL configured.
 - [ ] Frontend started successfully.
 - [ ] Authentication and required integrations tested.
+=======
+## 🧪 Production Verification & Build
+Set `DATABASE_URL` in the backend deployment environment. The backend build generates the Prisma client before compiling TypeScript. Apply committed database migrations with `npm run db:deploy` before starting a new release.
+
+Set these frontend environment variables in the production environment:
+
+```env
+NEXT_PUBLIC_API_URL=https://your-api.example.com/api
+NEXT_PUBLIC_SOCKET_URL=https://your-api.example.com
+NEXT_PUBLIC_GOOGLE_CLIENT_ID=your_google_oauth_client_id
+```
+
+Install and build each application from its own directory:
+
+```bash
+# Backend
+cd backend
+npm ci
+npm run build
+npm start
+
+# Frontend (in a separate deployment/build step)
+cd frontend
+npm ci
+npm run build
+npm start
+```
+
+Deploy the backend and frontend as separate services. Configure the backend's `DATABASE_URL`, `JWT_SECRET`, `CORS_ORIGIN` (comma-separated deployed frontend origins), and any enabled Cloudinary or Gemini credentials in the backend service environment; do not commit `.env` files or production secrets.
+
+### Render + Vercel deployment
+
+1. Connect this GitHub repository to Render and create a Blueprint from `render.yaml`. Set `DATABASE_URL`, `JWT_SECRET`, and `CORS_ORIGIN` on the Render service. `CORS_ORIGIN` must contain the deployed Vercel origin, without a trailing slash.
+2. Before the first production release, run `npm run db:deploy` from the `backend` service shell (or as a one-off command) against the production database.
+3. Create a Vercel project from the same repository and set its Root Directory to `frontend`. Set `NEXT_PUBLIC_API_URL` to `https://<render-service>.onrender.com/api`, `NEXT_PUBLIC_SOCKET_URL` to `https://<render-service>.onrender.com`, and `NEXT_PUBLIC_GOOGLE_CLIENT_ID` to the Google OAuth web client ID.
+4. Add the production Vercel domain to Render's `CORS_ORIGIN`, then redeploy the backend. Keep database credentials, JWT secrets, and provider API secrets in the host environment only.
+>>>>>>> e5beb9d (fix:Configured for delyment)
 
 ---
 

@@ -24,8 +24,6 @@ export default function RegisterPage() {
     }
   }, [token, authLoading, router]);
 
-  if (authLoading || token) return null;
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -44,8 +42,8 @@ export default function RegisterPage() {
       setLoading(true);
       await register(name, email, password);
       router.push("/app/dashboard");
-    } catch (err: any) {
-      setError(err.message || "Failed to create account. Email may already be registered.");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to create account. Email may already be registered.");
     } finally {
       setLoading(false);
     }
@@ -58,8 +56,8 @@ export default function RegisterPage() {
         setError(null);
         await googleLogin(tokenResponse.access_token);
         router.push("/app/dashboard");
-      } catch (err: any) {
-        setError(err.message || "Google sign up failed");
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : "Google sign up failed");
       } finally {
         setLoading(false);
       }
@@ -68,6 +66,8 @@ export default function RegisterPage() {
       setError("Google sign up was cancelled or failed");
     }
   });
+
+  if (authLoading || token) return null;
 
   return (
     <div className="relative min-h-screen flex items-center justify-center p-4 bg-[#050505] overflow-hidden">
