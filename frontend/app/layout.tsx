@@ -1,17 +1,20 @@
 import type { Metadata } from "next";
-import { Outfit, Syne } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
 
-const outfit = Outfit({
-  subsets: ["latin"],
+const outfit = localFont({
+  src: "./fonts/outfit-latin-wght-normal.woff2",
   variable: "--font-outfit",
+  display: "swap",
+  weight: "100 900",
 });
 
-const syne = Syne({
-  subsets: ["latin"],
+const syne = localFont({
+  src: "./fonts/syne-latin-wght-normal.woff2",
   variable: "--font-syne",
-  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
+  weight: "400 800",
 });
 
 export const metadata: Metadata = {

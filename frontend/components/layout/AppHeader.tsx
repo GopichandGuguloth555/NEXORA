@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useEffectEvent, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useWorkspace } from "@/context/WorkspaceContext";
@@ -37,10 +37,17 @@ export function AppHeader({ onMobileMenuClick }: AppHeaderProps) {
     }
   };
 
+  const refreshNotifications = useEffectEvent(() => {
+    void fetchNotifications();
+  });
+
   useEffect(() => {
-    fetchNotifications();
-    const interval = setInterval(fetchNotifications, 10000);
-    return () => clearInterval(interval);
+    const timeoutId = window.setTimeout(refreshNotifications, 0);
+    const interval = window.setInterval(refreshNotifications, 10000);
+    return () => {
+      window.clearTimeout(timeoutId);
+      window.clearInterval(interval);
+    };
   }, []);
 
   const handleMarkAsRead = async (id: string) => {

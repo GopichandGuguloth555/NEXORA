@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useEffect, useState, use } from "react";
+import { getErrorMessage } from "@/lib/errors";
+
+import React, { useEffect, useEffectEvent, useRef, useState, use } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useWorkspace } from "@/context/WorkspaceContext";
@@ -10,7 +12,6 @@ import { workspaceService } from "@/lib/services/workspace.service";
 import { Project, Task, TaskPriority, TaskStatus, WorkspaceMember, Comment } from "@/lib/types";
 import { ToastContainer, ToastMessage } from "@/components/ui/Toast";
 import {
-  FolderGit2,
   Plus,
   Trash2,
   Edit2,
@@ -42,6 +43,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
   const [error, setError] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<"kanban" | "list">("kanban");
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const toastIdRef = useRef(0);
 
   // Edit Project Modal
   const [isEditProjectOpen, setIsEditProjectOpen] = useState(false);
@@ -77,7 +79,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
   const [loadingComments, setLoadingComments] = useState(false);
 
   const showToast = (type: "success" | "error" | "info", message: string) => {
-    const id = Date.now().toString();
+    const id = String(++toastIdRef.current);
     setToasts((prev) => [...prev, { id, type, message }]);
   };
 
@@ -110,17 +112,20 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
         const memRes = await workspaceService.getMembers(currentWorkspace.id);
         setMembers(memRes.data || []);
       }
-    } catch (err: any) {
-      setError(err.message || "Failed to load project details");
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, "Failed to load project details"));
     } finally {
       setLoading(false);
     }
   };
 
+  const refreshProject = useEffectEvent(() => {
+    if (projectId) void loadProjectData();
+  });
+
   useEffect(() => {
-    if (projectId) {
-      loadProjectData();
-    }
+    const timeoutId = window.setTimeout(refreshProject, 0);
+    return () => window.clearTimeout(timeoutId);
   }, [projectId, currentWorkspace]);
 
   // Project Edit & Delete Handlers
@@ -139,8 +144,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
         setIsEditProjectOpen(false);
         showToast("success", "Project updated!");
       }
-    } catch (err: any) {
-      showToast("error", err.message || "Failed to update project");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Failed to update project"));
     } finally {
       setUpdatingProject(false);
     }
@@ -154,8 +159,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
       await projectService.deleteProject(project.id);
       showToast("success", "Project deleted successfully");
       router.push("/app/projects");
-    } catch (err: any) {
-      showToast("error", err.message || "Failed to delete project");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Failed to delete project"));
     }
   };
 
@@ -191,8 +196,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
         const updated = await taskService.getTasks(projectId);
         setTasks(updated.data || []);
       }
-    } catch (err: any) {
-      setCreateTaskError(err.message || "Failed to create task");
+    } catch (err: unknown) {
+      setCreateTaskError(getErrorMessage(err, "Failed to create task"));
     } finally {
       setCreatingTask(false);
     }
@@ -204,8 +209,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
       setTasks((prev) => prev.map((t) => (t.id === task.id ? { ...t, status: newStatus } : t)));
       await taskService.updateTask(task.id, { status: newStatus });
       showToast("success", `Task status updated to ${newStatus.replace("_", " ")}`);
-    } catch (err: any) {
-      showToast("error", err.message || "Failed to update task status");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Failed to update task status"));
       // Revert on error
       const updated = await taskService.getTasks(projectId);
       setTasks(updated.data || []);
@@ -259,8 +264,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
         const updated = await taskService.getTasks(projectId);
         setTasks(updated.data || []);
       }
-    } catch (err: any) {
-      showToast("error", err.message || "Failed to update task details");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Failed to update task details"));
     } finally {
       setUpdatingTask(false);
     }
@@ -273,8 +278,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
       showToast("success", "Task deleted");
       setTasks((prev) => prev.filter((t) => t.id !== taskId));
       if (activeTask?.id === taskId) setActiveTask(null);
-    } catch (err: any) {
-      showToast("error", err.message || "Failed to delete task");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Failed to delete task"));
     }
   };
 
@@ -290,8 +295,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
         setNewComment("");
         showToast("success", "Comment added");
       }
-    } catch (err: any) {
-      showToast("error", err.message || "Failed to add comment");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Failed to add comment"));
     }
   };
 
@@ -301,8 +306,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
       await taskService.deleteComment(activeTask.id, commentId);
       setComments((prev) => prev.filter((c) => c.id !== commentId));
       showToast("success", "Comment deleted");
-    } catch (err: any) {
-      showToast("error", err.message || "Failed to delete comment");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Failed to delete comment"));
     }
   };
 
@@ -341,8 +346,6 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
   const todoTasks = tasks.filter((t) => t.status === "TODO");
   const inProgressTasks = tasks.filter((t) => t.status === "IN_PROGRESS");
   const doneTasks = tasks.filter((t) => t.status === "DONE");
-  const highPriorityCount = tasks.filter((t) => t.priority === "HIGH").length;
-
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
       <ToastContainer toasts={toasts} onDismiss={removeToast} />

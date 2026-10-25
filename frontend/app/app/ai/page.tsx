@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import { getErrorMessage } from "@/lib/errors";
+
+import React, { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useWorkspace } from "@/context/WorkspaceContext";
 import { aiService } from "@/lib/services/ai.service";
@@ -15,17 +17,14 @@ import {
   CheckCircle2,
   ListTodo,
   FileText,
-  Cpu,
   Loader2,
   Edit3,
   Save,
   Plus,
   Trash2,
-  ArrowRight,
   HelpCircle,
   FolderGit2,
   Send,
-  Layers,
 } from "lucide-react";
 
 export default function AIPage() {
@@ -40,6 +39,7 @@ export default function AIPage() {
   const [creatingProject, setCreatingProject] = useState(false);
   const [savingDocs, setSavingDocs] = useState(false);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const toastIdRef = useRef(0);
 
   // Assistant State
   const [assistantPrompt, setAssistantPrompt] = useState("");
@@ -60,7 +60,7 @@ export default function AIPage() {
   ];
 
   const showToast = (type: "success" | "error" | "info", message: string) => {
-    const id = Date.now().toString();
+    const id = String(++toastIdRef.current);
     setToasts((prev) => [...prev, { id, type, message }]);
   };
 
@@ -98,8 +98,8 @@ export default function AIPage() {
         setPlan(res.data);
         showToast("success", "Project plan generated successfully!");
       }
-    } catch (err: any) {
-      showToast("error", err.message || "Failed to generate AI project plan.");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Failed to generate AI project plan."));
     } finally {
       setGenerating(false);
     }
@@ -171,8 +171,8 @@ export default function AIPage() {
       setTimeout(() => {
         router.push(`/app/projects?id=${createdProject.id}`);
       }, 1000);
-    } catch (err: any) {
-      showToast("error", err.message || "Failed to create project & tasks");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Failed to create project & tasks"));
     } finally {
       setCreatingProject(false);
     }
@@ -192,8 +192,8 @@ export default function AIPage() {
         docCount++;
       }
       showToast("success", `${docCount} documents saved to workspace successfully!`);
-    } catch (err: any) {
-      showToast("error", err.message || "Failed to save documentation");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Failed to save documentation"));
     } finally {
       setSavingDocs(false);
     }
@@ -209,8 +209,8 @@ export default function AIPage() {
       if (res.success && res.data) {
         setAssistantReply(res.data.reply);
       }
-    } catch (err: any) {
-      showToast("error", err.message || "Assistant inquiry failed");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Assistant inquiry failed"));
     } finally {
       setAssistantLoading(false);
     }
@@ -267,7 +267,7 @@ export default function AIPage() {
                 onClick={() => setPrompt(s)}
                 className="px-2.5 py-1 rounded-xl bg-[#050505]/80 border border-zinc-800 text-zinc-400 hover:text-zinc-300 hover:border-zinc-500/30 transition-all text-left text-[11px]"
               >
-                "{s.slice(0, 32)}..."
+                &quot;{s.slice(0, 32)}...&quot;
               </button>
             ))}
           </div>

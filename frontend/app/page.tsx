@@ -6,7 +6,6 @@ import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
 import {
   Layers,
-  CheckCircle2,
   Kanban,
   MessageSquare,
   FileText,
@@ -319,7 +318,7 @@ export default function LandingPage() {
                   Try NEXORA Demo
                 </h2>
                 <p className="text-zinc-400 text-base leading-relaxed mb-6 max-w-lg">
-                  Explore the complete NEXORA experience without creating an account. We've pre-populated a workspace with projects, tasks, and team activity for you.
+                  Explore the complete NEXORA experience without creating an account. We&apos;ve pre-populated a workspace with projects, tasks, and team activity for you.
                 </p>
                 <div className="inline-flex flex-col gap-2 p-4 rounded-xl bg-[#050505] border border-zinc-800 text-sm text-zinc-300 text-left w-full sm:w-auto">
                   <div className="flex items-center gap-3">
@@ -451,7 +450,7 @@ export default function LandingPage() {
                 Smart project planning powered by AI
               </h2>
               <p className="text-zinc-300 text-base leading-relaxed mb-6">
-                Tell Nexora AI what you want to build (e.g. <em>"I want to build an e-commerce platform with React, Node.js and PostgreSQL"</em>) and automatically generate structured project phases, tasks, document outlines, and technical milestones.
+                Tell Nexora AI what you want to build (e.g. <em>&quot;I want to build an e-commerce platform with React, Node.js and PostgreSQL&quot;</em>) and automatically generate structured project phases, tasks, document outlines, and technical milestones.
               </p>
               <Link
                 href="/register"

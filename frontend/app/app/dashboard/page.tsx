@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useEffectEvent, useState } from "react";
 import Link from "next/link";
 import { useWorkspace } from "@/context/WorkspaceContext";
 import { useAuth } from "@/context/AuthContext";
@@ -78,8 +78,13 @@ export default function DashboardPage() {
     }
   };
 
+  const refreshDashboard = useEffectEvent(() => {
+    void loadDashboardData();
+  });
+
   useEffect(() => {
-    loadDashboardData();
+    const timeoutId = window.setTimeout(refreshDashboard, 0);
+    return () => window.clearTimeout(timeoutId);
   }, [currentWorkspace]);
 
   if (!currentWorkspace) {

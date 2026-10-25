@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
+import { SOCKET_BASE_URL } from "@/lib/api";
 import { useAuth } from "./AuthContext";
 
 interface SocketContextType {
@@ -20,17 +21,9 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [connected, setConnected] = useState(false);
 
   useEffect(() => {
-    if (!token || !user) {
-      if (socket) {
-        socket.disconnect();
-        setSocket(null);
-        setConnected(false);
-      }
-      return;
-    }
+    if (!token || !user) return;
 
-    const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:5000";
-    const newSocket = io(socketUrl, {
+    const newSocket = io(SOCKET_BASE_URL, {
       auth: {
         token: token,
       },
@@ -45,15 +38,21 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       setConnected(false);
     });
 
-    setSocket(newSocket);
+    const socketStateTimeout = window.setTimeout(() => setSocket(newSocket), 0);
 
     return () => {
+      window.clearTimeout(socketStateTimeout);
       newSocket.disconnect();
     };
   }, [token, user]);
 
   return (
-    <SocketContext.Provider value={{ socket, connected }}>
+    <SocketContext.Provider
+      value={{
+        socket: token && user ? socket : null,
+        connected: token && user ? connected : false,
+      }}
+    >
       {children}
     </SocketContext.Provider>
   );

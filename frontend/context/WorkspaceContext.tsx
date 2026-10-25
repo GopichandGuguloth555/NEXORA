@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useEffectEvent, useState } from "react";
 import { Workspace } from "../lib/types";
 import { workspaceService } from "../lib/services/workspace.service";
 import { useAuth } from "./AuthContext";
@@ -52,8 +52,13 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     }
   };
 
+  const refreshWorkspaces = useEffectEvent(() => {
+    void fetchWorkspaces();
+  });
+
   useEffect(() => {
-    fetchWorkspaces();
+    const timeoutId = window.setTimeout(refreshWorkspaces, 0);
+    return () => window.clearTimeout(timeoutId);
   }, [user]);
 
   const setCurrentWorkspace = (workspace: Workspace) => {

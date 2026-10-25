@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { getErrorMessage } from "@/lib/errors";
+
+import React, { useEffect, useEffectEvent, useState } from "react";
 import { useWorkspace } from "@/context/WorkspaceContext";
 import { useAuth } from "@/context/AuthContext";
 import { workspaceService } from "@/lib/services/workspace.service";
 import { Role, WorkspaceMember, WorkspaceInvitation } from "@/lib/types";
-import { Users, UserPlus, Shield, Trash2, X, Loader2, Mail, Clock } from "lucide-react";
+import { Users, UserPlus, Trash2, X, Loader2, Mail, Clock } from "lucide-react";
 
 export default function MembersPage() {
   const { currentWorkspace } = useWorkspace();
@@ -43,8 +45,13 @@ export default function MembersPage() {
     }
   };
 
+  const refreshMembers = useEffectEvent(() => {
+    void fetchMembers();
+  });
+
   useEffect(() => {
-    fetchMembers();
+    const timeoutId = window.setTimeout(refreshMembers, 0);
+    return () => window.clearTimeout(timeoutId);
   }, [currentWorkspace]);
 
   const handleInvite = async (e: React.FormEvent) => {
@@ -61,8 +68,8 @@ export default function MembersPage() {
       setEmail("");
       setIsInviteOpen(false);
       await fetchMembers();
-    } catch (err: any) {
-      setError(err.message || "Failed to invite member");
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, "Failed to invite member"));
     } finally {
       setInviting(false);
     }
@@ -75,8 +82,8 @@ export default function MembersPage() {
       setMembers((prev) =>
         prev.map((m) => (m.id === memberId ? { ...m, role: newRole } : m))
       );
-    } catch (err: any) {
-      alert(err.message || "Failed to update member role");
+    } catch (err: unknown) {
+      alert(getErrorMessage(err, "Failed to update member role"));
     }
   };
 
@@ -87,8 +94,8 @@ export default function MembersPage() {
     try {
       await workspaceService.removeMember(currentWorkspace.id, memberId);
       setMembers((prev) => prev.filter((m) => m.id !== memberId));
-    } catch (err: any) {
-      alert(err.message || "Failed to remove member");
+    } catch (err: unknown) {
+      alert(getErrorMessage(err, "Failed to remove member"));
     }
   };
 
@@ -217,8 +224,8 @@ export default function MembersPage() {
                             try {
                               await workspaceService.cancelInvitation(inv.id);
                               await fetchMembers();
-                            } catch (err: any) {
-                              alert(err.message || "Failed to cancel invitation");
+                            } catch (err: unknown) {
+                              alert(getErrorMessage(err, "Failed to cancel invitation"));
                             }
                           }}
                           className="px-3 py-1.5 bg-zinc-800 hover:bg-red-500/20 text-zinc-400 hover:text-red-400 text-[11px] font-bold rounded-lg transition-colors border border-zinc-700 hover:border-red-500/50"
@@ -265,8 +272,8 @@ export default function MembersPage() {
                             await fetchMembers();
                             // If they accept a workspace they might want it in their selector, it's good to refresh context but let's stick to fetchMembers
                             window.location.reload(); // Hard refresh to ensure workspace selector updates
-                          } catch (err: any) {
-                            alert(err.message || "Failed to accept invitation");
+                          } catch (err: unknown) {
+                            alert(getErrorMessage(err, "Failed to accept invitation"));
                           }
                         }}
                         className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white text-[11px] font-bold rounded-lg transition-colors shadow-lg shadow-emerald-500/20"
@@ -278,8 +285,8 @@ export default function MembersPage() {
                           try {
                             await workspaceService.rejectInvitation(inv.id);
                             await fetchMembers();
-                          } catch (err: any) {
-                            alert(err.message || "Failed to reject invitation");
+                          } catch (err: unknown) {
+                            alert(getErrorMessage(err, "Failed to reject invitation"));
                           }
                         }}
                         className="px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white text-[11px] font-bold rounded-lg transition-colors shadow-lg shadow-red-500/20"

@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { getErrorMessage } from "@/lib/errors";
+
+import React, { useEffect, useEffectEvent, useRef, useState } from "react";
 import Link from "next/link";
 import { useWorkspace } from "@/context/WorkspaceContext";
 import { projectService } from "@/lib/services/project.service";
@@ -29,6 +31,7 @@ export default function ProjectsPage() {
   const [projects, setProjects] = useState<ProjectWithCount[]>([]);
   const [loading, setLoading] = useState(true);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const toastIdRef = useRef(0);
 
   // Create Modal State
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -49,7 +52,7 @@ export default function ProjectsPage() {
   const emojis = ["🚀", "⚡", "🎯", "🎨", "🛠️", "📊", "💡", "🔥", "💻", "🌐"];
 
   const showToast = (type: "success" | "error" | "info", message: string) => {
-    const id = Date.now().toString();
+    const id = String(++toastIdRef.current);
     setToasts((prev) => [...prev, { id, type, message }]);
   };
 
@@ -77,15 +80,20 @@ export default function ProjectsPage() {
       );
 
       setProjects(projectsWithCounts);
-    } catch (err: any) {
-      showToast("error", err.message || "Failed to load projects");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Failed to load projects"));
     } finally {
       setLoading(false);
     }
   };
 
+  const refreshProjects = useEffectEvent(() => {
+    void fetchProjects();
+  });
+
   useEffect(() => {
-    fetchProjects();
+    const timeoutId = window.setTimeout(refreshProjects, 0);
+    return () => window.clearTimeout(timeoutId);
   }, [currentWorkspace]);
 
   const handleCreateProject = async (e: React.FormEvent) => {
@@ -113,8 +121,8 @@ export default function ProjectsPage() {
         setIsCreateOpen(false);
         await fetchProjects();
       }
-    } catch (err: any) {
-      setCreateError(err.message || "Failed to create project");
+    } catch (err: unknown) {
+      setCreateError(getErrorMessage(err, "Failed to create project"));
     } finally {
       setCreating(false);
     }
@@ -151,8 +159,8 @@ export default function ProjectsPage() {
         setEditingProject(null);
         await fetchProjects();
       }
-    } catch (err: any) {
-      setEditError(err.message || "Failed to update project");
+    } catch (err: unknown) {
+      setEditError(getErrorMessage(err, "Failed to update project"));
     } finally {
       setUpdating(false);
     }
@@ -165,8 +173,8 @@ export default function ProjectsPage() {
       await projectService.deleteProject(projectId);
       showToast("success", `Project "${projectName}" deleted`);
       setProjects((prev) => prev.filter((p) => p.id !== projectId));
-    } catch (err: any) {
-      showToast("error", err.message || "Failed to delete project");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Failed to delete project"));
     }
   };
 

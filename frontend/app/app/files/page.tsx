@@ -1,6 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { getErrorMessage } from "@/lib/errors";
+
+import React, { useEffect, useEffectEvent, useRef, useState } from "react";
+import Image from "next/image";
 import { useWorkspace } from "@/context/WorkspaceContext";
 import { uploadService } from "@/lib/services/upload.service";
 import { FileItem } from "@/lib/types";
@@ -13,10 +16,6 @@ import {
   Loader2,
   File,
   FileText,
-  Image as ImageIcon,
-  CheckCircle,
-  AlertCircle,
-  FileSpreadsheet,
 } from "lucide-react";
 
 export default function FilesPage() {
@@ -26,9 +25,10 @@ export default function FilesPage() {
   const [uploading, setUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const toastIdRef = useRef(0);
 
   const showToast = (type: "success" | "error" | "info", message: string) => {
-    const id = Date.now().toString();
+    const id = String(++toastIdRef.current);
     setToasts((prev) => [...prev, { id, type, message }]);
   };
 
@@ -41,15 +41,20 @@ export default function FilesPage() {
       setLoading(true);
       const res = await uploadService.getFiles(currentWorkspace?.id);
       setFiles(res.data || []);
-    } catch (err: any) {
-      showToast("error", err.message || "Failed to load files");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Failed to load files"));
     } finally {
       setLoading(false);
     }
   };
 
+  const refreshFiles = useEffectEvent(() => {
+    void fetchFiles();
+  });
+
   useEffect(() => {
-    fetchFiles();
+    const timeoutId = window.setTimeout(refreshFiles, 0);
+    return () => window.clearTimeout(timeoutId);
   }, [currentWorkspace]);
 
   const validateFile = (file: File): string | null => {
@@ -104,8 +109,8 @@ export default function FilesPage() {
         setSelectedFile(null);
         await fetchFiles();
       }
-    } catch (err: any) {
-      showToast("error", err.message || "File upload failed");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "File upload failed"));
     } finally {
       setUploading(false);
     }
@@ -117,8 +122,8 @@ export default function FilesPage() {
       await uploadService.deleteFile(id);
       setFiles((prev) => prev.filter((f) => f.id !== id));
       showToast("success", "File deleted successfully");
-    } catch (err: any) {
-      showToast("error", err.message || "Failed to delete file");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Failed to delete file"));
     }
   };
 
@@ -131,8 +136,6 @@ export default function FilesPage() {
   };
 
   const isImage = (f: FileItem) => f.mimeType?.startsWith("image/") || /\.(jpg|jpeg|png)$/i.test(f.name);
-  const isPdf = (f: FileItem) => f.mimeType === "application/pdf" || /\.pdf$/i.test(f.name);
-
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
       <ToastContainer toasts={toasts} onDismiss={removeToast} />
@@ -209,8 +212,6 @@ export default function FilesPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {files.map((f) => {
               const imageType = isImage(f);
-              const pdfType = isPdf(f);
-
               return (
                 <div
                   key={f.id}
@@ -220,9 +221,12 @@ export default function FilesPage() {
                     {/* Media Thumbnail / Icon Preview */}
                     {imageType ? (
                       <div className="h-32 rounded-xl bg-[#121212] border border-zinc-800 overflow-hidden relative group-hover:border-zinc-500/30 transition-colors">
-                        <img
+                        <Image
                           src={f.url}
                           alt={f.name}
+                          fill
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                          unoptimized
                           className="w-full h-full object-cover"
                         />
                       </div>

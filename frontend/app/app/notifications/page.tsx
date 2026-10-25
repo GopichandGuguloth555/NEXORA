@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { getErrorMessage } from "@/lib/errors";
+
+import React, { useEffect, useEffectEvent, useRef, useState } from "react";
 import { notificationService } from "@/lib/services/notification.service";
 import { workspaceService } from "@/lib/services/workspace.service";
 import { NotificationItem } from "@/lib/types";
@@ -13,10 +15,11 @@ export default function NotificationsPage() {
   const [loading, setLoading] = useState(true);
   const [markingAll, setMarkingAll] = useState(false);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const toastIdRef = useRef(0);
   const { fetchWorkspaces } = useWorkspace();
 
   const showToast = (type: "success" | "error" | "info", message: string) => {
-    const id = Date.now().toString();
+    const id = String(++toastIdRef.current);
     setToasts((prev) => [...prev, { id, type, message }]);
   };
 
@@ -29,15 +32,20 @@ export default function NotificationsPage() {
       setLoading(true);
       const res = await notificationService.getNotifications();
       setNotifications(res.data || []);
-    } catch (err: any) {
-      showToast("error", err.message || "Failed to load notifications");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Failed to load notifications"));
     } finally {
       setLoading(false);
     }
   };
 
+  const refreshNotifications = useEffectEvent(() => {
+    void fetchNotifications();
+  });
+
   useEffect(() => {
-    fetchNotifications();
+    const timeoutId = window.setTimeout(refreshNotifications, 0);
+    return () => window.clearTimeout(timeoutId);
   }, []);
 
   const handleMarkAsRead = async (id: string) => {
@@ -47,8 +55,8 @@ export default function NotificationsPage() {
         prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
       );
       showToast("success", "Notification marked as read");
-    } catch (err: any) {
-      showToast("error", err.message || "Failed to mark as read");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Failed to mark as read"));
     }
   };
 
@@ -62,8 +70,8 @@ export default function NotificationsPage() {
       );
       // Refresh workspaces to immediately show the new one in the UI
       await fetchWorkspaces();
-    } catch (err: any) {
-      showToast("error", err.message || "Failed to accept invitation");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Failed to accept invitation"));
     }
   };
 
@@ -75,8 +83,8 @@ export default function NotificationsPage() {
       setNotifications((prev) =>
         prev.map((n) => (n.id === notificationId ? { ...n, isRead: true } : n))
       );
-    } catch (err: any) {
-      showToast("error", err.message || "Failed to reject invitation");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Failed to reject invitation"));
     }
   };
 
@@ -89,8 +97,8 @@ export default function NotificationsPage() {
       await Promise.all(unread.map((n) => notificationService.markAsRead(n.id, true)));
       setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
       showToast("success", "All notifications marked as read");
-    } catch (err: any) {
-      showToast("error", err.message || "Failed to mark all as read");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Failed to mark all as read"));
     } finally {
       setMarkingAll(false);
     }
@@ -101,8 +109,8 @@ export default function NotificationsPage() {
       await notificationService.deleteNotification(id);
       setNotifications((prev) => prev.filter((n) => n.id !== id));
       showToast("success", "Notification deleted");
-    } catch (err: any) {
-      showToast("error", err.message || "Failed to delete notification");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Failed to delete notification"));
     }
   };
 
@@ -143,7 +151,7 @@ export default function NotificationsPage() {
           </div>
         ) : notifications.length === 0 ? (
           <div className="py-12 text-center text-zinc-500 text-xs">
-            You're all caught up! No notifications available.
+            You&apos;re all caught up! No notifications available.
           </div>
         ) : (
           <div className="space-y-3">

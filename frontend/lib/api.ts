@@ -1,6 +1,18 @@
 import axios, { AxiosError } from "axios";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://nexora-bvpv.onrender.com/";
+const configuredApiUrl =
+  process.env.NEXT_PUBLIC_API_URL?.trim() ||
+  (process.env.NODE_ENV === "development"
+    ? "http://localhost:5000/api"
+    : "https://nexora-bvpv.onrender.com/api");
+
+export const API_BASE_URL = configuredApiUrl.replace(/\/+$/, "").endsWith("/api")
+  ? configuredApiUrl.replace(/\/+$/, "")
+  : `${configuredApiUrl.replace(/\/+$/, "")}/api`;
+
+export const SOCKET_BASE_URL =
+  process.env.NEXT_PUBLIC_SOCKET_URL?.trim().replace(/\/+$/, "") ||
+  API_BASE_URL.replace(/\/api$/, "");
 
 export const api = axios.create({
   baseURL: API_BASE_URL,

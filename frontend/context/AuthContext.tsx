@@ -22,18 +22,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    try {
-      const storedToken = localStorage.getItem("nexora_token");
-      const storedUser = localStorage.getItem("nexora_user");
-      if (storedToken && storedUser) {
-        setToken(storedToken);
-        setUser(JSON.parse(storedUser));
+    const timeoutId = window.setTimeout(() => {
+      try {
+        const storedToken = localStorage.getItem("nexora_token");
+        const storedUser = localStorage.getItem("nexora_user");
+        if (storedToken && storedUser) {
+          setToken(storedToken);
+          setUser(JSON.parse(storedUser));
+        }
+      } catch (err) {
+        console.error("Failed to restore auth state", err);
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      console.error("Failed to restore auth state", err);
-    } finally {
-      setLoading(false);
-    }
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
   }, []);
 
   const login = async (email: string, password: string) => {

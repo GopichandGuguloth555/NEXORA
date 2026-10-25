@@ -267,7 +267,6 @@ NEXORA/
 
 ## 🗄️ Database Design
 
-<<<<<<< HEAD
 Nexora uses PostgreSQL with Prisma for relational data management.
 
 The data model includes the following core entities:
@@ -349,20 +348,10 @@ If you only want to run the original project locally, clone the original reposit
 ### 3. Install Backend Dependencies
 
 Open a terminal in the repository root:
-=======
-### 1. Prerequisites
-- Node.js (v20.9 or higher)
-- PostgreSQL database running locally or remotely
->>>>>>> e5beb9d (fix:Configured for delyment)
 
 ```bash
 cd backend
 npm install
-<<<<<<< HEAD
-=======
-npm run db:migrate
-npm run dev
->>>>>>> e5beb9d (fix:Configured for delyment)
 ```
 
 ### 4. Configure Environment Variables
@@ -413,25 +402,20 @@ Replace the placeholders with your actual database credentials and database name
 
 From the backend directory, inspect the Prisma scripts and configuration.
 
-For a standard Prisma project, the commands may look like:
+Generate the Prisma client and apply the local migration:
 
 ```bash
 npx prisma generate
-npx prisma migrate dev
+npm run db:migrate
 ```
-
-Use the migration workflow supported by the repository. If the project already contains migrations or uses a different Prisma configuration, follow the existing setup instructions instead.
 
 ### 7. Start the Backend
 
-The backend provides build and start scripts:
+For local development, start the backend from the `backend/` directory:
 
 ```bash
-npm run build
-npm start
+npm run dev
 ```
-
-The build command compiles TypeScript, and the start command runs the compiled server.
 
 Keep the terminal running while using the application.
 
@@ -448,7 +432,6 @@ npm install
 
 Create a frontend `.env.local` file if needed.
 
-<<<<<<< HEAD
 Example:
 
 ```env
@@ -482,7 +465,7 @@ If the backend uses the same port, configure the two services to use different p
 - [ ] Frontend API URL configured.
 - [ ] Frontend started successfully.
 - [ ] Authentication and required integrations tested.
-=======
+
 ## 🧪 Production Verification & Build
 Set `DATABASE_URL` in the backend deployment environment. The backend build generates the Prisma client before compiling TypeScript. Apply committed database migrations with `npm run db:deploy` before starting a new release.
 
@@ -518,7 +501,6 @@ Deploy the backend and frontend as separate services. Configure the backend's `D
 2. Before the first production release, run `npm run db:deploy` from the `backend` service shell (or as a one-off command) against the production database.
 3. Create a Vercel project from the same repository and set its Root Directory to `frontend`. Set `NEXT_PUBLIC_API_URL` to `https://<render-service>.onrender.com/api`, `NEXT_PUBLIC_SOCKET_URL` to `https://<render-service>.onrender.com`, and `NEXT_PUBLIC_GOOGLE_CLIENT_ID` to the Google OAuth web client ID.
 4. Add the production Vercel domain to Render's `CORS_ORIGIN`, then redeploy the backend. Keep database credentials, JWT secrets, and provider API secrets in the host environment only.
->>>>>>> e5beb9d (fix:Configured for delyment)
 
 ---
 

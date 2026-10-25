@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import { getErrorMessage } from "@/lib/errors";
+
+import React, { useEffect, useEffectEvent, useRef, useState } from "react";
 import { useWorkspace } from "@/context/WorkspaceContext";
 import { useSocket } from "@/context/SocketContext";
 import { useAuth } from "@/context/AuthContext";
@@ -18,7 +20,6 @@ import {
   Trash2,
   ArrowLeft,
   Info,
-  Circle,
   MoreVertical,
   Search,
   Users,
@@ -27,7 +28,6 @@ import {
   Calendar,
   Settings,
   Bell,
-  Command,
   Reply,
   Edit2,
   MoreHorizontal
@@ -68,9 +68,10 @@ export default function ChatPage() {
   const [createError, setCreateError] = useState<string | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const toastIdRef = useRef(0);
 
   const showToast = (type: "success" | "error" | "info", message: string) => {
-    const id = Date.now().toString();
+    const id = String(++toastIdRef.current);
     setToasts((prev) => [...prev, { id, type, message }]);
   };
 
@@ -94,8 +95,8 @@ export default function ChatPage() {
       if (channelList.length > 0 && !selectedChannel) {
         selectChannel(channelList[0]);
       }
-    } catch (err: any) {
-      setError(err.message || "Failed to load channels");
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, "Failed to load channels"));
     } finally {
       setLoadingChannels(false);
     }
@@ -120,16 +121,21 @@ export default function ChatPage() {
       const res = await messageService.getMessages(channel.id);
       setMessages(res.data || []);
       setTimeout(scrollToBottom, 100);
-    } catch (err: any) {
-      showToast("error", err.message || "Failed to load channel messages");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Failed to load channel messages"));
       setMessages([]);
     } finally {
       setLoadingMessages(false);
     }
   };
 
+  const refreshChannels = useEffectEvent(() => {
+    void fetchChannels();
+  });
+
   useEffect(() => {
-    fetchChannels();
+    const timeoutId = window.setTimeout(refreshChannels, 0);
+    return () => window.clearTimeout(timeoutId);
   }, [currentWorkspace]);
 
   // Socket.IO event listeners for real-time messages & typing
@@ -167,7 +173,7 @@ export default function ChatPage() {
       }
     };
 
-    const handleUserStopTyping = (data: { userId: string }) => {
+    const handleUserStopTyping = () => {
       setTypingUsers([]);
     };
 
@@ -216,8 +222,8 @@ export default function ChatPage() {
         });
         setTimeout(scrollToBottom, 50);
       }
-    } catch (err: any) {
-      showToast("error", err.message || "Failed to send message");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Failed to send message"));
     }
   };
 
@@ -247,8 +253,8 @@ export default function ChatPage() {
         await fetchChannels();
         selectChannel(res.data);
       }
-    } catch (err: any) {
-      setCreateError(err.message || "Failed to create channel");
+    } catch (err: unknown) {
+      setCreateError(getErrorMessage(err, "Failed to create channel"));
     } finally {
       setCreating(false);
     }
@@ -260,8 +266,8 @@ export default function ChatPage() {
       await messageService.deleteMessage(selectedChannel.id, messageId);
       setMessages((prev) => prev.filter((m) => m.id !== messageId));
       showToast("success", "Message deleted");
-    } catch (err: any) {
-      showToast("error", err.message || "Failed to delete message");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Failed to delete message"));
     }
   };
 
@@ -704,7 +710,7 @@ export default function ChatPage() {
                   />
                 </div>
                 <p className="text-[10px] text-zinc-500 mt-1.5">
-                  Channels are where your team communicates. They're best when organized around a topic — #marketing, for example.
+                  Channels are where your team communicates. They&apos;re best when organized around a topic — #marketing, for example.
                 </p>
               </div>
 

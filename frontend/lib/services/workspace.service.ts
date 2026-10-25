@@ -37,18 +37,18 @@ export const workspaceService = {
     return res.data;
   },
 
-  async acceptInvitation(invitationId: string): Promise<ApiResponse<any>> {
-    const res = await api.post<ApiResponse<any>>(`/workspaces/invitations/${invitationId}/accept`, {});
+  async acceptInvitation(invitationId: string): Promise<ApiResponse<unknown>> {
+    const res = await api.post<ApiResponse<unknown>>(`/workspaces/invitations/${invitationId}/accept`, {});
     return res.data;
   },
 
-  async rejectInvitation(invitationId: string): Promise<ApiResponse<any>> {
-    const res = await api.post<ApiResponse<any>>(`/workspaces/invitations/${invitationId}/reject`, {});
+  async rejectInvitation(invitationId: string): Promise<ApiResponse<unknown>> {
+    const res = await api.post<ApiResponse<unknown>>(`/workspaces/invitations/${invitationId}/reject`, {});
     return res.data;
   },
 
-  async cancelInvitation(invitationId: string): Promise<ApiResponse<any>> {
-    const res = await api.post<ApiResponse<any>>(`/workspaces/invitations/${invitationId}/cancel`, {});
+  async cancelInvitation(invitationId: string): Promise<ApiResponse<unknown>> {
+    const res = await api.post<ApiResponse<unknown>>(`/workspaces/invitations/${invitationId}/cancel`, {});
     return res.data;
   },
 

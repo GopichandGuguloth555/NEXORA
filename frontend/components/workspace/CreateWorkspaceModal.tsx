@@ -1,5 +1,7 @@
 "use client";
 
+import { getErrorMessage } from "@/lib/errors";
+
 import React, { useState } from "react";
 import { useWorkspace } from "@/context/WorkspaceContext";
 import { X, Layers, Loader2 } from "lucide-react";
@@ -32,8 +34,8 @@ export function CreateWorkspaceModal({ isOpen, onClose }: CreateWorkspaceModalPr
       setName("");
       setDescription("");
       onClose();
-    } catch (err: any) {
-      setError(err.message || "Failed to create workspace");
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, "Failed to create workspace"));
     } finally {
       setLoading(false);
     }

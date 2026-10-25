@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { getErrorMessage } from "@/lib/errors";
+
+import React, { useEffect, useEffectEvent, useRef, useState } from "react";
 import { useWorkspace } from "@/context/WorkspaceContext";
 import { documentService } from "@/lib/services/document.service";
 import { DocumentItem } from "@/lib/types";
@@ -26,6 +28,7 @@ export default function DocumentsPage() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const toastIdRef = useRef(0);
 
   // Editor State
   const [title, setTitle] = useState("");
@@ -40,7 +43,7 @@ export default function DocumentsPage() {
   const [creating, setCreating] = useState(false);
 
   const showToast = (type: "success" | "error" | "info", message: string) => {
-    const id = Date.now().toString();
+    const id = String(++toastIdRef.current);
     setToasts((prev) => [...prev, { id, type, message }]);
   };
 
@@ -58,8 +61,8 @@ export default function DocumentsPage() {
       if (docs.length > 0 && !selectedDoc) {
         selectDocument(docs[0]);
       }
-    } catch (err: any) {
-      showToast("error", err.message || "Failed to load documents");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Failed to load documents"));
     } finally {
       setLoading(false);
     }
@@ -72,8 +75,13 @@ export default function DocumentsPage() {
     setIsEditing(false);
   };
 
+  const refreshDocuments = useEffectEvent(() => {
+    void fetchDocuments();
+  });
+
   useEffect(() => {
-    fetchDocuments();
+    const timeoutId = window.setTimeout(refreshDocuments, 0);
+    return () => window.clearTimeout(timeoutId);
   }, [currentWorkspace]);
 
   const handleSaveDoc = async () => {
@@ -99,8 +107,8 @@ export default function DocumentsPage() {
         showToast("success", "Document updated successfully");
         await fetchDocuments();
       }
-    } catch (err: any) {
-      showToast("error", err.message || "Failed to update document");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Failed to update document"));
     } finally {
       setSaving(false);
     }
@@ -130,8 +138,8 @@ export default function DocumentsPage() {
         await fetchDocuments();
         selectDocument(res.data);
       }
-    } catch (err: any) {
-      showToast("error", err.message || "Failed to create document");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Failed to create document"));
     } finally {
       setCreating(false);
     }
@@ -146,8 +154,8 @@ export default function DocumentsPage() {
         setSelectedDoc(null);
       }
       await fetchDocuments();
-    } catch (err: any) {
-      showToast("error", err.message || "Failed to delete document");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Failed to delete document"));
     }
   };
 
@@ -224,7 +232,7 @@ export default function DocumentsPage() {
               </div>
               <h3 className="text-sm font-bold text-zinc-100">No documents yet</h3>
               <p className="text-xs text-zinc-400 leading-relaxed">
-                Create your first project document to keep your team's knowledge organized.
+                Create your first project document to keep your team&apos;s knowledge organized.
               </p>
               <button
                 onClick={() => setIsCreateOpen(true)}

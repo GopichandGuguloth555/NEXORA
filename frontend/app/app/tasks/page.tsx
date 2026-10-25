@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { getErrorMessage } from "@/lib/errors";
+
+import React, { useEffect, useEffectEvent, useRef, useState } from "react";
 import { useWorkspace } from "@/context/WorkspaceContext";
 import { projectService } from "@/lib/services/project.service";
 import { taskService } from "@/lib/services/task.service";
@@ -14,7 +16,6 @@ import {
   X,
   Loader2,
   MessageSquare,
-  Filter,
   Kanban,
   List,
   Send,
@@ -24,7 +25,6 @@ import {
   CheckCircle2,
   AlertCircle,
   CalendarDays,
-  MoreHorizontal,
 } from "lucide-react";
 
 export default function TasksPage() {
@@ -36,6 +36,7 @@ export default function TasksPage() {
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<"kanban" | "list">("kanban");
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const toastIdRef = useRef(0);
   const [searchQuery, setSearchQuery] = useState("");
   const [priorityFilter, setPriorityFilter] = useState<"ALL" | "LOW" | "MEDIUM" | "HIGH">("ALL");
 
@@ -67,7 +68,7 @@ export default function TasksPage() {
   const [loadingComments, setLoadingComments] = useState(false);
 
   const showToast = (type: "success" | "error" | "info", message: string) => {
-    const id = Date.now().toString();
+    const id = String(++toastIdRef.current);
     setToasts((prev) => [...prev, { id, type, message }]);
   };
 
@@ -92,8 +93,8 @@ export default function TasksPage() {
         setTargetProjectId(defaultProjId);
         await fetchTasksForProject(defaultProjId);
       }
-    } catch (err: any) {
-      showToast("error", err.message || "Failed to load tasks data");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Failed to load tasks data"));
     } finally {
       setLoading(false);
     }
@@ -111,8 +112,13 @@ export default function TasksPage() {
     }
   };
 
+  const refreshInitialData = useEffectEvent(() => {
+    void loadInitialData();
+  });
+
   useEffect(() => {
-    loadInitialData();
+    const timeoutId = window.setTimeout(refreshInitialData, 0);
+    return () => window.clearTimeout(timeoutId);
   }, [currentWorkspace]);
 
   const handleProjectSelect = (projId: string) => {
@@ -156,8 +162,8 @@ export default function TasksPage() {
           fetchTasksForProject(selectedProjectId);
         }
       }
-    } catch (err: any) {
-      setCreateError(err.message || "Failed to create task");
+    } catch (err: unknown) {
+      setCreateError(getErrorMessage(err, "Failed to create task"));
     } finally {
       setCreating(false);
     }
@@ -168,8 +174,8 @@ export default function TasksPage() {
       setTasks((prev) => prev.map((t) => (t.id === task.id ? { ...t, status: newStatus } : t)));
       await taskService.updateTask(task.id, { status: newStatus });
       showToast("success", `Status updated to ${newStatus.replace("_", " ")}`);
-    } catch (err: any) {
-      showToast("error", err.message || "Failed to update status");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Failed to update status"));
       fetchTasksForProject(selectedProjectId);
     }
   };
@@ -181,8 +187,8 @@ export default function TasksPage() {
       showToast("success", "Task deleted");
       setTasks((prev) => prev.filter((t) => t.id !== taskId));
       if (activeTask?.id === taskId) setActiveTask(null);
-    } catch (err: any) {
-      showToast("error", err.message || "Failed to delete task");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Failed to delete task"));
     }
   };
 
@@ -231,8 +237,8 @@ export default function TasksPage() {
         setActiveTask(res.data);
         fetchTasksForProject(selectedProjectId);
       }
-    } catch (err: any) {
-      showToast("error", err.message || "Failed to update task");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Failed to update task"));
     } finally {
       setUpdatingTask(false);
     }
@@ -249,8 +255,8 @@ export default function TasksPage() {
         setNewComment("");
         showToast("success", "Comment added");
       }
-    } catch (err: any) {
-      showToast("error", err.message || "Failed to add comment");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Failed to add comment"));
     }
   };
 
@@ -260,8 +266,8 @@ export default function TasksPage() {
       await taskService.deleteComment(activeTask.id, commentId);
       setComments((prev) => prev.filter((c) => c.id !== commentId));
       showToast("success", "Comment deleted");
-    } catch (err: any) {
-      showToast("error", err.message || "Failed to delete comment");
+    } catch (err: unknown) {
+      showToast("error", getErrorMessage(err, "Failed to delete comment"));
     }
   };
 
@@ -370,7 +376,7 @@ export default function TasksPage() {
           <div className="h-4 w-px bg-zinc-800" />
           <select
             value={priorityFilter}
-            onChange={(e) => setPriorityFilter(e.target.value as any)}
+            onChange={(e) => setPriorityFilter(e.target.value as TaskPriority | "ALL")}
             className="bg-[#121212] border border-zinc-800 rounded-lg px-3 py-1.5 text-xs text-zinc-400 focus:outline-none focus:border-zinc-600 transition-colors cursor-pointer"
           >
             <option value="ALL">All Priorities</option>
@@ -498,7 +504,7 @@ export default function TasksPage() {
                     <div className="shrink-0" onClick={(e) => e.stopPropagation()}>
                       <select
                         value={t.status}
-                        onChange={(e) => handleUpdateStatus(t, e.target.value as any)}
+                        onChange={(e) => handleUpdateStatus(t, e.target.value as TaskStatus)}
                         className={`text-xs font-medium rounded-lg px-2.5 py-1.5 outline-none border appearance-none cursor-pointer transition-colors ${
                           t.status === "TODO" ? "bg-slate-500/10 text-slate-400 border-slate-500/20 hover:bg-slate-500/20" :
                           t.status === "IN_PROGRESS" ? "bg-amber-500/10 text-amber-400 border-amber-500/20 hover:bg-amber-500/20" :
